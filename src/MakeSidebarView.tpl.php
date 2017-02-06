@@ -1,4 +1,4 @@
-<?php /** @var \xltxlm\H5skin\MakeSidebarView $this */
+<?php /** @var \xltxlm\h5skin\MakeSidebarView $this */
 ?>
 <<?='?'?>php
         use xltxlm\helper\Ctroller\LoadClass;

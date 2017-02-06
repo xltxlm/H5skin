@@ -1,6 +1,6 @@
-<?php /** @var \xltxlm\H5skin\HeaderTrait $this */
-use xltxlm\H5skin\Request\UserCookieModel;
-use xltxlm\H5skin\Setting\Page;
+<?php /** @var \xltxlm\h5skin\HeaderTrait $this */
+use xltxlm\h5skin\Request\UserCookieModel;
+use xltxlm\h5skin\Setting\Page;
 use xltxlm\helper\Ctroller\LoadClass;
 use xltxlm\helper\Ctroller\Unit\RunInvoke;
 

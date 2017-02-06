@@ -6,7 +6,7 @@
  * Time: 16:34.
  */
 
-namespace xltxlm\H5skin;
+namespace xltxlm\h5skin;
 
 use Symfony\Component\Filesystem\Filesystem;
 use xltxlm\template\Template;
@@ -92,7 +92,7 @@ final class MakeSidebarView extends Template
         $this->__invoke();
         //2:拷贝分页类
         mkdir($this->rootDir."/Setting");
-        $page = strtr(file_get_contents(__DIR__.'/Setting/Page.php'), ["xltxlm\\H5skin\\Setting" => $this->rootNamespce.'\\Setting']);
+        $page = strtr(file_get_contents(__DIR__.'/Setting/Page.php'), ["xltxlm\\h5skin\\Setting" => $this->rootNamespce.'\\Setting']);
         file_put_contents($this->rootDir."/Setting/Page.php", $page);
         //3:拷贝静态资源
         (new Filesystem())

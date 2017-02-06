@@ -6,14 +6,14 @@
  * Time: 16:31
  */
 
-namespace xltxlm\H5skin\Request;
+namespace xltxlm\h5skin\Request;
 
 use xltxlm\helper\Ctroller\Request\Cookie;
 
 /**
  * 通用的cookie模型类
  * Class UserCookie
- * @package xltxlm\H5skin\Setting
+ * @package xltxlm\h5skin\Setting
  */
 class UserCookieModel
 {

@@ -6,7 +6,7 @@
  * Time: 12:39.
  */
 
-namespace xltxlm\H5skin;
+namespace xltxlm\h5skin;
 
 /**
  * 头部的公用部分

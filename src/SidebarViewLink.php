@@ -6,7 +6,7 @@
  * Time: 11:35.
  */
 
-namespace xltxlm\H5skin;
+namespace xltxlm\h5skin;
 
 use xltxlm\template\Template;
 

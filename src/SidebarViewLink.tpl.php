@@ -1,4 +1,4 @@
-<?php /** @var  \xltxlm\H5skin\SidebarViewLink $this */
+<?php /** @var  \xltxlm\h5skin\SidebarViewLink $this */
 ?>
 <li class="<<?= '?' ?>= in_array(LoadClass::$runClass,<?= json_encode($this->getHighlightClass(), JSON_UNESCAPED_UNICODE) ?>) ? 'active' : '' <?= '?' ?>>">
     <a href="<<?= '?' ?>= call_user_func([<?= $this->getClassName() ?>::class, 'urlNoFollow'], json_decode('<?= json_encode($this->getArgs(), JSON_UNESCAPED_UNICODE) ?>',true)) <?= '?' ?>>">

@@ -6,7 +6,7 @@
  * Time: 14:16.
  */
 
-namespace xltxlm\H5skin\Setting;
+namespace xltxlm\h5skin\Setting;
 
 use xltxlm\helper\Ctroller\Unit\RunInvoke;
 use xltxlm\helper\Url\FixUrl;

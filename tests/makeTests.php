@@ -1,9 +1,9 @@
 <?php
-namespace xltxlm\H5skin\tests;
+namespace xltxlm\h5skin\tests;
 
 use PHPUnit\Framework\TestCase;
-use xltxlm\H5skin\MakeSidebarView;
-use xltxlm\H5skin\tests\App\Base;
+use xltxlm\h5skin\MakeSidebarView;
+use xltxlm\h5skin\tests\App\Base;
 
 /**
  * Created by PhpStorm.

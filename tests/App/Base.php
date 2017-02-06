@@ -1,5 +1,5 @@
 <?php
-namespace xltxlm\H5skin\tests\App;
+namespace xltxlm\h5skin\tests\App;
 /**
  * Created by PhpStorm.
  * User: xialintai
