@@ -96,6 +96,6 @@ final class MakeSidebarView extends Template
         file_put_contents($this->rootDir."/Setting/Page.php", $page);
         //3:拷贝静态资源
         (new Filesystem())
-            ->mirror(__DIR__.'/static/', $this->rootDir.'/../Siteroot/static/');
+            ->mirror(__DIR__.'/static/', $this->rootDir.'/../Siteroot/static/', null, ['override' => true]);
     }
 }
