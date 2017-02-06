@@ -1,5 +1,5 @@
 {
-  "name": "xltxlm/H5skin",
+  "name": "xltxlm/h5skin",
   "description": "后台皮肤",
   "authors": [
     {
@@ -15,14 +15,14 @@
   },
   "autoload": {
     "psr-4": {
-      "xltxlm\\H5skin\\": [
+      "xltxlm\\h5skin\\": [
         "src/"
       ]
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "xltxlm\\H5skin\\": [
+      "xltxlm\\h5skin\\": [
         "./"
       ]
     }
