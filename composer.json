@@ -1,0 +1,30 @@
+{
+  "name": "xltxlm/H5skin",
+  "description": "后台皮肤",
+  "authors": [
+    {
+      "name": "xltxlm",
+      "email": "xltxlm@qq.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.0",
+    "symfony/filesystem": "*",
+    "xltxlm/helper": "*",
+    "xltxlm/Template": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "xltxlm\\H5skin\\": [
+        "src/"
+      ]
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "xltxlm\\H5skin\\": [
+        "./"
+      ]
+    }
+  }
+}
