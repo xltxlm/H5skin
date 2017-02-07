@@ -9,7 +9,7 @@
 namespace xltxlm\h5skin;
 
 use xltxlm\template\Template;
-use xltxlm\vue\Vue;
+use xltxlm\h5skin\Vue;
 
 /**
  * 下拉框
@@ -17,7 +17,7 @@ use xltxlm\vue\Vue;
  */
 class SelectTPL extends Template
 {
-    use Vue;
+    use xltxlm\h5skin\Vue;
     protected $name = '';
     protected $id = '';
     /** @var string 样式名称 */
