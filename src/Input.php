@@ -16,6 +16,7 @@ use xltxlm\template\Template;
  */
 final class Input extends Template
 {
+    use Vue;
     /** @var string id */
     protected $id = '';
     /** @var string form 表单名称 */
