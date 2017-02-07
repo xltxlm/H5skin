@@ -27,6 +27,26 @@ class UserCookieModel
     protected $sign = '';
     /** @var int 分页条数 */
     protected $prepage = 30;
+    /** @var int 当前页码 */
+    protected $pageID = 1;
+
+    /**
+     * @return int
+     */
+    public function getPageID(): int
+    {
+        return $this->pageID;
+    }
+
+    /**
+     * @param int $pageID
+     * @return UserCookieModel
+     */
+    public function setPageID(int $pageID): UserCookieModel
+    {
+        $this->pageID = $pageID;
+        return $this;
+    }
 
     /**
      * @return int
