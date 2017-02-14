@@ -35,6 +35,10 @@ class UserCookieModel
      */
     public function getPageID(): int
     {
+        //如果get上面有参数,以get的参数为标准
+        if ($_GET['pageID']) {
+            $this->pageID = $_GET['pageID'];
+        }
         return $this->pageID;
     }
 
@@ -53,6 +57,10 @@ class UserCookieModel
      */
     public function getPrepage(): int
     {
+        //如果get上面有参数,以get的参数为标准
+        if ($_GET['prepage']) {
+            $this->prepage = $_GET['prepage'];
+        }
         return $this->prepage;
     }
 
@@ -63,13 +71,7 @@ class UserCookieModel
      */
     public function setPrepage(int $prepage): UserCookieModel
     {
-        //如果get上面有参数,以get的参数为标准
-        if ($_GET['prepage']) {
-            $this->prepage = $_GET['prepage'];
-        } else {
-            $this->prepage = $prepage;
-        }
-
+        $this->prepage = $prepage;
         return $this;
     }
 
