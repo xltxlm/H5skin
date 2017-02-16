@@ -25,6 +25,27 @@ class SelectTPL extends Template
     protected $options = [];
     /** @var string 默认选择值 */
     protected $default = '';
+    /** @var bool  是否是复选框 */
+    protected $multiple = false;
+
+    /**
+     * @return bool
+     */
+    public function isMultiple(): bool
+    {
+        return $this->multiple;
+    }
+
+    /**
+     * @param bool $multiple
+     * @return SelectTPL
+     */
+    public function setMultiple(bool $multiple): SelectTPL
+    {
+        $this->multiple = $multiple;
+        return $this;
+    }
+
 
     /**
      * @return string
