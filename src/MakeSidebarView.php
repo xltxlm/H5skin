@@ -28,7 +28,7 @@ final class MakeSidebarView extends Template
 
     /**
      * MakeSidebarView constructor.
-     * @param Object $RunClass
+     * @param string $RunClass
      */
     public function __construct($RunClass)
     {
