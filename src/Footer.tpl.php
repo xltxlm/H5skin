@@ -1,4 +1,4 @@
-<?= $error = \xltxlm\helper\Ctroller\HtmlException::pop(); ?>
+<? $error = \xltxlm\helper\Ctroller\HtmlException::pop(); ?>
 <?php if ($error) { ?>
     <div style="padding: 20px 30px; z-index: 999999; font-size: 16px; font-weight: 600; background: rgb(243, 156, 18);">
         <?= $error ?>
