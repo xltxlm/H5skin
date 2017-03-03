@@ -44,8 +44,10 @@ use <?=$this->getClassName()?>Add;
                         ob_start();
                      ?>
                         <<?='?'?>=(new <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Copy)()[<?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>()]?>
-                        <?php  $fieldShowName=ob_get_clean(); ?>
-                    <!--       搜索的时候对应字段高亮. 时间段可选择, 枚举类型是下拉框         -->
+                        <?php  $fieldShowName=trim(ob_get_clean()); ?>
+
+
+                        <!--  <?=$property->getName()?>  -->
                     <div class="form-group col-md-2 <<?='?'?>= $this->get<?=$this->getShortName()?>Request()->get<?=$property->getName()?>() ? 'has-error' : '' ?> ">
                         <label  class="<<?='?'?>= $this->get<?=$this->getShortName()?>Request()->get<?=$property->getName()?>() ? 'label label-danger' : '' ?>" for="<?=$property->getName()?>">
                             <?=$fieldShowName?>
@@ -97,7 +99,7 @@ use <?=$this->getClassName()?>Add;
                     <tr>
                         <?php foreach ($this->TableModelClassNameReflectionClass->getProperties() as $property){ ob_start();?>
                         <<?='?'?>=(new <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Copy)()[<?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>()]?>
-                        <?php  $fieldShowName=ob_get_clean(); ?>
+                        <?php  $fieldShowName=trim(ob_get_clean()); ?>
                         <th><?=$fieldShowName?></th>
                         <?php }?>
                         <th>操作</th>
@@ -107,13 +109,14 @@ use <?=$this->getClassName()?>Add;
                     <<?='?'?>php foreach ($this->get<?=$this->TableModelClassNameReflectionClass->getShortName()?>() as $model) { ?>
                         <tr>
                             <?php foreach ($this->TableModelClassNameReflectionClass->getProperties() as $property){?>
+                                <!--  <?=$property->getName()?>  -->
                             <td><<?='?'?>= $model->get<?=ucfirst($property->name)?>() ?></td>
                             <?php }?>
                             <td>
                                 <?php if($this->isMakeDelete()){?><a href="<<?='?'?>= <?=$this->getShortName()?>DeleteDo::url([<?=$this->getShortName()?>RequestCopy::id() => $model->getId()]) ?>"
                                    onclick="return confirm('确认删除?')">删除</a><?php }?>
 
-                                <?php if($this->isMakeAdd()){?><a href="<<?='?'?>= <?=$this->getShortName()?>::url([<?=$this->getShortName()?>RequestCopy::id() => $model->getId()]) ?>"
+                                <?php if($this->isMakeAdd()){?><a href="<<?='?'?>= <?=$this->getShortName()?>Add::url([<?=$this->getShortName()?>RequestCopy::id() => $model->getId()]) ?>"
                                 >编辑</a><?php }?>
                             </td>
                         </tr>

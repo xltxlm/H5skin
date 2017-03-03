@@ -39,7 +39,10 @@ use xltxlm\h5skin\SelectTPL;
     eval('$enum='.$isEnumFunction);
     ob_start();?>
     <<?='?'?>=(new <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Copy)()[<?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>()]?>
-    <?php  $fieldShowName=ob_get_clean(); ?>
+    <?php  $fieldShowName=trim(ob_get_clean()); ?>
+
+
+    <!--  <?=$property->getName()?>  -->
                     <div class="form-group">
                         <label for="<?=$property->getName()?>" class="col-sm-2 control-label"><?=$fieldShowName?></label>
                         <div class="col-sm-6">
