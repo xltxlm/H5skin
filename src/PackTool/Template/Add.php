@@ -45,7 +45,7 @@ class <?=$this->getShortName()?>Add
             //数据库查询出来的覆盖再覆盖上请求的内容
             $this-><?=$this->getTableModelClassNameReflectionClass()->getShortName()?> =
                 (new MergeObject($this-><?=$this->getTableModelClassNameReflectionClass()->getShortName()?>))
-                    ->setObject($this->get<?=ucfirst($this->getShortName())?>Request())
+                    ->setMergeObject($this->get<?=ucfirst($this->getShortName())?>Request())
                     ->__invoke();
 
         }
