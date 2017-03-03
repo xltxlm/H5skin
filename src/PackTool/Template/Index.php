@@ -33,20 +33,23 @@ class <?=$this->getShortName()?>
     use PageObjectTrait;
     use <?=$this->getShortName()?>RequestTrait;
 
-    /** @var  <?=$this->TableModelClassNameReflectionClass->getShortName()?>[] */
-    protected $<?=$this->TableModelClassNameReflectionClass->getShortName()?>;
+    /** @var  <?=$this->getTableModelClassNameReflectionClass()->getShortName()?>[] */
+    protected $<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>;
 
     /**
-     * @return <?=$this->TableModelClassNameReflectionClass->getShortName()?>[]
+     * @return <?=$this->getTableModelClassNameReflectionClass()->getShortName()?>[]
      */
-    public function get<?=ucfirst($this->TableModelClassNameReflectionClass->getShortName())?>(): array
+    public function get<?=ucfirst($this->getTableModelClassNameReflectionClass()->getShortName())?>(): array
     {
-        if (empty($this-><?=$this->TableModelClassNameReflectionClass->getShortName()?>)) {
-            $this-><?=$this->TableModelClassNameReflectionClass->getShortName()?> = (new <?=strtr($this->TableModelClassNameReflectionClass->getShortName(),['Model'=>'Page'])?>())
+        if (empty($this-><?=$this->getTableModelClassNameReflectionClass()->getShortName()?>)) {
+            $this-><?=$this->getTableModelClassNameReflectionClass()->getShortName()?> = (new <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>'Page'])?>())
                 ->setPageObject($this->getPageObject())
+<?php foreach ($this->getTableModelClassNameReflectionClass()->getProperties() as $property){?>
+                ->where<?=ucfirst($property->getName())?>Maybe($this->get<?=$this->getShortName()?>Request()->get<?=ucfirst($property->getName())?>())
+<?php }?>
                 ->__invoke();
         }
-        return $this-><?=$this->TableModelClassNameReflectionClass->getShortName()?>;
+        return $this-><?=$this->getTableModelClassNameReflectionClass()->getShortName()?>;
     }
 
 

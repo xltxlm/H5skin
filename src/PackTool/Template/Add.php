@@ -40,11 +40,14 @@ class <?=$this->getShortName()?>Add
                     ->whereId($this->get<?=ucfirst($this->getShortName())?>Request()->getId())
                     ->__invoke();
             } else {
-                $this-><?=$this->getTableModelClassNameReflectionClass()->getShortName()?> =
-                    (new MergeObject((new <?=$this->getTableModelClassNameReflectionClass()->getShortName()?>)))
-                        ->setObject($this->get<?=ucfirst($this->getShortName())?>Request())
-                        ->__invoke();
+                $this-><?=$this->getTableModelClassNameReflectionClass()->getShortName()?> =new <?=$this->getTableModelClassNameReflectionClass()->getShortName()?>;
             }
+            //数据库查询出来的覆盖再覆盖上请求的内容
+            $this-><?=$this->getTableModelClassNameReflectionClass()->getShortName()?> =
+                (new MergeObject($this-><?=$this->getTableModelClassNameReflectionClass()->getShortName()?>))
+                    ->setObject($this->get<?=ucfirst($this->getShortName())?>Request())
+                    ->__invoke();
+
         }
 
         return $this-><?=$this->getTableModelClassNameReflectionClass()->getShortName()?>;

@@ -4,14 +4,13 @@ use xltxlm\h5skin\SelectTPL; ?>
 <<?='?'?>php
 /** @var <?=$this->getClassName()?> $this */
 use <?=$this->getClassName()?>;
-<?php if($this->isMakeAdd() || $this->isMakeDelete()){?>use <?=$this->getClassName()?>RequestCopy;<?php }?>
-
+use <?=$this->getClassName()?>RequestCopy;
 <?php if($this->isMakeDelete()){?>use <?=$this->getClassName()?>DeleteDo;<?php }?>
 
-use <?=strtr($this->TableModelClassNameReflectionClass->getName(),['Model'=>''])?>Type;
-use <?=strtr($this->TableModelClassNameReflectionClass->getName(),['Model'=>''])?>Copy;
+use <?=strtr($this->getTableModelClassNameReflectionClass()->getName(),['Model'=>''])?>Type;
+use <?=strtr($this->getTableModelClassNameReflectionClass()->getName(),['Model'=>''])?>Copy;
 <?php foreach ($this->getTableModelClassNameReflectionClass()->getProperties() as $property){
-    $isEnumFunction=strtr($this->TableModelClassNameReflectionClass->getName(),['Model'=>'']).'Type::'.$property->getName().'IsEnum();';
+    $isEnumFunction=strtr($this->getTableModelClassNameReflectionClass()->getName(),['Model'=>'']).'Type::'.$property->getName().'IsEnum();';
     $enum=false;
     eval('$enum='.$isEnumFunction);
     if($enum){
@@ -22,7 +21,8 @@ use <?=$this->getTableModelClassNameReflectionClass()->getNamespaceName()?>\enum
 use xltxlm\h5skin\Traits\PageBarHtml;
 use xltxlm\h5skin\SelectTPL;
 use kuaigeng\abconfig\vendor\xltxlm\h5skin\src\Traits\DatePicker;;
-use <?=$this->getClassName()?>Add;
+<?php if($this->isMakeAdd()){?>use <?=$this->getClassName()?>Add;<?php }?>
+
 ?>
 <div class="row">
     <div class="col-md-12">

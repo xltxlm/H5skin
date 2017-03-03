@@ -57,7 +57,6 @@ use xltxlm\h5skin\SelectTPL;
                                        id="<<?='?'?>= <?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>() ?>"
                                        name="<<?='?'?>= <?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>() ?>"
                                        value="<<?='?'?>= $this->get<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>()->get<?=$property->getName()?>() ?>"
-                                       required
                                        placeholder="<?=$fieldShowName?>">
                             <?php } ?>
                         </div>
