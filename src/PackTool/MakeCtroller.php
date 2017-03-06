@@ -187,59 +187,46 @@ final class MakeCtroller
 
 
         //1:先保证控制层的基准类一定存在
-        if (!is_file($classRealFile)) {
-            //先初始化类文件
-            ob_start();
-            include __DIR__.'/Template/Index.php';
-            file_put_contents($classRealFile, ob_get_clean());
-        }
+        $this->file_put_contents($classRealFile, __DIR__.'/Template/Index.php');
         $this->ReflectionClass = (new \ReflectionClass($this->getClassName()));
 
         //2:默认展示列表页面
         $tpRealFile = strtr($classRealFile, ['.php' => '.tpl.php']);
-        if (!is_file($tpRealFile)) {
-            //获取数据表的全部字段
-            ob_start();
-            include __DIR__."/Template/Index.tpl.php";
-            file_put_contents($tpRealFile, ob_get_clean());
-        }
+        $this->file_put_contents($tpRealFile, __DIR__."/Template/Index.tpl.php");
 
 
         //4:添加动作页面
-        if($this->isMakeAdd())
-        {
-            $addDoRealFile=strtr($classRealFile, ['.php' => 'Add.php']);
-            if(!is_file($addDoRealFile))
-            {
-                ob_start();
-                include __DIR__."/Template/Add.php";
-                file_put_contents($addDoRealFile, ob_get_clean());
-            }
-            $addDoRealFile=strtr($classRealFile, ['.php' => 'Add.tpl.php']);
-            if(!is_file($addDoRealFile))
-            {
-                ob_start();
-                include __DIR__."/Template/Add.tpl.php";
-                file_put_contents($addDoRealFile, ob_get_clean());
-            }
-            $addDoRealFile=strtr($classRealFile, ['.php' => 'AddDo.php']);
-            if(!is_file($addDoRealFile))
-            {
-                ob_start();
-                include __DIR__."/Template/AddDo.php";
-                file_put_contents($addDoRealFile, ob_get_clean());
-            }
+        if ($this->isMakeAdd()) {
+            $addDoRealFile = strtr($classRealFile, ['.php' => 'Add.php']);
+            $this->file_put_contents($addDoRealFile, __DIR__."/Template/Add.php");
+            $addDoRealFile = strtr($classRealFile, ['.php' => 'Add.tpl.php']);
+            $this->file_put_contents($addDoRealFile, __DIR__."/Template/Add.tpl.php");
+            $addDoRealFile = strtr($classRealFile, ['.php' => 'AddDo.php']);
+            $this->file_put_contents($addDoRealFile, __DIR__."/Template/AddDo.php");
         }
         //5:添加删除页面
-        if($this->isMakeDelete())
-        {
-            $deleteDoRealFile=strtr($classRealFile, ['.php' => 'DeleteDo.php']);
-            if(!is_file($deleteDoRealFile))
-            {
-                ob_start();
-                include __DIR__."/Template/DeleteDo.php";
-                file_put_contents($deleteDoRealFile, ob_get_clean());
-            }
+        if ($this->isMakeDelete()) {
+            $deleteDoRealFile = strtr($classRealFile, ['.php' => 'DeleteDo.php']);
+            $this->file_put_contents($deleteDoRealFile, __DIR__."/Template/DeleteDo.php");
         }
+    }
+
+    /**
+     * 同时写2份文件.临时文件的实时更新
+     * @param $classRealFile
+     * @param $templatePath
+     */
+    private function file_put_contents($classRealFile, $templatePath)
+    {
+        ob_start();
+        eval('include $templatePath;');
+        $ob_get_clean = ob_get_clean();
+        //1:先保证控制层的基准类一定存在
+        if (!is_file($classRealFile)) {
+            file_put_contents($classRealFile, $ob_get_clean);
+        }
+        $dir = dirname($classRealFile).'/temp/';
+        mkdir($dir);
+        file_put_contents($dir.basename($classRealFile), $ob_get_clean);
     }
 }
