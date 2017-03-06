@@ -3,11 +3,22 @@
     <div style="padding: 20px 30px; z-index: 999999; font-size: 16px; font-weight: 600; background: rgb(243, 156, 18);">
         <?= $error ?>
     </div>
+
+    <script>
+        $(function () {
+            setInterval(
+                function () {
+                    $('section.content').toggleClass('bg-red');
+                }
+                , 1000);
+        })
+    </script>
 <?php } ?>
 
 </section>
 <!-- /.content -->
 </div>
+
 
 <!-- /.content-wrapper -->
 <footer class="main-footer">

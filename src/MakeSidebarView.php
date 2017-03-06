@@ -22,7 +22,8 @@ final class MakeSidebarView extends Template
     /** @var  Object */
     protected $RunClass;
     /** @var string 运行代码的根目录 */
-    protected $rootDir = "";
+    protected $AppDir = "";
+    protected $SiterootDir = "";
     /** @var string 运行代码的命名空间 */
     protected $rootNamespce = "";
 
@@ -36,7 +37,7 @@ final class MakeSidebarView extends Template
         //自动加载请求类
         spl_autoload_register(function ($class) {
             if (strpos($class, 'Request') !== false) {
-                $filepath = $this->rootDir.strtr($class, [$this->rootNamespce => '', '\\' => '/', 'Request' => '.Request']).'.php';
+                $filepath = $this->AppDir.strtr($class, [$this->rootNamespce => '', '\\' => '/', 'Request' => '.Request']).'.php';
                 eval('include_once  $filepath;');
             }
         });
@@ -59,7 +60,9 @@ final class MakeSidebarView extends Template
     {
         $this->RunClass = $RunClass;
         $reflectionClass = (new \ReflectionClass($this->RunClass));
-        $this->rootDir = dirname($reflectionClass->getFileName());
+        $this->AppDir = dirname($reflectionClass->getFileName());
+        $this->SiterootDir = dirname(dirname($reflectionClass->getFileName())).'/Siteroot';
+        mkdir($this->SiterootDir);
         $this->rootNamespce = $reflectionClass->getNamespaceName();
         return $this;
     }
@@ -88,14 +91,19 @@ final class MakeSidebarView extends Template
     public function make()
     {
         //1:生成导航的运行html.php
-        $this->setSaveToFileName($this->rootDir.'/MakeSidebarView.tpl.php');
         $this->__invoke();
+        $this->setSaveToFileName($this->AppDir.'/MakeSidebarView.tpl.php');
         //2:拷贝分页类
-        mkdir($this->rootDir."/Setting");
+        mkdir($this->AppDir."/Setting");
         $page = strtr(file_get_contents(__DIR__.'/Setting/Page.php'), ["xltxlm\\h5skin\\Setting" => $this->rootNamespce.'\\Setting']);
-        file_put_contents($this->rootDir."/Setting/Page.php", $page);
+        file_put_contents($this->AppDir."/Setting/Page.php", $page);
         //3:拷贝静态资源
         (new Filesystem())
-            ->mirror(__DIR__.'/static/', $this->rootDir.'/../Siteroot/static/', null, ['override' => true]);
+            ->mirror(__DIR__.'/static/', $this->AppDir.'/../Siteroot/static/', null, ['override' => true]);
+        //拷贝入口页面
+        $index = $this->SiterootDir.'/index.php';
+        if (!is_file($index)) {
+            copy(__DIR__.'/index.php', $index);
+        }
     }
 }
