@@ -8,7 +8,7 @@
         $(function () {
             setInterval(
                 function () {
-                    $('section.content').toggleClass('bg-red');
+                    $('section.content-header').toggleClass('bg-red');
                 }
                 , 1000);
         })

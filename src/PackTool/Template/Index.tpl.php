@@ -1,6 +1,5 @@
 <?php /** @var \xltxlm\h5skin\PackTool\MakeCtroller $this */
-use kuaigeng\abconfig\vendor\xltxlm\h5skin\src\Traits\DatePicker;
-use xltxlm\h5skin\SelectTPL; ?>
+?>
 <<?='?'?>php
 /** @var <?=$this->getClassName()?> $this */
 use <?=$this->getClassName()?>;
@@ -20,7 +19,7 @@ use <?=$this->getTableModelClassNameReflectionClass()->getNamespaceName()?>\enum
 <?php }}?>
 use xltxlm\h5skin\Traits\PageBarHtml;
 use xltxlm\h5skin\SelectTPL;
-use kuaigeng\abconfig\vendor\xltxlm\h5skin\src\Traits\DatePicker;;
+use xltxlm\h5skin\Traits\DatePicker;;
 <?php if($this->isMakeAdd()){?>use <?=$this->getClassName()?>Add;<?php }?>
 
 ?>
@@ -30,7 +29,7 @@ use kuaigeng\abconfig\vendor\xltxlm\h5skin\src\Traits\DatePicker;;
         <div class="box box-primary">
             <div class="box-header with-border">
                 <h3 class="box-title"><?php if($this->isMakeAdd()){?><a type="button" class="btn bg-purple margin"
-                                                       href="<<?='?'?>= <?=$this->getShortName()?>Add::url() ?>">+添加新数据</a><?php }?></h3>
+                                                       href="<<?='?'?>= <?=$this->getShortName()?>Add::urlNoFollow() ?>">+添加新数据</a><?php }?></h3>
             </div>
             <!-- /.box-header -->
             <!-- form start -->
@@ -58,6 +57,7 @@ use kuaigeng\abconfig\vendor\xltxlm\h5skin\src\Traits\DatePicker;;
                             "全部"=>NULL
                         ]+Enum<?=$this->getShortName()?><?=ucfirst($property->getName())?>::ALL())
                                 ->setClassName('form-control')
+                                ->setName(<?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>())
                                 ->__invoke()?>
                     <?php }else{?>
                                 <input type="text"
@@ -68,6 +68,22 @@ use kuaigeng\abconfig\vendor\xltxlm\h5skin\src\Traits\DatePicker;;
                     <?php }?>
                     </div>
                     <?php }?>
+
+                    <!--  排序  -->
+                    <div class="form-group col-md-2 <<?='?'?>= $this->get<?=$this->getShortName()?>Request()->getWebPageOrderBy() ? 'has-error' : '' ?> ">
+                        <label  class="<<?='?'?>= $this->get<?=$this->getShortName()?>Request()->getWebPageOrderBy() ? 'label label-danger' : '' ?>" for="webPageOrderBy">
+                            排序依据
+                        </label>
+                        <<?='?'?> $ALLFields=(new <?=strtr($this->TableModelClassNameReflectionClass->getShortName(),['Model'=>''])?>Copy)()?>
+                        <<?='?'?>=(new SelectTPL())
+                            ->setOptions([
+                                    "排序"=>NULL
+                                ]+array_combine(array_values($ALLFields),array_keys($ALLFields)))
+                            ->setClassName('form-control')
+                            ->setName('webPageOrderBy')
+                            ->__invoke()?>
+                    </div>
+
 
                 </div>
                 <!-- /.box-body -->
@@ -132,4 +148,4 @@ use kuaigeng\abconfig\vendor\xltxlm\h5skin\src\Traits\DatePicker;;
 </div>
 
 
-<<?='?'?>= (new DatePicker($this))->setTimePicker(false)->__invoke() ?>
+<<?='?'?>= (new DatePicker($this))->setTimePicker(false)->setSingleDatePicker(false)->__invoke() ?>

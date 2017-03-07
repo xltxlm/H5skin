@@ -6,7 +6,7 @@
  * Time: 12:43.
  */
 
-namespace kuaigeng\abconfig\vendor\xltxlm\h5skin\src\Traits;
+namespace xltxlm\h5skin\Traits;
 
 use xltxlm\template\Template;
 
@@ -18,6 +18,8 @@ class DatePicker extends Template
 {
     protected $timePicker = false;
     protected $format = 'YYYYMMDD';
+    /** @var bool 不是区间选择 */
+    protected $singleDatePicker = false;
 
     /**
      * @return string
@@ -25,11 +27,30 @@ class DatePicker extends Template
     public function getFormat(): string
     {
         if ($this->timePicker) {
-            return $this->format="YYYYMMDDHHmmss";
+            return $this->format = "YYYYMMDDHHmmss";
         } else {
             return $this->format;
         }
     }
+
+    /**
+     * @return bool
+     */
+    public function isSingleDatePicker(): string
+    {
+        return $this->singleDatePicker == true ? 'true' : 'false';
+    }
+
+    /**
+     * @param bool $singleDatePicker
+     * @return DatePicker
+     */
+    public function setSingleDatePicker(bool $singleDatePicker): DatePicker
+    {
+        $this->singleDatePicker = $singleDatePicker;
+        return $this;
+    }
+
 
     /**
      * @return bool

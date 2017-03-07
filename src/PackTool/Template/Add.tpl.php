@@ -8,7 +8,7 @@
 */
 
 namespace <?=$this->getClassNameSpace()?>;
-use kuaigeng\abconfig\vendor\xltxlm\h5skin\src\Traits\DatePicker;
+use xltxlm\h5skin\Traits\DatePicker;
 use <?=strtr($this->TableModelClassNameReflectionClass->getName(),['Model'=>''])?>Copy;
 use <?=strtr($this->TableModelClassNameReflectionClass->getName(),['Model'=>''])?>Type;
 <?php foreach ($this->getTableModelClassNameReflectionClass()->getProperties() as $property){
@@ -50,6 +50,7 @@ use xltxlm\h5skin\SelectTPL;
                                 <<?='?'?>=(new SelectTPL())
                                 ->setOptions(Enum<?=$this->getShortName()?><?=ucfirst($property->getName())?>::ALL())
                                 ->setClassName('form-control')
+                                ->setName(<?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>())
                                 ->__invoke()?>
                             <?php }else{ ?>
                                 <input type="text"
@@ -74,5 +75,5 @@ use xltxlm\h5skin\SelectTPL;
     </div>
 </div>
 
-<<?='?'?>= (new DatePicker($this))->setTimePicker(false)->__invoke() ?>
+<<?='?'?>= (new DatePicker($this))->setTimePicker(false)->setSingleDatePicker(false)->__invoke() ?>
 

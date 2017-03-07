@@ -1,6 +1,6 @@
 <?php
-/** @var \kuaigeng\abconfig\vendor\xltxlm\h5skin\src\Traits\DatePicker $this */
-use \kuaigeng\abconfig\vendor\xltxlm\h5skin\src\Traits\DatePicker;
+/** @var \xltxlm\h5skin\Traits\DatePicker $this */
+use xltxlm\h5skin\Traits\DatePicker;
 
 ?>
 <script src="/static/js/moment.min.js"></script>
@@ -11,16 +11,22 @@ use \kuaigeng\abconfig\vendor\xltxlm\h5skin\src\Traits\DatePicker;
         var id = ".<?=DatePicker::daterangepicker()?>";
         $(id).daterangepicker({
             timePicker: <?=$this->isTimePicker()?>,
+            singleDatePicker:<?=$this->isSingleDatePicker()?>,
             autoUpdateInput: false,
             locale: {
                 format: '<?=$this->getFormat()?>'
             }
         });
 
+<?php if($this->isSingleDatePicker()=='false') {?>
         $(id).on('apply.daterangepicker', function (ev, picker) {
             $(this).val(picker.startDate.format('<?=$this->getFormat()?>') + ' - ' + picker.endDate.format('<?=$this->getFormat()?>'));
         });
-
+<?php }else{?>
+        $(id).on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(picker.startDate.format('<?=$this->getFormat()?>'));
+        });
+<?php }?>
         $(id).on('cancel.daterangepicker', function (ev, picker) {
             $(this).val('');
         });

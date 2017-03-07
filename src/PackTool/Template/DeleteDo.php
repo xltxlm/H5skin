@@ -10,6 +10,7 @@
 namespace <?=$this->getClassNameSpace()?>;
 
 use <?=strtr($this->getTableModelClassNameReflectionClass()->getName(),['Model'=>''])?>Update;
+use <?=$this->getTableModelClassNameReflectionClass()->getNamespaceName()?>\enum\Enum<?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Status;
 use xltxlm\helper\Ctroller\Unit\RunInvoke;
 
 /**
@@ -24,6 +25,8 @@ class <?=$this->getShortName()?>DeleteDo
     public function getDelete()
     {
         (new <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Update())
+            ->setStatus(Enum<?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Status::SHAN_CHU)
+            ->setDelete_time(date('c'))
             ->whereId($this->get<?=$this->getShortName()?>Request()->getId())
             ->__invoke();
         //写入成功之后,跳转到列表页面
