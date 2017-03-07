@@ -91,8 +91,8 @@ final class MakeSidebarView extends Template
     public function make()
     {
         //1:生成导航的运行html.php
-        $this->__invoke();
         $this->setSaveToFileName($this->AppDir.'/MakeSidebarView.tpl.php');
+        $this->__invoke();
         //2:拷贝分页类
         mkdir($this->AppDir."/Setting");
         $page = strtr(file_get_contents(__DIR__.'/Setting/Page.php'), ["xltxlm\\h5skin\\Setting" => $this->rootNamespce.'\\Setting']);
