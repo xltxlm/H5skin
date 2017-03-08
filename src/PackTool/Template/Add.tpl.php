@@ -1,4 +1,4 @@
-<?php /** @var \xltxlm\h5skin\PackTool\MakeCtroller $this */?>
+<?php /** @var \xltxlm\h5skin\PackTool\MakeCtroller $this */  ?>
 <<?='?'?>php
 /**
 * Created by PhpStorm.
@@ -9,6 +9,7 @@
 
 namespace <?=$this->getClassNameSpace()?>;
 use xltxlm\h5skin\Traits\DatePicker;
+use xltxlm\h5skin\Traits\Timepicker;
 use <?=strtr($this->TableModelClassNameReflectionClass->getName(),['Model'=>''])?>Copy;
 use <?=strtr($this->TableModelClassNameReflectionClass->getName(),['Model'=>''])?>Type;
 <?php foreach ($this->getTableModelClassNameReflectionClass()->getProperties() as $property){
@@ -54,7 +55,7 @@ use xltxlm\h5skin\SelectTPL;
                                 ->__invoke()?>
                             <?php }else{ ?>
                                 <input type="text"
-                                       class="form-control <<?='?'?>php if(<?=strtr($this->TableModelClassNameReflectionClass->getShortName(),['Model'=>''])?>Type::<?=$property->getName()?>IsDate()){?><<?='?'?>=DatePicker::daterangepicker()?><<?='?'?>php }?>"
+                                       class="form-control <<?='?'?>php if(<?=strtr($this->TableModelClassNameReflectionClass->getShortName(),['Model'=>''])?>Type::<?=$property->getName()?>IsDate()){?><<?='?'?>=DatePicker::daterangepicker()?><<?='?'?>php }?>  <<?='?'?>php if(<?=strtr($this->TableModelClassNameReflectionClass->getShortName(),['Model'=>''])?>Type::<?=$property->getName()?>IsTime()){?><<?='?'?>=Timepicker::getTimepickerCss()?><<?='?'?>php }?>"
                                        id="<<?='?'?>= <?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>() ?>"
                                        name="<<?='?'?>= <?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>() ?>"
                                        value="<<?='?'?>= $this->get<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>()->get<?=$property->getName()?>() ?>"
@@ -76,4 +77,4 @@ use xltxlm\h5skin\SelectTPL;
 </div>
 
 <<?='?'?>= (new DatePicker($this))->setTimePicker(false)->setSingleDatePicker(false)->__invoke() ?>
-
+<<?='?'?>= (new Timepicker($this))->setInterval(30)->__invoke() ?>

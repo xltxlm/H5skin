@@ -3,6 +3,7 @@
 <<?='?'?>php
 /** @var <?=$this->getClassName()?> $this */
 use <?=$this->getClassName()?>;
+use xltxlm\h5skin\Traits\Timepicker;
 use <?=$this->getClassName()?>RequestCopy;
 <?php if($this->isMakeDelete()){?>use <?=$this->getClassName()?>DeleteDo;<?php }?>
 
@@ -62,7 +63,7 @@ use xltxlm\h5skin\Traits\DatePicker;;
                                 ->__invoke()?>
                     <?php }else{?>
                                 <input type="text"
-                                       class="form-control <<?='?'?>php if(<?=strtr($this->TableModelClassNameReflectionClass->getShortName(),['Model'=>''])?>Type::<?=$property->getName()?>IsDate()){?><<?='?'?>=DatePicker::daterangepicker()?><<?='?'?>php }?>"
+                                       class="form-control <<?='?'?>php if(<?=strtr($this->TableModelClassNameReflectionClass->getShortName(),['Model'=>''])?>Type::<?=$property->getName()?>IsDate()){?><<?='?'?>=DatePicker::daterangepicker()?><<?='?'?>php }?>  <<?='?'?>php if(<?=strtr($this->TableModelClassNameReflectionClass->getShortName(),['Model'=>''])?>Type::<?=$property->getName()?>IsTime()){?><<?='?'?>=Timepicker::getTimepickerCss()?><<?='?'?>php }?>"
                                        name="<<?='?'?>= <?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>() ?>"
                                        value="<<?='?'?>=$this->get<?=$this->getShortName()?>Request()->get<?=$property->getName()?>()?>"
                                        id="<<?='?'?>= <?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>() ?>" placeholder="<<?='?'?>=(new <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Copy)()[<?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>()]?>">
@@ -151,3 +152,4 @@ use xltxlm\h5skin\Traits\DatePicker;;
 
 
 <<?='?'?>= (new DatePicker($this))->setTimePicker(false)->setSingleDatePicker(false)->__invoke() ?>
+<<?='?'?>= (new Timepicker($this))->setInterval(30)->__invoke() ?>
