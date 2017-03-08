@@ -28,7 +28,7 @@ final class MakeCtroller
     protected $ReflectionClass;
 
     /** @var array 除了数据库字段,还继续追加请求的字段 */
-    protected $AddRequestArgs = [];
+    protected $AddRequestArgs = ['webPageOrderBy'];
 
     /** @var bool 是否有添加页面流程 */
     protected $makeAdd = false;

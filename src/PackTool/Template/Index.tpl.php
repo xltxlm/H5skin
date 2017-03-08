@@ -56,6 +56,7 @@ use xltxlm\h5skin\Traits\DatePicker;;
                         ->setOptions([
                             "全部"=>NULL
                         ]+Enum<?=$this->getShortName()?><?=ucfirst($property->getName())?>::ALL())
+                                ->setDefault($this->get<?=$this->getShortName()?>Request()->get<?=ucfirst($property->getName())?>())
                                 ->setClassName('form-control')
                                 ->setName(<?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>())
                                 ->__invoke()?>
@@ -64,7 +65,7 @@ use xltxlm\h5skin\Traits\DatePicker;;
                                        class="form-control <<?='?'?>php if(<?=strtr($this->TableModelClassNameReflectionClass->getShortName(),['Model'=>''])?>Type::<?=$property->getName()?>IsDate()){?><<?='?'?>=DatePicker::daterangepicker()?><<?='?'?>php }?>"
                                        name="<<?='?'?>= <?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>() ?>"
                                        value="<<?='?'?>=$this->get<?=$this->getShortName()?>Request()->get<?=$property->getName()?>()?>"
-                                       id="<<?='?'?>= <?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>() ?>" placeholder="<?=$property->getName()?>">
+                                       id="<<?='?'?>= <?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>() ?>" placeholder="<<?='?'?>=(new <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Copy)()[<?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>()]?>">
                     <?php }?>
                     </div>
                     <?php }?>
@@ -80,6 +81,7 @@ use xltxlm\h5skin\Traits\DatePicker;;
                                     "排序"=>NULL
                                 ]+array_combine(array_values($ALLFields),array_keys($ALLFields)))
                             ->setClassName('form-control')
+                            ->setDefault($this->get<?=$this->getShortName()?>Request()->getWebPageOrderBy())
                             ->setName('webPageOrderBy')
                             ->__invoke()?>
                     </div>
