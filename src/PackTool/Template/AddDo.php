@@ -11,8 +11,10 @@ namespace <?=$this->getClassNameSpace()?>;
 
 use <?=strtr($this->getTableModelClassNameReflectionClass()->getName(),['Model'=>''])?>Update;
 use <?=strtr($this->getTableModelClassNameReflectionClass()->getName(),['Model'=>''])?>Insert;
+use <?=strtr($this->getTableModelClassNameReflectionClass()->getName(),['Model'=>''])?>logInsert;
+use <?=strtr($this->getTableModelClassNameReflectionClass()->getNamespaceName(),['Model'=>''])?>\enum\Enum<?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>logLogtype;
 use xltxlm\helper\Ctroller\Unit\RunInvoke;
-
+use xltxlm\h5skin\Request\UserCookieModel;
 /**
  * Class <?=$this->getShortName()?>AddDo
  */
@@ -30,14 +32,29 @@ class <?=$this->getShortName()?>AddDo
             $object = (new <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Update())
                 ->whereId($this->get<?=$this->getShortName()?>Request()->getId());
 
+            //记录日志
+            (new <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>logInsert())
+                ->setUsername((new UserCookieModel())->getUsername())
+                ->set<?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>id($this->get<?=$this->getShortName()?>Request()->getId())
+                ->setLogtype(Enum<?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>logLogtype::XIU_GAI)
+                ->__invoke();
         } else {
             $object = (new <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Insert());
         }
-        $object
+        $id = $object
 <?php foreach ($this->getTableModelClassNameReflectionClass()->getProperties() as $property){?>
             ->set<?=$property->getName()?>($this->get<?=$this->getShortName()?>Request()->get<?=$property->getName()?>())
 <?php }?>
             ->__invoke();
+
+        if (empty($this->get<?=$this->getShortName()?>Request()->getId())) {
+            //记录日志
+            (new <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>logInsert())
+                ->setUsername((new UserCookieModel())->getUsername())
+                ->set<?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>id($id)
+                ->setLogtype(Enum<?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>logLogtype::CHUANG_JIAN)
+                ->__invoke();
+        }
         //写入成功之后,跳转到列表页面
         <?=$this->getShortName()?>::gourlNoFollow();
     }

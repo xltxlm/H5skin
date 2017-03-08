@@ -119,7 +119,7 @@ use xltxlm\h5skin\Traits\DatePicker;;
                         <?php foreach ($this->TableModelClassNameReflectionClass->getProperties() as $property){ ob_start();?>
                         <<?='?'?>=(new <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Copy)()[<?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>()]?>
                         <?php  $fieldShowName=trim(ob_get_clean()); ?>
-                        <th><?=$fieldShowName?></th>
+                            <!--  <?=$property->getName()?>  --><th><?=$fieldShowName?></th>
                         <?php }?>
                         <th>操作</th>
                     </tr>
@@ -128,8 +128,7 @@ use xltxlm\h5skin\Traits\DatePicker;;
                     <<?='?'?>php foreach ($this->get<?=$this->TableModelClassNameReflectionClass->getShortName()?>() as $model) { ?>
                         <tr>
                             <?php foreach ($this->TableModelClassNameReflectionClass->getProperties() as $property){?>
-                                <!--  <?=$property->getName()?>  -->
-                            <td><<?='?'?>= $model->get<?=ucfirst($property->name)?>() ?></td>
+                                <!--  <?=$property->getName()?>  --><td><<?='?'?>= $model->get<?=ucfirst($property->name)?>() ?></td>
                             <?php }?>
                             <td>
                                 <?php if($this->isMakeDelete()){?><a href="<<?='?'?>= <?=$this->getShortName()?>DeleteDo::url([<?=$this->getShortName()?>RequestCopy::id() => $model->getId()]) ?>"
