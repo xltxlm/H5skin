@@ -52,6 +52,7 @@ use xltxlm\h5skin\SelectTPL;
                                 ->setOptions(Enum<?=$this->getShortName()?><?=ucfirst($property->getName())?>::ALL())
                                 ->setClassName('form-control')
                                 ->setName(<?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>())
+                                ->setDefault($this->get<?=$this->getShortName()?>Request()->get<?=ucfirst($property->getName())?>())
                                 ->__invoke()?>
                             <?php }else{ ?>
                                 <input type="text"
