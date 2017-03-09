@@ -1,4 +1,4 @@
-<?php /** @var  \kuaigeng\pushconfig\vendor\xltxlm\h5skin\src\Traits\VuePatchJs $this */ ?>
+<?php /** @var  \xltxlm\h5skin\Traits\VuePatchJs $this */ ?>
 
 <script>
     var vueel = (new Vue({

@@ -6,7 +6,7 @@
  * Time: 18:32
  */
 
-namespace kuaigeng\pushconfig\vendor\xltxlm\h5skin\src\Traits;
+namespace xltxlm\h5skin\Traits;
 
 use xltxlm\template\Template;
 
