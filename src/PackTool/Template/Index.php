@@ -20,6 +20,8 @@ use xltxlm\h5skin\Traits\PageObjectTrait;
 use xltxlm\helper\Ctroller\Unit\RunInvoke;
 use xltxlm\template\HtmlTemplate;
 use xltxlm\ormTool\Template\PdoAction;
+use xltxlm\ssoclient\LoginTrait;
+
 /**
  * Class <?=$this->getShortName()?>
 
@@ -28,6 +30,7 @@ class <?=$this->getShortName()?>
 
 {
     use RunInvoke;
+    use LoginTrait;
     use HeaderTrait;
     use HtmlTemplate;
     use FooterTrait;

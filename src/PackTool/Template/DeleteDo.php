@@ -15,6 +15,7 @@ use <?=strtr($this->getTableModelClassNameReflectionClass()->getName(),['Model'=
 use <?=$this->getTableModelClassNameReflectionClass()->getNamespaceName()?>\enum\Enum<?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Status;
 use xltxlm\helper\Ctroller\Unit\RunInvoke;
 use xltxlm\h5skin\Request\UserCookieModel;
+use xltxlm\ssoclient\LoginTrait;
 
 /**
  * Class <?=$this->getShortName()?>DeleteDo
@@ -22,6 +23,7 @@ use xltxlm\h5skin\Request\UserCookieModel;
 class <?=$this->getShortName()?>DeleteDo
 {
     use RunInvoke;
+    use LoginTrait;
     use <?=$this->getShortName()?>RequestTrait;
 
 

@@ -16,6 +16,7 @@ use xltxlm\h5skin\HeaderTrait;
 use xltxlm\helper\Ctroller\Unit\RunInvoke;
 use xltxlm\helper\Hclass\MergeObject;
 use xltxlm\template\HtmlTemplate;
+use xltxlm\ssoclient\LoginTrait;
 
 /**
  * 添加AB测试内容
@@ -24,6 +25,7 @@ use xltxlm\template\HtmlTemplate;
 class <?=$this->getShortName()?>Add
 {
     use RunInvoke;
+    use LoginTrait;
     use HeaderTrait;
     use HtmlTemplate;
     use FooterTrait;
