@@ -133,7 +133,7 @@ class UserCookieModel
 
     public function makeCookie()
     {
-        setcookie('username', $this->getUsername(), 0, '/');
-        setcookie('sign', $this->getSign(), 0, '/');
+        setcookie('username', $_COOKIE['username'] = $this->getUsername(), 0, '/');
+        setcookie('sign', $_COOKIE['sign'] = $this->getSign(), 0, '/');
     }
 }
