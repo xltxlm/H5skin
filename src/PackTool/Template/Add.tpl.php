@@ -10,7 +10,7 @@
 namespace <?=$this->getClassNameSpace()?>;
 use xltxlm\h5skin\Traits\DatePicker;
 use xltxlm\h5skin\Traits\Timepicker;
-use <?=strtr($this->TableModelClassNameReflectionClass->getName(),['Model'=>''])?>Copy;
+use <?=$this->TableModelClassNameReflectionClass->getName()?>;
 use <?=strtr($this->TableModelClassNameReflectionClass->getName(),['Model'=>''])?>Type;
 <?php foreach ($this->getTableModelClassNameReflectionClass()->getProperties() as $property){
     $isEnumFunction=strtr($this->TableModelClassNameReflectionClass->getName(),['Model'=>'']).'Type::'.$property->getName().'IsEnum();';
@@ -39,7 +39,7 @@ use xltxlm\h5skin\SelectTPL;
     $enum=false;
     eval('$enum='.$isEnumFunction);
     ob_start();?>
-    <<?='?'?>=(new <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Copy)()[<?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>()]?>
+    <<?='?'?>=(new <?=$this->getTableModelClassNameReflectionClass()->getShortName()?>)()[<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::<?=$property->getName()?>()]?>
     <?php  $fieldShowName=trim(ob_get_clean()); ?>
 
 
@@ -51,14 +51,14 @@ use xltxlm\h5skin\SelectTPL;
                                 <<?='?'?>=(new SelectTPL())
                                 ->setOptions(Enum<?=$this->getShortName()?><?=ucfirst($property->getName())?>::ALL())
                                 ->setClassName('form-control')
-                                ->setName(<?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>())
+                                ->setName(<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::<?=$property->getName()?>())
                                 ->setDefault($this->get<?=$this->getShortName()?>Request()->get<?=ucfirst($property->getName())?>())
                                 ->__invoke()?>
                             <?php }else{ ?>
                                 <input type="text"
                                        class="form-control <<?='?'?>php if(<?=strtr($this->TableModelClassNameReflectionClass->getShortName(),['Model'=>''])?>Type::<?=$property->getName()?>IsDate()){?><<?='?'?>=DatePicker::daterangepicker()?><<?='?'?>php }?>  <<?='?'?>php if(<?=strtr($this->TableModelClassNameReflectionClass->getShortName(),['Model'=>''])?>Type::<?=$property->getName()?>IsTime()){?><<?='?'?>=Timepicker::getTimepickerCss()?><<?='?'?>php }?>"
-                                       id="<<?='?'?>= <?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>() ?>"
-                                       name="<<?='?'?>= <?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>() ?>"
+                                       id="<<?='?'?>= <?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::<?=$property->getName()?>() ?>"
+                                       name="<<?='?'?>= <?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::<?=$property->getName()?>() ?>"
                                        value="<<?='?'?>= $this->get<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>()->get<?=$property->getName()?>() ?>"
                                        placeholder="<?=$fieldShowName?>">
                             <?php } ?>

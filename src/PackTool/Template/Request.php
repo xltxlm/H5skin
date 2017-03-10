@@ -12,8 +12,13 @@ use xltxlm\helper\Ctroller\Request\Request;
 
 class <?=$this->getShortName()?>Request
 {
-    use Request;
-    use <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Base;
+    use Request, <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Base
+    {
+        Request::varName insteadof <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Base;
+        Request::selfInstance insteadof <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Base;
+        Request::load insteadof <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Base;
+        Request::export insteadof <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Base;
+    }
     use <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Getset;
 
 <?php foreach ($this->getAddRequestArgs() as $addRequestArg){?>

@@ -4,11 +4,10 @@
 /** @var <?=$this->getClassName()?> $this */
 use <?=$this->getClassName()?>;
 use xltxlm\h5skin\Traits\Timepicker;
-use <?=$this->getClassName()?>RequestCopy;
 <?php if($this->isMakeDelete()){?>use <?=$this->getClassName()?>DeleteDo;<?php }?>
 
 use <?=strtr($this->getTableModelClassNameReflectionClass()->getName(),['Model'=>''])?>Type;
-use <?=strtr($this->getTableModelClassNameReflectionClass()->getName(),['Model'=>''])?>Copy;
+use <?=$this->getTableModelClassNameReflectionClass()->getName()?>;
 <?php foreach ($this->getTableModelClassNameReflectionClass()->getProperties() as $property){
     $isEnumFunction=strtr($this->getTableModelClassNameReflectionClass()->getName(),['Model'=>'']).'Type::'.$property->getName().'IsEnum();';
     $enum=false;
@@ -43,7 +42,7 @@ use xltxlm\h5skin\Traits\DatePicker;;
                         eval('$enum='.$isEnumFunction);
                         ob_start();
                      ?>
-                        <<?='?'?>=(new <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Copy)()[<?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>()]?>
+                        <<?='?'?>=(new <?=$this->getTableModelClassNameReflectionClass()->getShortName()?>)()[<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::<?=$property->getName()?>()]?>
                         <?php  $fieldShowName=trim(ob_get_clean()); ?>
 
 
@@ -59,14 +58,14 @@ use xltxlm\h5skin\Traits\DatePicker;;
                         ]+Enum<?=$this->getShortName()?><?=ucfirst($property->getName())?>::ALL())
                                 ->setDefault($this->get<?=$this->getShortName()?>Request()->get<?=ucfirst($property->getName())?>())
                                 ->setClassName('form-control')
-                                ->setName(<?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>())
+                                ->setName(<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::<?=$property->getName()?>())
                                 ->__invoke()?>
                     <?php }else{?>
                                 <input type="text"
                                        class="form-control <<?='?'?>php if(<?=strtr($this->TableModelClassNameReflectionClass->getShortName(),['Model'=>''])?>Type::<?=$property->getName()?>IsDate()){?><<?='?'?>=DatePicker::daterangepicker()?><<?='?'?>php }?>  <<?='?'?>php if(<?=strtr($this->TableModelClassNameReflectionClass->getShortName(),['Model'=>''])?>Type::<?=$property->getName()?>IsTime()){?><<?='?'?>=Timepicker::getTimepickerCss()?><<?='?'?>php }?>"
-                                       name="<<?='?'?>= <?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>() ?>"
+                                       name="<<?='?'?>= <?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::<?=$property->getName()?>() ?>"
                                        value="<<?='?'?>=$this->get<?=$this->getShortName()?>Request()->get<?=$property->getName()?>()?>"
-                                       id="<<?='?'?>= <?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>() ?>" placeholder="<<?='?'?>=(new <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Copy)()[<?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>()]?>">
+                                       id="<<?='?'?>= <?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::<?=$property->getName()?>() ?>" placeholder="<<?='?'?>=(new <?=$this->getTableModelClassNameReflectionClass()->getShortName()?>)()[<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::<?=$property->getName()?>()]?>">
                     <?php }?>
                     </div>
                     <?php }?>
@@ -76,7 +75,7 @@ use xltxlm\h5skin\Traits\DatePicker;;
                         <label  class="<<?='?'?>= $this->get<?=$this->getShortName()?>Request()->getWebPageOrderBy() ? 'label label-danger' : '' ?>" for="webPageOrderBy">
                             排序依据
                         </label>
-                        <<?='?'?> $ALLFields=(new <?=strtr($this->TableModelClassNameReflectionClass->getShortName(),['Model'=>''])?>Copy)()?>
+                        <<?='?'?> $ALLFields=(new <?=$this->TableModelClassNameReflectionClass->getShortName()?>)()?>
                         <<?='?'?>=(new SelectTPL())
                             ->setOptions([
                                     "排序"=>NULL
@@ -117,7 +116,7 @@ use xltxlm\h5skin\Traits\DatePicker;;
                     <thead>
                     <tr>
                         <?php foreach ($this->TableModelClassNameReflectionClass->getProperties() as $property){ ob_start();?>
-                        <<?='?'?>=(new <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>Copy)()[<?=$this->getShortName()?>RequestCopy::<?=$property->getName()?>()]?>
+                        <<?='?'?>=(new <?=$this->getTableModelClassNameReflectionClass()->getShortName()?>)()[<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::<?=$property->getName()?>()]?>
                         <?php  $fieldShowName=trim(ob_get_clean()); ?>
                             <!--  <?=$property->getName()?>  --><th><?=$fieldShowName?></th>
                         <?php }?>
@@ -131,10 +130,10 @@ use xltxlm\h5skin\Traits\DatePicker;;
                                 <!--  <?=$property->getName()?>  --><td><<?='?'?>= $model->get<?=ucfirst($property->name)?>() ?></td>
                             <?php }?>
                             <td>
-                                <?php if($this->isMakeDelete()){?><a href="<<?='?'?>= <?=$this->getShortName()?>DeleteDo::url([<?=$this->getShortName()?>RequestCopy::id() => $model->getId()]) ?>"
+                                <?php if($this->isMakeDelete()){?><a href="<<?='?'?>= <?=$this->getShortName()?>DeleteDo::url([<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::id() => $model->getId()]) ?>"
                                    onclick="return confirm('确认删除?')">删除</a><?php }?>
 
-                                <?php if($this->isMakeAdd()){?><a href="<<?='?'?>= <?=$this->getShortName()?>Add::url([<?=$this->getShortName()?>RequestCopy::id() => $model->getId()]) ?>"
+                                <?php if($this->isMakeAdd()){?><a href="<<?='?'?>= <?=$this->getShortName()?>Add::url([<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::id() => $model->getId()]) ?>"
                                 >编辑</a><?php }?>
                             </td>
                         </tr>

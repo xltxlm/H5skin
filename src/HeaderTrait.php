@@ -38,6 +38,6 @@ trait HeaderTrait
 
     final public function getHeader()
     {
-        include __DIR__.'/HeaderView.tpl.php';
+        include __DIR__.'/Header.tpl.php';
     }
 }
