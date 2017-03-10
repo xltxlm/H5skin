@@ -177,10 +177,6 @@ final class MakeCtroller
         include __DIR__."/Template/Request.php";
         file_put_contents($requestRealFile, ob_get_clean());
 
-        (new CopyObjectAttributeNameMakeTool(static::$rootClass))
-            ->setClassNames($this->getClassName().'Request')
-            ->__invoke();
-
         (new ObjectMakeTrait(static::$rootClass))
             ->setClassName($this->getClassName().'Request')
             ->__invoke();

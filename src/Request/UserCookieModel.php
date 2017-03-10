@@ -136,4 +136,9 @@ class UserCookieModel
         setcookie('username', $_COOKIE['username'] = $this->getUsername(), 0, '/');
         setcookie('sign', $_COOKIE['sign'] = $this->getSign(), 0, '/');
     }
+
+    public function clearCookie()
+    {
+        setcookie('sign', $_COOKIE['sign'] = "", 0, '/');
+    }
 }
