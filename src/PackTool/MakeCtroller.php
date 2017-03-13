@@ -205,6 +205,9 @@ final class MakeCtroller
             $deleteDoRealFile = strtr($classRealFile, ['.php' => 'DeleteDo.php']);
             $this->file_put_contents($deleteDoRealFile, __DIR__."/Template/DeleteDo.php");
         }
+        //6:Excel下载页面
+        $ExcelRealFile = strtr($classRealFile, ['.php' => 'Excel.php']);
+        $this->file_put_contents($ExcelRealFile, __DIR__.'/Template/Excel.php');
     }
 
     /**
@@ -212,13 +215,13 @@ final class MakeCtroller
      * @param $classRealFile
      * @param $templatePath
      */
-    private function file_put_contents($classRealFile, $templatePath)
+    private function file_put_contents($classRealFile, $templatePath, $orverWrite = false)
     {
         ob_start();
         eval('include $templatePath;');
         $ob_get_clean = ob_get_clean();
         //1:先保证控制层的基准类一定存在
-        if (!is_file($classRealFile)) {
+        if (!is_file($classRealFile) || $orverWrite) {
             file_put_contents($classRealFile, $ob_get_clean);
         }
         $dir = dirname($classRealFile).'/temp/';

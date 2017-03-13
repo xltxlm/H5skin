@@ -17,6 +17,7 @@ use <?=$this->getTableModelClassNameReflectionClass()->getName()?>;
 use <?=$this->getTableModelClassNameReflectionClass()->getNamespaceName()?>\enum\Enum<?=$this->getShortName()?><?=ucfirst($property->getName())?>;
 
 <?php }}?>
+use <?=$this->getClassName()?>Excel;
 use xltxlm\h5skin\Traits\PageBarHtml;
 use xltxlm\h5skin\SelectTPL;
 use xltxlm\h5skin\Traits\DatePicker;;
@@ -92,6 +93,7 @@ use xltxlm\h5skin\Traits\DatePicker;;
 
                 <div class="box-footer">
                     <button type="submit" class="btn btn-primary">搜索数据</button>
+                    <<?='?'?>php if(is_file(__DIR__.'/<?=$this->getShortName()?>Excel.php')){?><a  href="<<?='?'?>=<?=$this->getShortName()?>Excel::url()?>" class="btn btn-primary">当前页面数据另存为Excel</a><<?='?'?>php } ?>
                 </div>
             </form>
         </div>
