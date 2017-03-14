@@ -105,8 +105,5 @@ final class MakeSidebarView extends Template
         if (!is_file($index)) {
             copy(__DIR__.'/index.php', $index);
         }
-        //拷贝Docker打包文件
-        copy(__DIR__.'/Dockerfile', dirname($this->SiterootDir).'/Dockerfile');
-        copy(__DIR__.'/docker-entrypoint.sh', dirname($this->SiterootDir).'/docker-entrypoint.sh');
     }
 }

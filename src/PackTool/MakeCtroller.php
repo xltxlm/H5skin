@@ -34,6 +34,27 @@ final class MakeCtroller
     protected $makeAdd = false;
     /** @var bool 是否有删除页面流程 */
     protected $makeDelete = false;
+    /** @var bool 是否为报表类的页面 */
+    protected $excel = false;
+
+    /**
+     * @return bool
+     */
+    public function isExcel(): bool
+    {
+        return $this->excel;
+    }
+
+    /**
+     * @param bool $excel
+     * @return MakeCtroller
+     */
+    public function setExcel(bool $excel): MakeCtroller
+    {
+        $this->excel = $excel;
+        return $this;
+    }
+
 
     /**
      * @return bool
@@ -167,7 +188,7 @@ final class MakeCtroller
     public function __invoke()
     {
         $diffPath = strtr($this->getClassName(), [static::$rootNamespce => '']);
-        $classRealFile = static::$rootDir.$diffPath.'.php';
+        $classRealFile = strtr(static::$rootDir.$diffPath.'.php', ['\\' => '/']);
         $this->shortName = end(explode('\\', $this->getClassName()));
         $this->classNameSpace = strtr($this->getClassName(), ['\\'.$this->shortName => ""]);
 
@@ -206,8 +227,10 @@ final class MakeCtroller
             $this->file_put_contents($deleteDoRealFile, __DIR__."/Template/DeleteDo.php");
         }
         //6:Excel下载页面
-        $ExcelRealFile = strtr($classRealFile, ['.php' => 'Excel.php']);
-        $this->file_put_contents($ExcelRealFile, __DIR__.'/Template/Excel.php');
+        if ($this->isExcel()) {
+            $ExcelRealFile = strtr($classRealFile, ['.php' => 'Excel.php']);
+            $this->file_put_contents($ExcelRealFile, __DIR__.'/Template/Excel.php');
+        }
     }
 
     /**
