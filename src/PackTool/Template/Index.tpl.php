@@ -38,6 +38,7 @@ use xltxlm\h5skin\Traits\DatePicker;;
                 <div class="box-body">
 
                     <?php foreach ($this->getTableModelClassNameReflectionClass()->getProperties() as $property){
+                        if($this->isExcel() && strpos($property->getName(),'old')===0 || $property->getName()=='elasticsearch'){continue;}
                         $isEnumFunction=strtr($this->getTableModelClassNameReflectionClass()->getName(),['Model'=>'']).'Type::'.$property->getName().'IsEnum();';
                         $enum=false;
                         eval('$enum='.$isEnumFunction);
@@ -117,7 +118,7 @@ use xltxlm\h5skin\Traits\DatePicker;;
                 <table class="table table-hover">
                     <thead>
                     <tr>
-                        <?php foreach ($this->TableModelClassNameReflectionClass->getProperties() as $property){ ob_start();?>
+                        <?php foreach ($this->TableModelClassNameReflectionClass->getProperties() as $property){ if($this->isExcel() && strpos($property->getName(),'old')===0 || $property->getName()=='elasticsearch'){continue;} ob_start();?>
                         <<?='?'?>=(new <?=$this->getTableModelClassNameReflectionClass()->getShortName()?>)()[<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::<?=$property->getName()?>()]?>
                         <?php  $fieldShowName=trim(ob_get_clean()); ?>
                             <!--  <?=$property->getName()?>  --><th><?=$fieldShowName?></th>
@@ -128,7 +129,7 @@ use xltxlm\h5skin\Traits\DatePicker;;
                     <tbody>
                     <<?='?'?>php foreach ($this->get<?=$this->TableModelClassNameReflectionClass->getShortName()?>() as $model) { ?>
                         <tr>
-                            <?php foreach ($this->TableModelClassNameReflectionClass->getProperties() as $property){?>
+                            <?php foreach ($this->TableModelClassNameReflectionClass->getProperties() as $property){ if($this->isExcel() && strpos($property->getName(),'old')===0 || $property->getName()=='elasticsearch'){continue;}?>
                                 <!--  <?=$property->getName()?>  --><td><<?='?'?>= $model->get<?=ucfirst($property->name)?>() ?></td>
                             <?php }?>
                             <td>

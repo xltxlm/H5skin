@@ -37,6 +37,28 @@ final class MakeCtroller
     /** @var bool 是否为报表类的页面 */
     protected $excel = false;
 
+    /** @var bool 是否配置同步到elasticsearch */
+    protected $elasticsearchCrontab = false;
+
+    /**
+     * @return bool
+     */
+    public function isElasticsearchCrontab(): bool
+    {
+        return $this->elasticsearchCrontab;
+    }
+
+    /**
+     * @param bool $elasticsearchCrontab
+     * @return MakeCtroller
+     */
+    public function setElasticsearchCrontab(bool $elasticsearchCrontab): MakeCtroller
+    {
+        $this->elasticsearchCrontab = $elasticsearchCrontab;
+        return $this;
+    }
+
+
     /**
      * @return bool
      */
@@ -231,6 +253,16 @@ final class MakeCtroller
             $ExcelRealFile = strtr($classRealFile, ['.php' => 'Excel.php']);
             $this->file_put_contents($ExcelRealFile, __DIR__.'/Template/Excel.php');
         }
+        //7:配置定时加载数据任务
+
+        if ($this->isElasticsearchCrontab()) {
+            $Crontab = dirname($classRealFile).'/temp/Crontab/';
+            mkdir($Crontab);
+            ob_start();
+            include __DIR__.'/Template/Crontab/LoadDataToElatic.php';
+            file_put_contents($Crontab.'/'.$this->getShortName().'.php', ob_get_clean());
+        }
+
     }
 
     /**

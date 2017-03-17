@@ -24,7 +24,7 @@ final class <?=$this->getShortName()?>Excel extends <?=$this->getShortName()?>
         $excelheader = [];
 <?php foreach ($this->getTableModelClassNameReflectionClass()->getProperties() as $property){
 //如果标题头有包含old开头的,不要显示
-    if(strpos($property->getName(),'old')===0)
+    if(strpos($property->getName(),'old')===0 || $property->getName()=='elasticsearch')
     {
         continue;
     }
@@ -36,7 +36,7 @@ final class <?=$this->getShortName()?>Excel extends <?=$this->getShortName()?>
         array_walk($get<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>, function (&$item, $key) {
             eval('$item = $item->__toArray();');
             foreach ($item as $key => $value) {
-                if (strpos($key, 'old') === 0) {
+                if (strpos($key, 'old') === 0 || $key=='elasticsearch') {
                     unset($item[$key]);
                 }
             }
