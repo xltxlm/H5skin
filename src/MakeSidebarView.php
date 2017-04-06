@@ -105,5 +105,6 @@ final class MakeSidebarView extends Template
         if (!is_file($index)) {
             copy(__DIR__.'/index.php', $index);
         }
+        //todo:拷贝推出登录类
     }
 }

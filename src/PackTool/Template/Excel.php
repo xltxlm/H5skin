@@ -24,7 +24,7 @@ final class <?=$this->getShortName()?>Excel extends <?=$this->getShortName()?>
         $excelheader = [];
 <?php foreach ($this->getTableModelClassNameReflectionClass()->getProperties() as $property){
 //如果标题头有包含old开头的,不要显示
-    if(strpos($property->getName(),'old')===0 || $property->getName()=='elasticsearch')
+    if(strpos($property->getName(),'elasticsearch')===0)
     {
         continue;
     }
@@ -36,7 +36,7 @@ final class <?=$this->getShortName()?>Excel extends <?=$this->getShortName()?>
         array_walk($get<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>, function (&$item, $key) {
             eval('$item = $item->__toArray();');
             foreach ($item as $key => $value) {
-                if (strpos($key, 'old') === 0 || $key=='elasticsearch') {
+                if (strpos($key, 'elasticsearch') === 0) {
                     unset($item[$key]);
                 }
             }
@@ -48,7 +48,5 @@ final class <?=$this->getShortName()?>Excel extends <?=$this->getShortName()?>
             ->setData($get<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>)
             ->setFilename('<?=$this->getShortName()?>Excel.xlsx')
             ->__invoke();
-        flush();
-        die;
     }
 }

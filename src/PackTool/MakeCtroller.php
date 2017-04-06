@@ -2,12 +2,14 @@
 
 namespace xltxlm\h5skin\PackTool;
 
+use xltxlm\elasticsearch\Unit\ElasticsearchConfig;
 use xltxlm\helper\Ctroller\LoadClassRegister;
 use xltxlm\helper\Hclass\CopyObjectAttributeNameMakeTool;
 use xltxlm\helper\Hclass\ObjectMakeTrait;
+use xltxlm\redis\Config\RedisConfig;
 
 /**
- * 一个展示页面,一个搜索提交动作
+ * 一个展示页面,一个搜索提交动作,生成的表都必须有一个自增id
  * Class ShowAndSaerch.
  */
 final class MakeCtroller
@@ -36,23 +38,128 @@ final class MakeCtroller
     protected $makeDelete = false;
     /** @var bool 是否为报表类的页面 */
     protected $excel = false;
+    /** @var bool 是否生成ajax查询接口 */
+    protected $ajax = false;
+    /** @var bool 页面数据是否可以动态编辑 */
+    protected $ajaxEdit = false;
 
-    /** @var bool 是否配置同步到elasticsearch */
-    protected $elasticsearchCrontab = false;
+    /** @var ElasticsearchConfig 是否配置同步到elasticsearch */
+    protected $elasticsearchCrontab;
+    /** @var array 可以编辑的字段 */
+    protected $AjaxEditField=[];
+    /** @var bool 完全处在编辑状态 */
+    protected $AjaxEditOnly=false;
+    /** @var  RedisConfig 开启审核的时候,redis服务的配置 */
+    protected $redisConfig;
+
+    /**
+     * @return RedisConfig
+     */
+    public function getRedisConfig(): RedisConfig
+    {
+        return $this->redisConfig;
+    }
+
+    /**
+     * @param RedisConfig $redisConfig
+     * @return MakeCtroller
+     */
+    public function setRedisConfig(RedisConfig $redisConfig): MakeCtroller
+    {
+        $this->redisConfig = $redisConfig;
+        return $this;
+    }
+
 
     /**
      * @return bool
      */
-    public function isElasticsearchCrontab(): bool
+    public function isAjaxEditOnly(): bool
+    {
+        return $this->AjaxEditOnly;
+    }
+
+    /**
+     * @param bool $AjaxEditOnly
+     * @return MakeCtroller
+     */
+    public function setAjaxEditOnly(bool $AjaxEditOnly): MakeCtroller
+    {
+        $this->AjaxEditOnly = $AjaxEditOnly;
+        return $this;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getAjaxEditField(): array
+    {
+        return $this->AjaxEditField;
+    }
+
+    /**
+     * @param array $AjaxEditField
+     * @return MakeCtroller
+     */
+    public function setAjaxEditField(string $AjaxEditField): MakeCtroller
+    {
+        $this->AjaxEditField[] = $AjaxEditField;
+        return $this;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isAjaxEdit(): bool
+    {
+        return $this->ajaxEdit;
+    }
+
+    /**
+     * @param bool $ajaxEdit
+     * @return MakeCtroller
+     */
+    public function setAjaxEdit(bool $ajaxEdit): MakeCtroller
+    {
+        $this->ajaxEdit = $ajaxEdit;
+        return $this;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isAjax(): bool
+    {
+        return $this->ajax;
+    }
+
+    /**
+     * @param bool $ajax
+     * @return MakeCtroller
+     */
+    public function setAjax(bool $ajax): MakeCtroller
+    {
+        $this->ajax = $ajax;
+        return $this;
+    }
+
+
+    /**
+     * @return ElasticsearchConfig
+     */
+    public function getElasticsearchCrontab()
     {
         return $this->elasticsearchCrontab;
     }
 
     /**
-     * @param bool $elasticsearchCrontab
+     * @param ElasticsearchConfig $elasticsearchCrontab
      * @return MakeCtroller
      */
-    public function setElasticsearchCrontab(bool $elasticsearchCrontab): MakeCtroller
+    public function setElasticsearchCrontab(ElasticsearchConfig $elasticsearchCrontab): MakeCtroller
     {
         $this->elasticsearchCrontab = $elasticsearchCrontab;
         return $this;
@@ -255,12 +362,23 @@ final class MakeCtroller
         }
         //7:配置定时加载数据任务
 
-        if ($this->isElasticsearchCrontab()) {
-            $Crontab = dirname($classRealFile).'/temp/Crontab/';
-            mkdir($Crontab);
+        if ($this->getElasticsearchCrontab()) {
+            mkdir(self::$rootDir.'/../Crontab/LoadData/');
             ob_start();
             include __DIR__.'/Template/Crontab/LoadDataToElatic.php';
-            file_put_contents($Crontab.'/'.$this->getShortName().'.php', ob_get_clean());
+            file_put_contents(self::$rootDir.'/../Crontab/LoadData/'.$this->getShortName().'.php', ob_get_clean());
+        }
+
+        //8:ajax页面生成
+        if ($this->isAjax()) {
+            $AjaxRealFile = strtr($classRealFile, ['.php' => 'Ajax.php']);
+            $this->file_put_contents($AjaxRealFile, __DIR__.'/Template/Ajax.php');
+        }
+        //9:页面数据可以编辑
+        if($this->isAjaxEdit())
+        {
+            $AjaxRealFile = strtr($classRealFile, ['.php' => 'AjaxEdit.php']);
+            $this->file_put_contents($AjaxRealFile, __DIR__.'/Template/AjaxEdit.php');
         }
 
     }

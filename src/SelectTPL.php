@@ -27,6 +27,47 @@ class SelectTPL extends Template
     protected $default = '';
     /** @var bool  是否是复选框 */
     protected $multiple = false;
+    /** @var bool 是否允许下拉框可以筛选 */
+    protected $select2 = true;
+    /** @var bool 是否快速选择 */
+    protected $quick = false;
+
+    /**
+     * @return bool
+     */
+    public function isQuick(): bool
+    {
+        return $this->quick;
+    }
+
+    /**
+     * @param bool $quick
+     * @return SelectTPL
+     */
+    public function setQuick(bool $quick): SelectTPL
+    {
+        $this->quick = $quick;
+        return $this;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isSelect2(): bool
+    {
+        return $this->select2;
+    }
+
+    /**
+     * @param bool $select2
+     * @return SelectTPL
+     */
+    public function setSelect2(bool $select2): SelectTPL
+    {
+        $this->select2 = $select2;
+        return $this;
+    }
 
     /**
      * @return bool

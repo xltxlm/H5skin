@@ -14,14 +14,34 @@ use xltxlm\template\Template;
 class VueLink extends Template
 {
     protected static $vueel = "vueel";
+    /** @var string ajax网址地址 */
+    protected $url = "";
+    /** @var string 字段编辑网址 */
+    protected $editAjaxUrl = "";
 
     public static function vueel()
     {
         return self::$vueel;
     }
 
-    /** @var string ajax网址地址 */
-    protected $url = "";
+    /**
+     * @return string
+     */
+    public function getEditAjaxUrl(): string
+    {
+        return $this->editAjaxUrl;
+    }
+
+    /**
+     * @param string $editAjaxUrl
+     * @return VueLink
+     */
+    public function setEditAjaxUrl(string $editAjaxUrl): VueLink
+    {
+        $this->editAjaxUrl = $editAjaxUrl;
+        return $this;
+    }
+
 
     /**
      * @return string

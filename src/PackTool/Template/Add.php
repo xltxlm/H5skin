@@ -37,12 +37,13 @@ class <?=$this->getShortName()?>Add
     public function get<?=ucfirst($this->getTableModelClassNameReflectionClass()->getShortName())?>()
     {
         if (empty($this-><?=$this->getTableModelClassNameReflectionClass()->getShortName()?>)) {
-            if ($this->get<?=ucfirst($this->getShortName())?>Request()->getId()) {
+            if ($this->get<?=ucfirst($this->getShortName())?>Request()->getId()->getValue()) {
                 $this-><?=$this->getTableModelClassNameReflectionClass()->getShortName()?> = (new <?=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>''])?>SelectOne())
                     ->whereId($this->get<?=ucfirst($this->getShortName())?>Request()->getId())
                     ->__invoke();
             } else {
-                $this-><?=$this->getTableModelClassNameReflectionClass()->getShortName()?> =new <?=$this->getTableModelClassNameReflectionClass()->getShortName()?>;
+                $this-><?=$this->getTableModelClassNameReflectionClass()->getShortName()?> =(new <?=$this->getTableModelClassNameReflectionClass()->getShortName()?>)
+                    ->default();
             }
             //数据库查询出来的覆盖再覆盖上请求的内容
             $this-><?=$this->getTableModelClassNameReflectionClass()->getShortName()?> =

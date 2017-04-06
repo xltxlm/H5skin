@@ -35,6 +35,16 @@ use xltxlm\h5skin\SelectTPL;
             <form role="form" class="form-horizontal" action="<<?='?'?>= <?=$this->getShortName()?>AddDo::url() ?>" method="post">
                 <div class="box-body">
 <?php foreach ($this->getTableModelClassNameReflectionClass()->getProperties() as $property){
+    //自增id,特殊字段,一律不参与创建页面
+    if($property->getName() == call_user_func([(new \ReflectionClass(strtr($this->TableModelClassNameReflectionClass->getName(),['Model'=>''])))->newInstance(),'getAutoIncrement']))
+    {
+        continue;
+    }
+    if(in_array($property->getName(),['username','status','add_time','delete_time']))
+    {
+        continue;
+    }
+
     $isEnumFunction=strtr($this->getTableModelClassNameReflectionClass()->getName(),['Model'=>'']).'Type::'.$property->getName().'IsEnum();';
     $enum=false;
     eval('$enum='.$isEnumFunction);

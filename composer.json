@@ -11,7 +11,9 @@
     "php": ">=7.0",
     "symfony/filesystem": "*",
     "xltxlm/helper": "*",
-    "xltxlm/Template": "*"
+    "xltxlm/redis": "*",
+    "xltxlm/Template": "*",
+    "xltxlm/page": "*"
   },
   "autoload": {
     "psr-4": {

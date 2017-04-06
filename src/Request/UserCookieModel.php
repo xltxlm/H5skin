@@ -29,6 +29,17 @@ class UserCookieModel
     protected $prepage = 30;
     /** @var int 当前页码 */
     protected $pageID = 1;
+    /** @var  string 客户端ip */
+    protected $ip = "";
+
+    /**
+     * @return string
+     */
+    public function getIp(): string
+    {
+        return $this->ip = (string)$_SERVER['REMOTE_ADDR'];
+    }
+
 
     /**
      * @return int
@@ -38,6 +49,9 @@ class UserCookieModel
         //如果get上面有参数,以get的参数为标准
         if ($_GET['pageID']) {
             $this->pageID = $_GET['pageID'];
+        }
+        if ($_POST['pageID']) {
+            $this->pageID = $_POST['pageID'];
         }
         return $this->pageID;
     }
@@ -60,6 +74,9 @@ class UserCookieModel
         //如果get上面有参数,以get的参数为标准
         if ($_GET['prepage']) {
             $this->prepage = $_GET['prepage'];
+        }
+        if ($_POST['prepage']) {
+            $this->prepage = $_POST['prepage'];
         }
         return $this->prepage;
     }
