@@ -2,14 +2,11 @@
 use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
 
 <script>
-    var getdata = {};
     var <?=$this::vueel()?> =(new Vue({
             el: "#<?=$this::vueel()?>",
             data: {
                 //ajax接受到的结果集
-                alldata: {},
-                page: [],
-                firstopen: true,
+                alldata: alldata,
                 openeditflag:"",
                 tmpindex: 0
             },
@@ -28,11 +25,9 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                         data: getdata,
                         async:false,
                         success: function (result) {
-                            <?=$this::vueel()?>. $data.alldata = result.data;
-                            <?=$this::vueel()?>. $data.page = result.page;
+                            <?=$this::vueel()?>. $data.alldata = result;
                         }
                     });
-                    this.firstopen = false
                 },
                 //以下是分页条
                 pageBar:function (pageid) {

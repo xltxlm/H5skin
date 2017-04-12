@@ -1,7 +1,9 @@
 <?php
 /** @var  \xltxlm\h5skin\PackTool\MakeCtroller $this */
-$TableModel = $this->getTableModelClassNameReflectionClass()->getShortName();
-$TableModelLong = $this->getTableModelClassNameReflectionClass()->getName();
+use function GuzzleHttp\Psr7\str;
+
+$Table = strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>'']);
+$TableLong = strtr($this->getTableModelClassNameReflectionClass()->getName(),['Model'=>'']);
 ?>
 <<?='?'?>php
 /**
@@ -15,7 +17,7 @@ namespace <?=$this->getClassNameSpace()?>;
 
 use <?=$this->getTableClassName()?>;
 use <?=(new \ReflectionClass($this->getRedisConfig()))->getName()?>;
-use <?=strtr($this->getTableClassName(),['Model'=>''])?>Page;
+use <?=$TableLong?>Page;
 use xltxlm\h5skin\Request\UserCookieModel;
 use xltxlm\redis\LockKey;
 use xltxlm\redis\RedisClient;
@@ -42,39 +44,39 @@ class <?=$this->getShortName()?>
     use PageObjectTrait;
     use <?=$this->getShortName()?>RequestTrait;
 
-    /** @var  <?= $TableModel ?>[] */
-    protected $<?= $TableModel ?> = [];
+    /** @var  <?= $Table ?>[] */
+    protected $<?= $Table ?>Model = [];
 
     /**
-     * @return <?= $TableModel ?>[]
+     * @return <?= $Table ?>[]
      */
-    public function get<?=ucfirst($TableModel)?>(): array
+    public function get<?=ucfirst($Table)?>Model(): array
     {
-        if (empty($this-><?= $TableModel ?>)) {
+        if (empty($this-><?= $Table ?>Model)) {
             $pagei = 0;
             $pageObject = $this->getPageObject();
             //最大循环10页数据
             while ($pagei < 10) {
                 $pageObject->setPageID($pageObject->getPageID() + $pagei);
                 $pagei++;
-            $<?=strtr($TableModel,['Model'=>'Page'])?>=(new <?=strtr($TableModel,['Model'=>'Page'])?>())->setPageObject($pageObject);;
+            $<?=$Table?>Page = (new <?=$Table?>Page())->setPageObject($pageObject);;
             //默认 主键字段 进行排序
             if ($this->get<?=$this->getShortName()?>Request()->getWebPageOrderBy()) {
                     $orderFunction='order'.ucfirst($this->get<?=$this->getShortName()?>Request()->getWebPageOrderBy()).'Desc';
-                    $<?=strtr($TableModel,['Model'=>'Page'])?>->$orderFunction();
+                    $<?=$Table?>Page->$orderFunction();
             }else
             {
 <?php
-$ReflectionClass = (new \ReflectionClass(strtr($TableModelLong,['Model'=>''])))->newInstance();
+$ReflectionClass = (new \ReflectionClass($TableLong))->newInstance();
 $UniqueKey=call_user_func([$ReflectionClass,'getUniqueKey']);
 if($UniqueKey){?>
-                    $<?=strtr($TableModel,['Model'=>'Page'])?>->order<?=ucfirst(current($UniqueKey))?>Desc();
+                    $<?=$Table?>Page->order<?=ucfirst(current($UniqueKey))?>Desc();
 <?php }?>
             }
 <?php
 //日期格式的区间查询
 foreach ($this->getTableModelClassNameReflectionClass()->getProperties() as $property){
-    $isDateFunction=strtr($this->getTableModelClassNameReflectionClass()->getName(),['Model'=>'']).'Type::'.$property->getName().'IsDate();';
+    $isDateFunction=$TableLong.'Type::'.$property->getName().'IsDate();';
     $IsDate=false;
     eval('$IsDate='.$isDateFunction);
     if(!$IsDate)
@@ -82,15 +84,14 @@ foreach ($this->getTableModelClassNameReflectionClass()->getProperties() as $pro
         continue;
     }
 ?>
-        $<?=strtr($TableModel,['Model'=>'Page'])?>->where<?=$property->getName()?>Maybe($this->get<?=$this->getShortName()?>Request()->get<?=$property->getName()?>()->formatFullIndate(), PdoAction::INDATE);
+        $<?=$Table?>Page->where<?=$property->getName()?>Maybe($this->get<?=$this->getShortName()?>Request()->get<?=$property->getName()?>()->formatFullIndate(), PdoAction::INDATE);
 <?php }?>
-            /** @var <?=$TableModel?>[] $<?= $TableModel ?>s */
-            $<?= $TableModel ?>s = $<?=strtr($TableModel,['Model'=>'Page'])?>
-
+            /** @var <?=$Table?>Model[] $<?= $Table ?>s */
+            $<?= $Table ?>s = $<?=$Table?>Page
 <?php
 //非日期格式的查询
 foreach ($this->getTableModelClassNameReflectionClass()->getProperties() as $property){
-    $isDateFunction=strtr($TableModelLong,['Model'=>'']).'Type::'.$property->getName().'IsDate();';
+    $isDateFunction=$TableLong.'Type::'.$property->getName().'IsDate();';
     $IsDate=false;
     eval('$IsDate='.$isDateFunction);
     if($IsDate)
@@ -99,17 +100,17 @@ foreach ($this->getTableModelClassNameReflectionClass()->getProperties() as $pro
     }
 
     //是否是特别类型的字段? 主键,唯一键,自增id字段
-    $isSpecialFunction=call_user_func([(new \ReflectionClass(strtr($TableModelLong,['Model'=>''])))->newInstance(),'getSpecial']);
+    $isSpecialFunction=call_user_func([(new \ReflectionClass($TableLong))->newInstance(),'getSpecial']);
     $isSpecial=false;
     eval('$isSpecial=in_array($property->getName(),$isSpecialFunction);');
 
     //如果是数组类型,采用>=比较进行查询
-    $isnumFunction=strtr($TableModelLong,['Model'=>'']).'Type::'.$property->getName().'IsInt() || '.strtr($TableModelLong,['Model'=>'']).'Type::'.$property->getName().'IsFloat();';
+    $isnumFunction=$TableLong.'Type::'.$property->getName().'IsInt() || '.$TableLong.'Type::'.$property->getName().'IsFloat();';
     $IsNum=false;
     eval('$IsNum='.$isnumFunction);
 
     //如果是数组类型,采用>=比较进行查询
-    $isEnumFunction=strtr($TableModelLong,['Model'=>'']).'Type::'.$property->getName().'IsEnum();';
+    $isEnumFunction=$TableLong.'Type::'.$property->getName().'IsEnum();';
     $IsEnum=false;
     eval('$IsEnum='.$isEnumFunction);
 
@@ -119,21 +120,23 @@ foreach ($this->getTableModelClassNameReflectionClass()->getProperties() as $pro
                 ->__invoke();
 
                 //已经查找不到数据,退出循环
-                if (empty($<?= $TableModel ?>s)) {
+                if (empty($<?= $Table ?>s)) {
                     break;
                 }
                 $out = false;
-                foreach ($<?= $TableModel ?>s as $<?= $TableModel ?>) {
-<?php if($this->isAjaxEdit()){?>
+                foreach ($<?= $Table ?>s as $<?= $Table ?>) {
+<?php
+//不是日志表,并且可以编辑的情况下可以进行互斥锁
+if(strpos($this->getShortName(),'log')!== strlen($this->getShortName())-3 && $this->isAjaxEdit()){?>
                     //在待审核状态下,需要配合redis锁踢出掉已经审核完的数据
                     $data = (new RedisClient())
                         ->setRedisConfig(new <?=(new \ReflectionClass($this->getRedisConfig()))->getShortName()?>())
-                        ->get('auditok.'.$<?= $TableModel ?>->getId());
+                        ->get('<?=$this->getShortName()?>.ok.'.$<?= $Table ?>->getId());
                     if ($data) {
                         continue;
                     }
                     //待审核状态下,不能取出被被人锁定的视频 锁定10分钟
-                    $rediskey = 'auditlock.'.$<?= $TableModel ?>->getId();
+                    $rediskey = '<?=$this->getShortName()?>.lock.'.$<?= $Table ?>->getId();
                     //当前的登陆账户
                     $me = (new UserCookieModel())->getUsername();
                     $locked = (new LockKey())
@@ -152,9 +155,9 @@ foreach ($this->getTableModelClassNameReflectionClass()->getProperties() as $pro
                         }
                     }
 <?php }?>
-                    $this-><?= $TableModel ?>[] = $<?= $TableModel ?>;
+                    $this-><?= $Table ?>Model[] = $<?= $Table ?>;
                     //完成条数使命
-                    if (count($this-><?= $TableModel ?>) == $this->getPageObject()->getPrepage()) {
+                    if (count($this-><?= $Table ?>Model) == $this->getPageObject()->getPrepage()) {
                         $out = true;
                         break;
                     }
@@ -168,7 +171,7 @@ foreach ($this->getTableModelClassNameReflectionClass()->getProperties() as $pro
                 }
             }
         }
-        return $this-><?= $TableModel ?>;
+        return $this-><?= $Table ?>Model;
     }
 
 

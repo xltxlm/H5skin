@@ -19,14 +19,14 @@ class MakeElaticReload
 {
     /** @var Table */
     protected $table;
-    /** @var  RedisConfig redis配置,辅助做并发处理 */
+    /** @var  string redis配置,辅助做并发处理 */
     protected $redis;
 
     /** @var string 定时任务写入的文件夹 */
     protected $crontabDir = "";
 
     /**
-     * @return RedisConfig
+     * @return string
      */
     public function getRedis(): RedisConfig
     {
@@ -34,10 +34,10 @@ class MakeElaticReload
     }
 
     /**
-     * @param RedisConfig $redis
+     * @param string $redis
      * @return MakeElaticReload
      */
-    public function setRedis(RedisConfig $redis): MakeElaticReload
+    public function setRedis(string $redis): MakeElaticReload
     {
         $this->redis = $redis;
         return $this;

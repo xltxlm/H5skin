@@ -14,6 +14,7 @@ use <?=$this->getTableModelClassNameReflectionClass()->getNamespaceName()?>\enum
 use xltxlm\helper\Ctroller\Request\Request;
 use xltxlm\helper\Ctroller\Unit\RunInvoke;
 use xltxlm\redis\LockKey;
+use \xltxlm\redis\RedisClient;
 
 final class <?=$this->getShortName()?>AjaxEdit
 {
@@ -94,8 +95,9 @@ final class <?=$this->getShortName()?>AjaxEdit
         }
 
         $audit = Enum<?=$this->getShortName()?>Audit::YI_SHEN_HE;
-        if ($tableObject->getName() == <?=$this->getShortName()?>Model::status() && $this->getValue() == Enum<?=$this->getShortName()?>Status::DAI_DING) {
+        if ($this->getName() == <?=$this->getShortName()?>Model::status() && $this->getValue() == Enum<?=$this->getShortName()?>Status::DAI_DING) {
             $audit = Enum<?=$this->getShortName()?>Audit::DAI_SHEN_HE;
+            // 如果取消了,还要灭掉redis的key标致
         }
         $sql = "UPDATE `".$tableObject->getName()."` SET ".$this->getName()."=:value,username=@username,update_time=now(),elasticsearch='未索引'
                 ,audit=:audit
@@ -108,18 +110,22 @@ final class <?=$this->getShortName()?>AjaxEdit
             ]);
         $num = $tableObject->update();
         if ($num) {
-            if ($num) {
-                //标记以及审核过数了,刷新页面的时候要过滤掉这些数据
-                try {
+            try {
+                if ($audit != Enum<?=$this->getShortName()?>Audit::DAI_SHEN_HE) {
+                    //标记以及审核过数了,刷新页面的时候要过滤掉这些数据
                     (new LockKey())
                         ->setRedisConfig(new <?=(new \ReflectionClass($this->getRedisConfig()))->getShortName()?>())
-                        ->setKey('auditok.'.$this->getid())
+                        ->setKey('<?=$this->getShortName()?>.ok.'.$this->getid())
                         ->setExpire(60 * 2)
                         ->__invoke();
-                } catch (\Exception $e) {
-                    $tableObject->rollBack();
-                    throw $e;
+                }else{
+                        (new RedisClient)
+                            ->setRedisConfig(new <?=(new \ReflectionClass($this->getRedisConfig()))->getShortName()?>())
+                            ->del('<?=$this->getShortName()?>.ok.'.$this->getid());
                 }
+            } catch (\Exception $e) {
+                $tableObject->rollBack();
+                throw $e;
             }
             echo "true";
         } else {

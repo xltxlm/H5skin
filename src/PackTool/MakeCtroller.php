@@ -4,7 +4,6 @@ namespace xltxlm\h5skin\PackTool;
 
 use xltxlm\elasticsearch\Unit\ElasticsearchConfig;
 use xltxlm\helper\Ctroller\LoadClassRegister;
-use xltxlm\helper\Hclass\CopyObjectAttributeNameMakeTool;
 use xltxlm\helper\Hclass\ObjectMakeTrait;
 use xltxlm\redis\Config\RedisConfig;
 
@@ -43,28 +42,28 @@ final class MakeCtroller
     /** @var bool 页面数据是否可以动态编辑 */
     protected $ajaxEdit = false;
 
-    /** @var ElasticsearchConfig 是否配置同步到elasticsearch */
+    /** @var string 是否配置同步到elasticsearch */
     protected $elasticsearchCrontab;
     /** @var array 可以编辑的字段 */
-    protected $AjaxEditField=[];
+    protected $AjaxEditField = [];
     /** @var bool 完全处在编辑状态 */
-    protected $AjaxEditOnly=false;
-    /** @var  RedisConfig 开启审核的时候,redis服务的配置 */
+    protected $AjaxEditOnly = false;
+    /** @var  string 开启审核的时候,redis服务的配置 */
     protected $redisConfig;
 
     /**
      * @return RedisConfig
      */
-    public function getRedisConfig(): RedisConfig
+    public function getRedisConfig(): string
     {
         return $this->redisConfig;
     }
 
     /**
-     * @param RedisConfig $redisConfig
+     * @param string $redisConfig
      * @return MakeCtroller
      */
-    public function setRedisConfig(RedisConfig $redisConfig): MakeCtroller
+    public function setRedisConfig(string $redisConfig): MakeCtroller
     {
         $this->redisConfig = $redisConfig;
         return $this;
@@ -148,7 +147,7 @@ final class MakeCtroller
 
 
     /**
-     * @return ElasticsearchConfig
+     * @return string
      */
     public function getElasticsearchCrontab()
     {
@@ -156,10 +155,10 @@ final class MakeCtroller
     }
 
     /**
-     * @param ElasticsearchConfig $elasticsearchCrontab
+     * @param string $elasticsearchCrontab
      * @return MakeCtroller
      */
-    public function setElasticsearchCrontab(ElasticsearchConfig $elasticsearchCrontab): MakeCtroller
+    public function setElasticsearchCrontab(string $elasticsearchCrontab): MakeCtroller
     {
         $this->elasticsearchCrontab = $elasticsearchCrontab;
         return $this;
@@ -323,14 +322,10 @@ final class MakeCtroller
 
         //3:请求的Request参数
         $requestRealFile = strtr($classRealFile, ['.php' => '.Request.php']);
-        ob_start();
-        include __DIR__."/Template/Request.php";
-        file_put_contents($requestRealFile, ob_get_clean());
-
+        $this->file_put_contents($requestRealFile, __DIR__."/Template/Request.php");
         (new ObjectMakeTrait(static::$rootClass))
             ->setClassName($this->getClassName().'Request')
             ->__invoke();
-
 
         //1:先保证控制层的基准类一定存在
         $this->file_put_contents($classRealFile, __DIR__.'/Template/Index.php');
@@ -364,9 +359,7 @@ final class MakeCtroller
 
         if ($this->getElasticsearchCrontab()) {
             mkdir(self::$rootDir.'/../Crontab/LoadData/');
-            ob_start();
-            include __DIR__.'/Template/Crontab/LoadDataToElatic.php';
-            file_put_contents(self::$rootDir.'/../Crontab/LoadData/'.$this->getShortName().'.php', ob_get_clean());
+            $this->file_put_contents(self::$rootDir.'/../Crontab/Elasticsearch/'.$this->getShortName().'Elastic.php', __DIR__.'/Template/Crontab/LoadDataToElatic.php');
         }
 
         //8:ajax页面生成
@@ -375,12 +368,11 @@ final class MakeCtroller
             $this->file_put_contents($AjaxRealFile, __DIR__.'/Template/Ajax.php');
         }
         //9:页面数据可以编辑
-        if($this->isAjaxEdit())
-        {
+        if ($this->isAjaxEdit() && $this->getAjaxEditField()) {
             $AjaxRealFile = strtr($classRealFile, ['.php' => 'AjaxEdit.php']);
             $this->file_put_contents($AjaxRealFile, __DIR__.'/Template/AjaxEdit.php');
         }
-
+        mkdir(strtr($classRealFile, ['.php' => '']));
     }
 
     /**
@@ -388,17 +380,14 @@ final class MakeCtroller
      * @param $classRealFile
      * @param $templatePath
      */
-    private function file_put_contents($classRealFile, $templatePath, $orverWrite = false)
+    private function file_put_contents($classRealFile, $templatePath)
     {
         ob_start();
         eval('include $templatePath;');
         $ob_get_clean = ob_get_clean();
-        //1:先保证控制层的基准类一定存在
-        if (!is_file($classRealFile) || $orverWrite) {
+        //确保文件的内容不一致才写入
+        if (file_get_contents($classRealFile) !== $ob_get_clean) {
             file_put_contents($classRealFile, $ob_get_clean);
         }
-        $dir = dirname($classRealFile).'/temp/';
-        mkdir($dir);
-        file_put_contents($dir.basename($classRealFile), $ob_get_clean);
     }
 }

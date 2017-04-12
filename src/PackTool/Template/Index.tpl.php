@@ -7,6 +7,10 @@ $TableNameLong=strtr($this->getTableModelClassNameReflectionClass()->getName(),[
 <<?='?'?>php
 /** @var <?=$this->getClassName()?> $this */
 use <?=$this->getClassName()?>;
+<?php if(strpos($this->getShortName(),'log')!==strlen($this->getShortName())-3){?>
+use <?=$this->getClassName()?>log;
+use <?=$TableNameLong?>logModel;
+<?php }?>
 use xltxlm\h5skin\Traits\Timepicker;
 use xltxlm\h5skin\Request\UserCookieModelCopy;
 <?php if($this->isMakeDelete()){?>use <?=$this->getClassName()?>DeleteDo;<?php }?>
@@ -52,6 +56,21 @@ use xltxlm\h5skin\Traits\VueLink;
                 <!--       隐藏的分页条         -->
                 <input type="hidden" name="<?='<'?>?=UserCookieModelCopy::pageID()?>" value="<?='<'?>?=$this->getPageObject()->getPageID()?>">
                 <div class="box-body">
+
+                    <!--  分页  -->
+                    <div class="form-group col-md-1 ">
+                        <label   > 分页 </label>
+                        <<?='?'?>=(new SelectTPL())
+                        ->setOptions([
+                        "分页"=>NULL
+                        ]+array_combine(range(1,200,30),range(1,200,30))
+                        )
+                        ->setClassName('form-control')
+                        ->setDefault(10)
+                        ->setName('prepage')
+                        ->setSelect2(false)
+                        ->__invoke()?>
+                    </div>
 
                     <?php foreach ($this->getTableModelClassNameReflectionClass()->getProperties() as $property){
                         if(strpos($property->getName(),'elasticsearch')===0){continue;}
@@ -106,20 +125,6 @@ use xltxlm\h5skin\Traits\VueLink;
                     </div>
 
 
-                    <!--  分页  -->
-                    <div class="form-group col-md-1 ">
-                        <label   > 分页 </label>
-                        <<?='?'?>=(new SelectTPL())
-                            ->setOptions([
-                                    "分页"=>NULL
-                                ]+array_combine(range(1,200,30),range(1,200,30))
-                            )
-                            ->setClassName('form-control')
-                            ->setDefault(10)
-                            ->setName('prepage')
-                            ->setSelect2(false)
-                            ->__invoke()?>
-                    </div>
 
                 </div>
                 <!-- /.box-body -->
@@ -138,51 +143,49 @@ use xltxlm\h5skin\Traits\VueLink;
 </div>
 
 
-
-<div class="row">
+<template v-for=" idata in [alldata.<?='<'?>?=<?=$this->getShortName()?>Ajax::<?=$TableName?>Model()?>ed,alldata.<?='<'?>?=<?=$this->getShortName()?>Ajax::<?=$TableName?>Model()?>]">
+<div class="row" v-if="idata">
     <div class="col-xs-12">
         <div class="box">
             <div class="box-header">
-                <h3 class="box-title">Responsive Hover Table</h3>
-
+                <h3 class="box-title">数据</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">
-                <<?='?'?>=(new PageBarHtml($this))()<?='?'?>>
+                <<?='?'?>=(new PageBarHtml($this))->setVue(true)->__invoke()<?='?'?>>
                 <table class="table table-hover">
                     <thead>
-                    <tr>
-                        <?php foreach ($this->TableModelClassNameReflectionClass->getProperties() as $property){
-                            if(strpos($property->getName(),'elasticsearch')===0){continue;}
-                            ob_start();?>
-                        <<?='?'?>=(new <?=$this->getTableModelClassNameReflectionClass()->getShortName()?>)()[<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::<?=$property->getName()?>()]?>
-                        <?php  $fieldShowName=trim(ob_get_clean()); ?>
-                            <!--  <?=$property->getName()?>  --><th><?=$fieldShowName?></th>
-                        <?php }?>
-                        <th>操作</th>
-                    </tr>
+                <tr>
+                    <?php foreach ($this->TableModelClassNameReflectionClass->getProperties() as $property){
+                        if(strpos($property->getName(),'elasticsearch')===0){continue;}
+                        ob_start();?>
+                    <<?='?'?>=(new <?=$this->getTableModelClassNameReflectionClass()->getShortName()?>)()[<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::<?=$property->getName()?>()]?>
+<?php  $fieldShowName=trim(ob_get_clean()); ?>
+                        <!--  <?=$property->getName()?>  --><th><?=$fieldShowName?></th>
+<?php }?>
+                    <th>操作</th>
+                </tr>
                     </thead>
                     <tbody>
 
-<?php if($this->isAjax()){?>
 <!--  vue形式展示的网页格式  -->
-                        <template v-for="(item,index) in alldata.edit">
+                        <template v-for="(item,index) in idata">
 <!--          vue编辑状态下的页面              -->
                 <?php if($this->isAjaxEdit()){?>
-                        <tr @click="openedit(item.id)" <?php if(!$this->isAjaxEditOnly()){?>@blur="openedit(0)" v-show="openeditflag == item.id"  @drop="drop(index,$event)" @dragover="dragover" draggable="true" @dragstart="dragstart(index,$event)" <?php }?>>
+                        <tr @mouseover="openedit(item.id)" @click="openedit(item.id)" <?php if(!$this->isAjaxEditOnly()){?>@blur="openedit(0)" v-show="openeditflag == item.id"  @drop="drop(index,$event)" @dragover="dragover" draggable="true" @dragstart="dragstart(index,$event)" <?php }?>>
                             <?php foreach ($this->TableModelClassNameReflectionClass->getProperties() as $property){
                                 if(strpos($property->getName(),'elasticsearch')===0){continue;}
                                 $isEnumFunction= $TableNameLong.'Type::'.$property->getName().'IsEnum();';
                                 $isenum=false;
                                 eval('$isenum='.$isEnumFunction);
                             ?>
-                    <?php
-                        $AutoIncrement = $property->getName() == call_user_func([(new \ReflectionClass($TableNameLong))->newInstance(), 'getAutoIncrement']);
-                        $AjaxEditField = in_array($property->getName(),$this->getAjaxEditField());
-                        if($AutoIncrement || ($this->getAjaxEditField() && !$AjaxEditField)){
+<?php
+    $AutoIncrement = $property->getName() == call_user_func([(new \ReflectionClass($TableNameLong))->newInstance(), 'getAutoIncrement']);
+    $isAjaxEditField = in_array($property->getName(),$this->getAjaxEditField());
+    if(!$isAjaxEditField){
                                     ?>
-                        <!--  <?=$property->getName()?>  --><td @click="openeditflag=0"><<?='?'?>= <?=$TableName?>Model::<?=$property->name?>Vue() ?></td>
-                    <?php }elseif ($isenum){ ?>
+        <!--  <?=$property->getName()?>  --><td><<?='?'?>= <?=$TableName?>Model::<?=$property->name?>Vue() ?></td>
+<?php }elseif ($isenum){ ?>
                     <!--  <?=$property->getName()?>  --><td>
                             <<?='?'?>=(new SelectTPL())
                                 ->setOptions(Enum<?=$this->getShortName().ucfirst($property->getName())?>::ALL())
@@ -191,12 +194,11 @@ use xltxlm\h5skin\Traits\VueLink;
                                 ->setQuick(true)
                                 ->setVmodel(<?=$TableName?>Model::<?=$property->name?>Vue(false))
                             ->__invoke()?>
-                    <?php }else{ ?>
-                    <!--  <?=$property->getName()?>  --><td><input @keyup="editField()" class="<<?='?'?>php if(<?=$TableName?>Type::<?=$property->getName()?>IsDate()){?><<?='?'?>=DatePicker::daterangepicker()?><<?='?'?>php }?>" style="width: 100%" title="" name="<<?='?'?>=<?=$TableName?>Model::<?=$property->name?>()?>" type="text" v-model="<<?='?'?>= <?=$TableName?>Model::<?=$property->name?>Vue(false) ?>"></td>
-                    <?php }?>
-                            <?php }?>
-                            <td>
-                            </td>
+<?php }else{ ?>
+            <!--  <?=$property->getName()?>  --><td><input @keyup="editField()" class="<<?='?'?>php if(<?=$TableName?>Type::<?=$property->getName()?>IsDate()){?><<?='?'?>=DatePicker::daterangepicker()?><<?='?'?>php }?>" style="width: 100%" title="" name="<<?='?'?>=<?=$TableName?>Model::<?=$property->name?>()?>" type="text" v-model="<<?='?'?>= <?=$TableName?>Model::<?=$property->name?>Vue(false) ?>"></td>
+<?php }?>
+<?php }?>
+                            <td><?php if(strpos($this->getShortName(),'log')!==strlen($this->getShortName())-3){?><a target="_blank" :href="'<?='<'?>?=<?=$this->getShortName()?>log::url()?>&<?='<'?>?=<?=$this->getShortName()?>logModel::pid()?>='+<?='<'?>?=<?=$this->getShortName()?>logModel::idVue(false)?>">日志</a><?php }?></td>
                         </tr>
 
                 <?php }?>
@@ -204,53 +206,47 @@ use xltxlm\h5skin\Traits\VueLink;
 <?php if(!$this->isAjaxEditOnly()){?>
 <!--            vue查看数据下的页面               -->
                         <tr  <?php if($this->isAjaxEdit()){?>@click="openedit(item.id)"  v-show="openeditflag != item.id"<?php }?>  @drop="drop(index,$event)" @dragover="dragover" draggable="true" @dragstart="dragstart(index,$event)">
-                            <?php foreach ($this->TableModelClassNameReflectionClass->getProperties() as $property){
-                                if(strpos($property->getName(),'elasticsearch')===0){continue;}
-                                ?>
+<?php foreach ($this->TableModelClassNameReflectionClass->getProperties() as $property){
+    if(strpos($property->getName(),'elasticsearch')===0){continue;}
+    ?>
                                 <!--  <?=$property->getName()?>  --><td><<?='?'?>= <?=$TableName?>Model::<?=$property->name?>Vue() ?></td>
-                            <?php }?>
+<?php }?>
                             <td>
-            <?php if($this->isMakeDelete()){?><a :href="'<<?='?'?>= <?=$this->getShortName()?>DeleteDo::url()?>&<<?='?'?>=<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::id()?>='+<<?='?'?>=<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::idVue(false)?>" onclick="return confirm('确认删除?')">删除</a><?php }?>
+<?php if($this->isMakeDelete()){?><a :href="'<<?='?'?>= <?=$this->getShortName()?>DeleteDo::url()?>&<<?='?'?>=<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::id()?>='+<<?='?'?>=<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::idVue(false)?>" onclick="return confirm('确认删除?')">删除</a><?php }?>
 
-            <?php if(!$this->isAjaxEdit() && $this->isMakeAdd()){?><a :href="'<<?='?'?>= <?=$this->getShortName()?>Add::url()?>&<<?='?'?>=<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::id()?>='+<<?='?'?>=<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::idVue(false)?>">编辑</a><?php }?>
+<?php if(!$this->isAjaxEdit() && $this->isMakeAdd()){?><a :href="'<<?='?'?>= <?=$this->getShortName()?>Add::url()?>&<<?='?'?>=<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::id()?>='+<<?='?'?>=<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::idVue(false)?>">编辑</a><?php }?>
 
                             </td>
                         </tr>
 <?php }?>
                         </template>
-<?php }else{ ?>
-<!-- 原生的网页展示形式 -->
-<<?='?'?>php foreach ($this->get<?=$this->TableModelClassNameReflectionClass->getShortName()?>() as $model) { ?>
-    <tr  v-show="firstopen">
-        <?php foreach ($this->TableModelClassNameReflectionClass->getProperties() as $property){
-            if(strpos($property->getName(),'elasticsearch')===0){continue;}
-            ?>
-            <!--  <?=$property->getName()?>  --><td><<?='?'?>= $model->get<?=ucfirst($property->name)?>() ?></td>
-        <?php }?>
-        <td>
-            <?php if($this->isMakeDelete()){?><a href="<<?='?'?>= <?=$this->getShortName()?>DeleteDo::url([<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::id() => $model->getId()]) ?>"
-                                                 onclick="return confirm('确认删除?')">删除</a><?php }?>
-
-            <?php if($this->isMakeAdd()){?><a href="<<?='?'?>= <?=$this->getShortName()?>Add::url([<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::id() => $model->getId()]) ?>" > 编辑</a><?php } ?>
-        </td>
-    </tr>
-    <<?='?'?>php } ?>
-
-<?php }?>
 
                     </tbody>
                 </table>
-                <<?='?'?>=(new PageBarHtml($this))()<?='?'?>>
+                <<?='?'?>=(new PageBarHtml($this))->setVue(true)->__invoke()<?='?'?>>
             </div>
             <!-- /.box-body -->
         </div>
         <!-- /.box -->
     </div>
 </div>
+<div v-else="">没有数据</div>
+</template>
 </div>
+    <?='<'?>? $Properties=(new \ReflectionClass(<?=$TableName?>Ajax::class))->getProperties();
+    $define=[];
+    foreach ($Properties as $Propertie)
+    {
+        $define[$Propertie->getName()]='';
+    }
+    ?>
+<script>
+    var alldata=JSON.parse('<?='<'?>?=json_encode($define,JSON_UNESCAPED_UNICODE)?>');
+    console.log(alldata);
+</script>
 <?php if($this->isAjax()){?>
 <<?='?'?>=(new VueLink)->setUrl(<?=$this->getShortName()?>Ajax::url())<?php if($this->isAjaxEdit()){?>->setEditAjaxUrl(<?=$this->getShortName()?>AjaxEdit::url())<?php }?>->__invoke()?>
 <?php } ?>
 
-<<?='?'?>= (new DatePicker($this))->setTimePicker(false)->setSingleDatePicker(false)->__invoke() ?>
-<<?='?'?>= (new Timepicker($this))->setInterval(30)->__invoke() ?>
+<<?='?'?>= (new DatePicker())->setTimePicker(false)->setSingleDatePicker(false)->__invoke() ?>
+<<?='?'?>= (new Timepicker())->setInterval(30)->__invoke() ?>

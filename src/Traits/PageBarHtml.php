@@ -15,6 +15,27 @@ class PageBarHtml extends Template
 {
     /** @var RunInvoke */
     protected $runObject;
+    /** @var bool 是否是vue格式的分页条 */
+    protected $vue = false;
+
+    /**
+     * @return bool
+     */
+    public function isVue(): bool
+    {
+        return $this->vue;
+    }
+
+    /**
+     * @param bool $vue
+     * @return PageBarHtml
+     */
+    public function setVue(bool $vue): PageBarHtml
+    {
+        $this->vue = $vue;
+        return $this;
+    }
+
 
     /**
      * PageBarHtml constructor.
