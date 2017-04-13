@@ -46,10 +46,31 @@ final class MakeCtroller
     protected $elasticsearchCrontab;
     /** @var array 可以编辑的字段 */
     protected $AjaxEditField = [];
+    /** @var array 可以被格式化显示的字段 */
+    protected $Ajaxhowfield = [];
     /** @var bool 完全处在编辑状态 */
     protected $AjaxEditOnly = false;
     /** @var  string 开启审核的时候,redis服务的配置 */
     protected $redisConfig;
+
+    /**
+     * @return array
+     */
+    public function getAjaxhowfield(): array
+    {
+        return $this->Ajaxhowfield;
+    }
+
+    /**
+     * @param string $Ajaxhowfield
+     * @return MakeCtroller
+     */
+    public function setAjaxhowfield(string $Ajaxhowfield): MakeCtroller
+    {
+        $this->Ajaxhowfield[] = $Ajaxhowfield;
+        return $this;
+    }
+
 
     /**
      * @return RedisConfig
@@ -372,7 +393,9 @@ final class MakeCtroller
             $AjaxRealFile = strtr($classRealFile, ['.php' => 'AjaxEdit.php']);
             $this->file_put_contents($AjaxRealFile, __DIR__.'/Template/AjaxEdit.php');
         }
-        mkdir(strtr($classRealFile, ['.php' => '']));
+        $extendFolder = strtr($classRealFile, ['.php' => '']);
+        mkdir($extendFolder);
+        mkdir($extendFolder.'/showfield/');
     }
 
     /**

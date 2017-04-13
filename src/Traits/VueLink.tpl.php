@@ -5,6 +5,8 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
     var <?=$this::vueel()?> =(new Vue({
             el: "#<?=$this::vueel()?>",
             data: {
+                //请求页面模型
+                requestmodel:requestmodel,
                 //ajax接受到的结果集
                 alldata: alldata,
                 openeditflag:"",
@@ -93,11 +95,9 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
             $(this).change(function () {
                 <?=$this::vueel()?>.action();
             });
-            $(function () {
-                $('.daterangepickerClass').on('apply.daterangepicker cancel.daterangepicker', function (ev, picker) {
-                    <?=$this::vueel()?>.action();
-                });
-            })
+        });
+        $('.daterangepickerClass').on('apply.daterangepicker cancel.daterangepicker', function (ev, picker) {
+            <?=$this::vueel()?>.action();
         });
         <?=$this::vueel()?>. action();
     });

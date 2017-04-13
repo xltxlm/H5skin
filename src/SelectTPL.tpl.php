@@ -31,7 +31,6 @@ if (!defined(__FILE__)) {
     <?= $this->isMultiple() ? ' multiple="multiple" ' : '' ?>
         title="<?= $this->getName() ?>">
     <?php $i=0; foreach ($this->getOptions() as $showText => $value) { $i++;?>
-        <option value="<?= $value ?>"
-                <?php if ($this->getDefault() == $value){ ?>selected<?php } ?>><?if($this->isQuick()){ echo $i;}?><?= $showText ?></option>
+        <option value="<?= $value ?>" <?php if ($this->getDefault() == $value){ ?>selected<?php } ?>><?if($this->isQuick()){ echo $i;}?><?= $showText ?></option>
     <?php } ?>
 </select>

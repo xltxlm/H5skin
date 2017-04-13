@@ -28,7 +28,7 @@ class MakeElaticReload
     /**
      * @return string
      */
-    public function getRedis(): RedisConfig
+    public function getRedis(): string
     {
         return $this->redis;
     }

@@ -1,12 +1,11 @@
 <?php /** @var \xltxlm\h5skin\PackTool\MakeCtroller $this */
-use xltxlm\h5skin\SelectTPL;
-
 $TableName=strtr($this->getTableModelClassNameReflectionClass()->getShortName(),['Model'=>'']);
 $TableNameLong=strtr($this->getTableModelClassNameReflectionClass()->getName(),['Model'=>'']);
 ?>
 <<?='?'?>php
 /** @var <?=$this->getClassName()?> $this */
 use <?=$this->getClassName()?>;
+use <?=$this->getClassName()?>Request;
 <?php if(strpos($this->getShortName(),'log')!==strlen($this->getShortName())-3){?>
 use <?=$this->getClassName()?>log;
 use <?=$TableNameLong?>logModel;
@@ -33,6 +32,8 @@ use <?=$this->getClassName()?>Ajax;
 use <?=$this->getClassName()?>AjaxEdit;
 
 <?php }?>
+use xltxlm\helper\Hdir\Dir;
+use xltxlm\helper\Hclass\ConvertObject;
 use xltxlm\h5skin\Traits\PageBarHtml;
 use xltxlm\h5skin\SelectTPL;
 use xltxlm\h5skin\Traits\DatePicker;
@@ -66,7 +67,7 @@ use xltxlm\h5skin\Traits\VueLink;
                         ]+array_combine(range(1,200,30),range(1,200,30))
                         )
                         ->setClassName('form-control')
-                        ->setDefault(10)
+                        ->setDefault($this->getPageObject()->getPrepage())
                         ->setName('prepage')
                         ->setSelect2(false)
                         ->__invoke()?>
@@ -80,13 +81,13 @@ use xltxlm\h5skin\Traits\VueLink;
 
                         ob_start();
                      ?>
-                        <<?='?'?>=(new <?=$this->getTableModelClassNameReflectionClass()->getShortName()?>)()[<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::<?=$property->getName()?>()]?>
+                        <<?='?'?>=(new <?=$TableName?>Model)()[<?=$TableName?>Model::<?=$property->getName()?>()]?>
                         <?php  $fieldShowName=trim(ob_get_clean()); ?>
 
 
                         <!--  <?=$property->getName()?>  -->
-                    <div class="form-group col-md-2 <<?='?'?>= (string)$this->get<?=$this->getShortName()?>Request()->get<?=$property->getName()?>() ? 'has-error' : '' ?> ">
-                        <label  class="<<?='?'?>= (string)$this->get<?=$this->getShortName()?>Request()->get<?=$property->getName()?>() ? 'label label-danger' : '' ?>" for="<?=$property->getName()?>">
+                    <div :class="{'has-error':requestmodel.<?=$property->getName()?>}" class="form-group col-md-1">
+                        <label  :class="{'label label-danger':requestmodel.<?=$property->getName()?>}"  for="<?=$property->getName()?>">
                             <?=$fieldShowName?>
                         </label>
                     <?php if($enum){?>
@@ -96,20 +97,21 @@ use xltxlm\h5skin\Traits\VueLink;
                         ]+Enum<?=$this->getShortName()?><?=ucfirst($property->getName())?>::ALL())
                                 ->setDefault($this->get<?=$this->getShortName()?>Request()->get<?=ucfirst($property->getName())?>())
                                 ->setClassName('form-control')
-                                ->setName(<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::<?=$property->getName()?>())
+                                ->setName(<?=$TableName?>Model::<?=$property->getName()?>())
+                                ->setVmodel('requestmodel.<?=$property->getName()?>')
                                 ->__invoke()?>
                     <?php }else{?>
-                                <input type="text"
-                                       class="form-control <<?='?'?>php if(<?=$TableName?>Type::<?=$property->getName()?>IsDate()){?><<?='?'?>=DatePicker::daterangepicker()?><<?='?'?>php }?>  <<?='?'?>php if(<?=strtr($this->TableModelClassNameReflectionClass->getShortName(),['Model'=>''])?>Type::<?=$property->getName()?>IsTime()){?><<?='?'?>=Timepicker::getTimepickerCss()?><<?='?'?>php }?>"
-                                       name="<<?='?'?>= <?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::<?=$property->getName()?>() ?>"
-                                       value="<<?='?'?>=$this->get<?=$this->getShortName()?>Request()->get<?=$property->getName()?>()?>"
-                                       id="<<?='?'?>= <?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::<?=$property->getName()?>() ?>" placeholder="<<?='?'?>=(new <?=$this->getTableModelClassNameReflectionClass()->getShortName()?>)()[<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::<?=$property->getName()?>()]?>">
+                                <input title="<?=$fieldShowName?>" type="text"
+                                       class="form-control <<?='?'?>php if(<?=$TableName?>Type::<?=$property->getName()?>IsDate()){?><<?='?'?>=DatePicker::daterangepicker()?><<?='?'?>php }?>  <<?='?'?>php if(<?=$TableName?>Type::<?=$property->getName()?>IsTime()){?><<?='?'?>=Timepicker::getTimepickerCss()?><<?='?'?>php }?>"
+                                       name="<<?='?'?>= <?=$TableName?>Model::<?=$property->getName()?>() ?>"
+                                       <<?='?'?>php if(!<?=$TableName?>Type::<?=$property->getName()?>IsDate()){?>v-model="requestmodel.<?=$property->getName()?>"<<?='?'?>php }else{?>value="<<?='?'?>=$this->get<?=$this->getShortName()?>Request()->get<?=$property->getName()?>()?>"<<?='?'?>php }?>
+                                       id="<<?='?'?>= <?=$TableName?>Model::<?=$property->getName()?>() ?>" placeholder="<<?='?'?>=(new <?=$TableName?>Model)()[<?=$TableName?>Model::<?=$property->getName()?>()]?>">
                     <?php }?>
                     </div>
                     <?php }?>
 
                     <!--  排序  -->
-                    <div class="form-group col-md-2 <<?='?'?>= $this->get<?=$this->getShortName()?>Request()->getWebPageOrderBy() ? 'has-error' : '' ?> ">
+                    <div class="form-group col-md-1 <<?='?'?>= $this->get<?=$this->getShortName()?>Request()->getWebPageOrderBy() ? 'has-error' : '' ?> ">
                         <label  class="<<?='?'?>= $this->get<?=$this->getShortName()?>Request()->getWebPageOrderBy() ? 'label label-danger' : '' ?>" for="webPageOrderBy">
                             排序依据
                         </label>
@@ -143,7 +145,7 @@ use xltxlm\h5skin\Traits\VueLink;
 </div>
 
 
-<template v-for=" idata in [alldata.<?='<'?>?=<?=$this->getShortName()?>Ajax::<?=$TableName?>Model()?>ed,alldata.<?='<'?>?=<?=$this->getShortName()?>Ajax::<?=$TableName?>Model()?>]">
+<template v-for=" idata in [alldata.<?='<'?>?=<?=$this->getShortName()?>Ajax::<?=$TableName?>Model()?>,alldata.<?='<'?>?=<?=$this->getShortName()?>Ajax::<?=$TableName?>Model()?>ed]">
 <div class="row" v-if="idata">
     <div class="col-xs-12">
         <div class="box">
@@ -168,6 +170,7 @@ use xltxlm\h5skin\Traits\VueLink;
                     </thead>
                     <tbody>
 
+
 <!--  vue形式展示的网页格式  -->
                         <template v-for="(item,index) in idata">
 <!--          vue编辑状态下的页面              -->
@@ -182,18 +185,22 @@ use xltxlm\h5skin\Traits\VueLink;
 <?php
     $AutoIncrement = $property->getName() == call_user_func([(new \ReflectionClass($TableNameLong))->newInstance(), 'getAutoIncrement']);
     $isAjaxEditField = in_array($property->getName(),$this->getAjaxEditField());
-    if(!$isAjaxEditField){
-                                    ?>
-        <!--  <?=$property->getName()?>  --><td><<?='?'?>= <?=$TableName?>Model::<?=$property->name?>Vue() ?></td>
+    //不可编辑的字段,可以被格式化
+    if(!$isAjaxEditField){     ?>
+            <?php if(in_array($property->getName(),$this->getAjaxhowfield())){?>
+            <!--  <?=$property->getName()?>  --><td v-html="<?='<'?>?=<?=$TableName?>Model::<?=$property->name?>VueFunction(false,'<?=$property->getName()?>') ?>"></td>
+            <?php }else{?>
+            <!--  <?=$property->getName()?>  --><td ><<?='?'?>= <?=$TableName?>Model::<?=$property->name?>Vue() ?></td>
+            <?php }?>
 <?php }elseif ($isenum){ ?>
-                    <!--  <?=$property->getName()?>  --><td>
-                            <<?='?'?>=(new SelectTPL())
-                                ->setOptions(Enum<?=$this->getShortName().ucfirst($property->getName())?>::ALL())
-                                ->setName(<?=$TableName?>Model::<?=$property->name?>())
-                                ->setVOnChange('editField')
-                                ->setQuick(true)
-                                ->setVmodel(<?=$TableName?>Model::<?=$property->name?>Vue(false))
-                            ->__invoke()?>
+            <!--  <?=$property->getName()?>  --><td>
+                    <<?='?'?>=(new SelectTPL())
+                        ->setOptions(Enum<?=$this->getShortName().ucfirst($property->getName())?>::ALL())
+                        ->setName(<?=$TableName?>Model::<?=$property->name?>())
+                        ->setVOnChange('editField')
+                        ->setQuick(true)
+                        ->setVmodel(<?=$TableName?>Model::<?=$property->name?>Vue(false))
+                    ->__invoke()?>
 <?php }else{ ?>
             <!--  <?=$property->getName()?>  --><td><input @keyup="editField()" class="<<?='?'?>php if(<?=$TableName?>Type::<?=$property->getName()?>IsDate()){?><<?='?'?>=DatePicker::daterangepicker()?><<?='?'?>php }?>" style="width: 100%" title="" name="<<?='?'?>=<?=$TableName?>Model::<?=$property->name?>()?>" type="text" v-model="<<?='?'?>= <?=$TableName?>Model::<?=$property->name?>Vue(false) ?>"></td>
 <?php }?>
@@ -203,23 +210,8 @@ use xltxlm\h5skin\Traits\VueLink;
 
                 <?php }?>
 
-<?php if(!$this->isAjaxEditOnly()){?>
-<!--            vue查看数据下的页面               -->
-                        <tr  <?php if($this->isAjaxEdit()){?>@click="openedit(item.id)"  v-show="openeditflag != item.id"<?php }?>  @drop="drop(index,$event)" @dragover="dragover" draggable="true" @dragstart="dragstart(index,$event)">
-<?php foreach ($this->TableModelClassNameReflectionClass->getProperties() as $property){
-    if(strpos($property->getName(),'elasticsearch')===0){continue;}
-    ?>
-                                <!--  <?=$property->getName()?>  --><td><<?='?'?>= <?=$TableName?>Model::<?=$property->name?>Vue() ?></td>
-<?php }?>
-                            <td>
-<?php if($this->isMakeDelete()){?><a :href="'<<?='?'?>= <?=$this->getShortName()?>DeleteDo::url()?>&<<?='?'?>=<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::id()?>='+<<?='?'?>=<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::idVue(false)?>" onclick="return confirm('确认删除?')">删除</a><?php }?>
-
-<?php if(!$this->isAjaxEdit() && $this->isMakeAdd()){?><a :href="'<<?='?'?>= <?=$this->getShortName()?>Add::url()?>&<<?='?'?>=<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::id()?>='+<<?='?'?>=<?=$this->getTableModelClassNameReflectionClass()->getShortName()?>::idVue(false)?>">编辑</a><?php }?>
-
-                            </td>
-                        </tr>
-<?php }?>
                         </template>
+
 
                     </tbody>
                 </table>
@@ -241,8 +233,9 @@ use xltxlm\h5skin\Traits\VueLink;
     }
     ?>
 <script>
-    var alldata=JSON.parse('<?='<'?>?=json_encode($define,JSON_UNESCAPED_UNICODE)?>');
-    console.log(alldata);
+    var requestmodel=<?='<'?>?=(new ConvertObject(new <?=$this->getShortName()?>Request))
+        ->toJson()?>;
+    var alldata=<?='<'?>?=json_encode($define,JSON_UNESCAPED_UNICODE)?>;
 </script>
 <?php if($this->isAjax()){?>
 <<?='?'?>=(new VueLink)->setUrl(<?=$this->getShortName()?>Ajax::url())<?php if($this->isAjaxEdit() && strpos($this->getShortName(),'log')!==strlen($this->getShortName())-3 ){?>->setEditAjaxUrl(<?=$this->getShortName()?>AjaxEdit::url())<?php }?>->__invoke()?>
@@ -250,3 +243,15 @@ use xltxlm\h5skin\Traits\VueLink;
 
 <<?='?'?>= (new DatePicker())->setTimePicker(false)->setSingleDatePicker(false)->__invoke() ?>
 <<?='?'?>= (new Timepicker())->setInterval(30)->__invoke() ?>
+<script>
+<?='<'?>?php
+$jss = (new Dir(__DIR__.'/<?=$this->getShortName()?>/'))
+    ->setPreg('.js$')
+    ->setOnlyFile(true)
+    ->__invoke();
+foreach ($jss as $js)
+{
+    include $js->getRealPath();
+}
+?>
+</script>

@@ -58,7 +58,7 @@ final class <?=ucfirst($this->getShortName())?>Elastic
 
     protected function getSleepSecond(): int
     {
-        return 3600;
+        return 10;
     }
 
     protected function whileRun()
@@ -79,12 +79,11 @@ final class <?=ucfirst($this->getShortName())?>Elastic
                         ]
                     );
             } catch (\Exception $e) {
-                Util::d($e->getMessage());
             }
         }
 
         $pageObject=(new PageObject())
-            ->setPrepage(30);
+            ->setPrepage(1000);
         $<?=ucfirst($this->getShortName())?>SelectAlls = (new <?=ucfirst($this->getShortName())?>Page())
             ->setPageObject($pageObject)
             ->whereElasticsearch(Enum<?=ucfirst($this->getShortName())?>Elasticsearch::WEI_SUO_YIN)
@@ -107,10 +106,10 @@ final class <?=ucfirst($this->getShortName())?>Elastic
             {
                 try {
                     //加载其他业务逻辑
-                    $exFile = __DIR__.'./<?=ucfirst($this->getShortName())?>More.php';
+                    $exFile = __DIR__.'/<?=ucfirst($this->getShortName())?>ElasticMore.php';
                     if( is_file( $exFile ) )
                     {
-                        (new <?=ucfirst($this->getShortName())?>More($this))
+                        (new <?=ucfirst($this->getShortName())?>ElasticMore($this))
                         ->__invoke();
                     }
                     //记录操作日志

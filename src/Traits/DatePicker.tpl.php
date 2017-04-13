@@ -20,11 +20,13 @@ use xltxlm\h5skin\Traits\DatePicker;
 
 <?php if($this->isSingleDatePicker()=='false') {?>
         $(id).on('apply.daterangepicker', function (ev, picker) {
-            $(this).val(picker.startDate.format('<?=$this->getFormat()?>') + ' - ' + picker.endDate.format('<?=$this->getFormat()?>'));
+            var val=picker.startDate.format('<?=$this->getFormat()?>') + ' - ' + picker.endDate.format('<?=$this->getFormat()?>');
+            $(this).val(val);
         });
 <?php }else{?>
         $(id).on('apply.daterangepicker', function (ev, picker) {
-            $(this).val(picker.startDate.format('<?=$this->getFormat()?>'));
+            var val=picker.startDate.format('<?=$this->getFormat()?>');
+            $(this).val(val);
         });
 <?php }?>
         $(id).on('cancel.daterangepicker', function (ev, picker) {
