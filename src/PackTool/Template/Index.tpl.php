@@ -245,7 +245,7 @@ use xltxlm\h5skin\Traits\VueLink;
     console.log(alldata);
 </script>
 <?php if($this->isAjax()){?>
-<<?='?'?>=(new VueLink)->setUrl(<?=$this->getShortName()?>Ajax::url())<?php if($this->isAjaxEdit()){?>->setEditAjaxUrl(<?=$this->getShortName()?>AjaxEdit::url())<?php }?>->__invoke()?>
+<<?='?'?>=(new VueLink)->setUrl(<?=$this->getShortName()?>Ajax::url())<?php if($this->isAjaxEdit() && strpos($this->getShortName(),'log')!==strlen($this->getShortName())-3 ){?>->setEditAjaxUrl(<?=$this->getShortName()?>AjaxEdit::url())<?php }?>->__invoke()?>
 <?php } ?>
 
 <<?='?'?>= (new DatePicker())->setTimePicker(false)->setSingleDatePicker(false)->__invoke() ?>
