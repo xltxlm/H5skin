@@ -4,6 +4,7 @@ $TableNameLong=strtr($this->getTableModelClassNameReflectionClass()->getName(),[
 ?>
 <<?='?'?>php
 /** @var <?=$this->getClassName()?> $this */
+use <?=self::$rootNamespce?>\Setting\Page;
 use <?=$this->getClassName()?>;
 use <?=$this->getClassName()?>Request;
 <?php if(strpos($this->getShortName(),'log')!==strlen($this->getShortName())-3){?>
@@ -70,6 +71,7 @@ use xltxlm\h5skin\Traits\VueLink;
                         ->setDefault($this->getPageObject()->getPrepage())
                         ->setName('prepage')
                         ->setSelect2(false)
+                        ->setVmodel('alldata.pageObject.prepage')
                         ->__invoke()?>
                     </div>
 
@@ -144,8 +146,11 @@ use xltxlm\h5skin\Traits\VueLink;
     </div>
 </div>
 
-
-<template v-for=" idata in [alldata.<?='<'?>?=<?=$this->getShortName()?>Ajax::<?=$TableName?>Model()?>,alldata.<?='<'?>?=<?=$this->getShortName()?>Ajax::<?=$TableName?>Model()?>ed]">
+<?php if(strpos($this->getShortName(),'log')!==strlen($this->getShortName())-3) {?>
+<template v-for=" (idata,iindex) in [alldata.<?='<'?>?=<?=$this->getShortName()?>Ajax::<?=$TableName?>Model()?>,alldata.<?='<'?>?=<?=$this->getShortName()?>Ajax::<?=$TableName?>Model()?>ed]">
+<?php }else{?>
+<template v-for=" (idata,iindex) in [alldata.<?='<'?>?=<?=$this->getShortName()?>Ajax::<?=$TableName?>Model()?>]">
+<?php }?>
 <div class="row" v-if="idata">
     <div class="col-xs-12">
         <div class="box">
@@ -154,7 +159,7 @@ use xltxlm\h5skin\Traits\VueLink;
             </div>
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">
-                <<?='?'?>=(new PageBarHtml($this))->setVue(true)->__invoke()<?='?'?>>
+                <div v-if="iindex == 0 "><<?='?'?>=(new PageBarHtml($this))->setVue(true)->__invoke()<?='?'?>></div>
                 <table class="table table-hover">
                     <thead>
                 <tr>
@@ -215,7 +220,7 @@ use xltxlm\h5skin\Traits\VueLink;
 
                     </tbody>
                 </table>
-                <<?='?'?>=(new PageBarHtml($this))->setVue(true)->__invoke()<?='?'?>>
+                <div v-if="iindex == 0 "><<?='?'?>=(new PageBarHtml($this))->setVue(true)->__invoke()<?='?'?>></div>
             </div>
             <!-- /.box-body -->
         </div>
@@ -243,6 +248,12 @@ use xltxlm\h5skin\Traits\VueLink;
 
 <<?='?'?>= (new DatePicker())->setTimePicker(false)->setSingleDatePicker(false)->__invoke() ?>
 <<?='?'?>= (new Timepicker())->setInterval(30)->__invoke() ?>
+<script>
+    //监控分页条设置的改变
+    vueel.$watch('alldata.pageObject.prepage',function () {
+        $.get('<?='<'?>?=Page::url()?>&prepage='+this.alldata.pageObject.prepage)
+    });
+</script>
 <script>
 <?='<'?>?php
 $jss = (new Dir(__DIR__.'/<?=$this->getShortName()?>/'))

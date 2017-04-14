@@ -22,9 +22,11 @@ final class Page
     public function getPage()
     {
         setcookie('prepage', $_GET['prepage'], time() + 3600 * 24 * 360, '/');
-        $_GET['backurl'] = (new FixUrl($_GET['backurl']))
-            ->setUnserKeys(['prepage'])
-            ->__invoke();
-        header('location:'.$_GET['backurl']);
+        if ($_GET['backurl']) {
+            $_GET['backurl'] = (new FixUrl($_GET['backurl']))
+                ->setUnserKeys(['prepage'])
+                ->__invoke();
+            header('location:'.$_GET['backurl']);
+        }
     }
 }

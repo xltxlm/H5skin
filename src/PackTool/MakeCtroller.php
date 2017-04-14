@@ -381,6 +381,7 @@ final class MakeCtroller
         if ($this->getElasticsearchCrontab()) {
             mkdir(self::$rootDir.'/../Crontab/LoadData/');
             $this->file_put_contents(self::$rootDir.'/../Crontab/Elasticsearch/'.$this->getShortName().'Elastic.php', __DIR__.'/Template/Crontab/LoadDataToElatic.php');
+            $this->file_put_contents(self::$rootDir.'/../Crontab/Elasticsearch/'.$this->getShortName().'ElasticMore.php', __DIR__.'/Template/Crontab/LoadDataToElaticMore.php', false);
         }
 
         //8:ajax页面生成
@@ -402,15 +403,17 @@ final class MakeCtroller
      * 同时写2份文件.临时文件的实时更新
      * @param $classRealFile
      * @param $templatePath
+     * @param bool $overWrite 文件存在也覆盖掉
      */
-    private function file_put_contents($classRealFile, $templatePath)
+    private function file_put_contents($classRealFile, $templatePath, $overWrite = true)
     {
         ob_start();
         eval('include $templatePath;');
         $ob_get_clean = ob_get_clean();
         //确保文件的内容不一致才写入
-        if (file_get_contents($classRealFile) !== $ob_get_clean) {
+        if (file_get_contents($classRealFile) !== $ob_get_clean && $overWrite || !is_file($classRealFile)) {
             file_put_contents($classRealFile, $ob_get_clean);
         }
     }
+
 }
