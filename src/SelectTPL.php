@@ -31,6 +31,27 @@ class SelectTPL extends Template
     protected $select2 = true;
     /** @var bool 是否快速选择 */
     protected $quick = false;
+    /** @var array 直接修改html代码 */
+    protected $attr=[];
+
+    /**
+     * @return array
+     */
+    public function getAttr(): array
+    {
+        return $this->attr;
+    }
+
+    /**
+     * @param string $attr
+     * @return SelectTPL
+     */
+    public function setAttr(string $attr): SelectTPL
+    {
+        $this->attr[] = $attr;
+        return $this;
+    }
+
 
     /**
      * @return bool

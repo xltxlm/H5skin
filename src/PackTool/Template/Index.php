@@ -47,6 +47,15 @@ class <?=$this->getShortName()?>
     /** @var  <?= $Table ?>[] */
     protected $<?= $Table ?>Model = [];
 
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return (new \<?=$TableLong?>)->getComment();
+    }
+
     /**
      * @return <?= $Table ?>[]
      */

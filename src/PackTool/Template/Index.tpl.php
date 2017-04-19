@@ -4,7 +4,7 @@ $TableNameLong=strtr($this->getTableModelClassNameReflectionClass()->getName(),[
 ?>
 <<?='?'?>php
 /** @var <?=$this->getClassName()?> $this */
-use <?=self::$rootNamespce?>\Setting\Page;
+use <?=static::$rootNamespce?>\Setting\Page;
 use <?=$this->getClassName()?>;
 use <?=$this->getClassName()?>Request;
 <?php if(strpos($this->getShortName(),'log')!==strlen($this->getShortName())-3){?>
@@ -81,6 +81,10 @@ use xltxlm\h5skin\Traits\VueLink;
                         $enum=false;
                         eval('$enum='.$isEnumFunction);
 
+                        $IsIntFunction= $TableNameLong.'Type::'.$property->getName().'IsInt();';
+                        $IsInt=false;
+                        eval('$IsInt='.$IsIntFunction);
+
                         ob_start();
                      ?>
                         <<?='?'?>=(new <?=$TableName?>Model)()[<?=$TableName?>Model::<?=$property->getName()?>()]?>
@@ -92,6 +96,7 @@ use xltxlm\h5skin\Traits\VueLink;
                         <label  :class="{'label label-danger':requestmodel.<?=$property->getName()?>}"  for="<?=$property->getName()?>">
                             <?=$fieldShowName?>
                         </label>
+                        <?php if($IsInt){?><span class="pull-right">批量查询</span><?php }?>
                     <?php if($enum){?>
                             <<?='?'?>=(new SelectTPL())
                         ->setOptions([
@@ -205,9 +210,10 @@ use xltxlm\h5skin\Traits\VueLink;
                         ->setVOnChange('editField')
                         ->setQuick(true)
                         ->setVmodel(<?=$TableName?>Model::<?=$property->name?>Vue(false))
+                        ->setAttr(':disabled="openeditflag != item.id"')
                     ->__invoke()?>
 <?php }else{ ?>
-            <!--  <?=$property->getName()?>  --><td><input @keyup="editField()" class="<<?='?'?>php if(<?=$TableName?>Type::<?=$property->getName()?>IsDate()){?><<?='?'?>=DatePicker::daterangepicker()?><<?='?'?>php }?>" style="width: 100%" title="" name="<<?='?'?>=<?=$TableName?>Model::<?=$property->name?>()?>" type="text" v-model="<<?='?'?>= <?=$TableName?>Model::<?=$property->name?>Vue(false) ?>"></td>
+            <!--  <?=$property->getName()?>  --><td><input  :disabled="openeditflag != item.id" @keyup="editField()" class="<<?='?'?>php if(<?=$TableName?>Type::<?=$property->getName()?>IsDate()){?><<?='?'?>=DatePicker::daterangepicker()?><<?='?'?>php }?>" style="width: 100%" title="" name="<<?='?'?>=<?=$TableName?>Model::<?=$property->name?>()?>" type="text" v-model="<<?='?'?>= <?=$TableName?>Model::<?=$property->name?>Vue(false) ?>"></td>
 <?php }?>
 <?php }?>
                             <td><?php if(strpos($this->getShortName(),'log')!==strlen($this->getShortName())-3){?><a target="_blank" :href="'<?='<'?>?=<?=$this->getShortName()?>log::url()?>&<?='<'?>?=<?=$this->getShortName()?>logModel::pid()?>='+<?='<'?>?=<?=$this->getShortName()?>logModel::idVue(false)?>">日志</a><?php }?></td>
@@ -238,9 +244,12 @@ use xltxlm\h5skin\Traits\VueLink;
     }
     ?>
 <script>
-    var requestmodel=<?='<'?>?=(new ConvertObject(new <?=$this->getShortName()?>Request))
-        ->toJson()?>;
+    //查询表单的数据字段列表
+    var requestmodel=<?='<'?>?=(new ConvertObject(new <?=$this->getShortName()?>Request))->toJson()?>;
+    //ajax返回的数据结构
     var alldata=<?='<'?>?=json_encode($define,JSON_UNESCAPED_UNICODE)?>;
+    //修改值之后,可以重新刷新界面的字段
+    var reloadfield=<?=$this->getReloadfield()?>;
 </script>
 <?php if($this->isAjax()){?>
 <<?='?'?>=(new VueLink)->setUrl(<?=$this->getShortName()?>Ajax::url())<?php if($this->isAjaxEdit() && strpos($this->getShortName(),'log')!==strlen($this->getShortName())-3 ){?>->setEditAjaxUrl(<?=$this->getShortName()?>AjaxEdit::url())<?php }?>->__invoke()?>

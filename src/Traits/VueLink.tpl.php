@@ -10,7 +10,8 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 //ajax接受到的结果集
                 alldata: alldata,
                 openeditflag:"",
-                tmpindex: 0
+                tmpindex: 0,
+                reloadfield:reloadfield
             },
             methods: {
                 action: function () {
@@ -59,7 +60,10 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                         url: '<?=$this->getEditAjaxUrl()?>',
                         data: postdata,
                         success: function (result) {
-                            <?=$this::vueel()?>.action();
+                            if($.inArray(object.name,<?=$this::vueel()?>.$data.reloadfield) != -1)
+                            {
+                                <?=$this::vueel()?>.action();
+                            }
                         }
                     });
                 },

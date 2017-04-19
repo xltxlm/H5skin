@@ -11,6 +11,9 @@ use xltxlm\redis\LockKey;
 
 eval('include "/var/www/html/vendor/autoload.php";');
 
+/**
+* 把数据加载到Elasticsearch中
+*/
 class <?=ucfirst($this->getTable()->getName())?>ElaticReload
 {
 

@@ -28,6 +28,28 @@ final class Input extends Template
     /** @var string 值 */
     protected $value = '';
 
+    /** @var array 直接修改html代码 */
+    protected $attr=[];
+
+    /**
+     * @return array
+     */
+    public function getAttr(): array
+    {
+        return $this->attr;
+    }
+
+    /**
+     * @param string $attr
+     * @return Input
+     */
+    public function setAttr(string $attr): Input
+    {
+        $this->attr[] = $attr;
+        return $this;
+    }
+
+
     /**
      * @return string
      */

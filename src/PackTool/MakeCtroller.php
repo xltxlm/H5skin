@@ -48,10 +48,31 @@ final class MakeCtroller
     protected $AjaxEditField = [];
     /** @var array 可以被格式化显示的字段 */
     protected $Ajaxhowfield = [];
+    /** @var string 点击修改值之后,可以重新加载数据的字段 */
+    protected $reloadfield="[]";
     /** @var bool 完全处在编辑状态 */
     protected $AjaxEditOnly = false;
     /** @var  string 开启审核的时候,redis服务的配置 */
     protected $redisConfig;
+
+    /**
+     * @return string
+     */
+    public function getReloadfield(): string
+    {
+        return $this->reloadfield;
+    }
+
+    /**
+     * @param string $reloadfield
+     * @return MakeCtroller
+     */
+    public function setReloadfield(string $reloadfield): MakeCtroller
+    {
+        $this->reloadfield = $reloadfield;
+        return $this;
+    }
+
 
     /**
      * @return array
@@ -338,6 +359,7 @@ final class MakeCtroller
     {
         $diffPath = strtr($this->getClassName(), [static::$rootNamespce => '']);
         $classRealFile = strtr(static::$rootDir.$diffPath.'.php', ['\\' => '/']);
+        mkdir(dirname($classRealFile));
         $this->shortName = end(explode('\\', $this->getClassName()));
         $this->classNameSpace = strtr($this->getClassName(), ['\\'.$this->shortName => ""]);
 
@@ -380,6 +402,7 @@ final class MakeCtroller
 
         if ($this->getElasticsearchCrontab()) {
             mkdir(self::$rootDir.'/../Crontab/LoadData/');
+            mkdir(self::$rootDir.'/../Crontab/Elasticsearch/');
             $this->file_put_contents(self::$rootDir.'/../Crontab/Elasticsearch/'.$this->getShortName().'Elastic.php', __DIR__.'/Template/Crontab/LoadDataToElatic.php');
             $this->file_put_contents(self::$rootDir.'/../Crontab/Elasticsearch/'.$this->getShortName().'ElasticMore.php', __DIR__.'/Template/Crontab/LoadDataToElaticMore.php', false);
         }
@@ -411,7 +434,7 @@ final class MakeCtroller
         eval('include $templatePath;');
         $ob_get_clean = ob_get_clean();
         //确保文件的内容不一致才写入
-        if (file_get_contents($classRealFile) !== $ob_get_clean && $overWrite || !is_file($classRealFile)) {
+        if (!is_file($classRealFile) || (file_get_contents($classRealFile) !== $ob_get_clean && $overWrite)) {
             file_put_contents($classRealFile, $ob_get_clean);
         }
     }
