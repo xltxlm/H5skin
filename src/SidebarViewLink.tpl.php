@@ -1,4 +1,5 @@
 <?php /** @var  \xltxlm\h5skin\SidebarViewLink $this */
+$className = $this->getClassName();
 ?>
 <li class="<<?= '?' ?>= in_array(LoadClass::$runClass,<?= json_encode($this->getHighlightClass(), JSON_UNESCAPED_UNICODE) ?>) ? 'active' : '' <?= '?' ?>>">
     <a href="<<?= '?' ?>= call_user_func([<?= $this->getClassName() ?>::class, 'urlNoFollow'], json_decode('<?= json_encode($this->getArgs(), JSON_UNESCAPED_UNICODE) ?>',true)) <?= '?' ?>>">
@@ -7,6 +8,6 @@
             <<?= '?' ?>php } else { <?= '?' ?>>
                 <i class="fa fa-th"></i>
                 <<?= '?' ?>php } <?= '?' ?>>
-                    <span><?= $this->getName() ?></span>
+                    <span><?= $this->getName()?:(new $className)->getTitle() ?></span>
     </a>
 </li>

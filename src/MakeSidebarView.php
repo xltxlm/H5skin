@@ -8,7 +8,8 @@
 
 namespace xltxlm\h5skin;
 
-use Symfony\Component\Filesystem\Filesystem;
+use xltxlm\helper\Hdir\DirTemplate;
+use xltxlm\helper\Hdir\file_write_contents;
 use xltxlm\template\Template;
 
 /**
@@ -17,6 +18,7 @@ use xltxlm\template\Template;
  */
 final class MakeSidebarView extends Template
 {
+    use file_write_contents;
     /** @var array 节点数据 */
     protected $node = [];
     /** @var  Object */
@@ -96,15 +98,12 @@ final class MakeSidebarView extends Template
         //2:拷贝分页类
         mkdir($this->AppDir."/Setting");
         $page = strtr(file_get_contents(__DIR__.'/Setting/Page.php'), ["xltxlm\\h5skin\\Setting" => $this->rootNamespce.'\\Setting']);
-        file_put_contents($this->AppDir."/Setting/Page.php", $page);
+        $this->file_write_contents($this->AppDir."/Setting/Page.php", $page);
         //3:拷贝静态资源
-        (new Filesystem())
-            ->mirror(__DIR__.'/static/', $this->AppDir.'/../Siteroot/static/', null, ['override' => true]);
-        //拷贝入口页面
-        $index = $this->SiterootDir.'/index.php';
-        if (!is_file($index)) {
-            copy(__DIR__.'/index.php', $index);
-        }
-        //todo:拷贝推出登录类
+        mkdir($this->AppDir.'/../Siteroot/static/');
+        (new DirTemplate())
+            ->setFromDir(__DIR__.'/static/')
+            ->setToDir($this->AppDir.'/../Siteroot/static/')
+            ->__invoke();
     }
 }
