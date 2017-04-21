@@ -10,6 +10,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 //ajax接受到的结果集
                 alldata: alldata,
                 openeditflag:"",
+                openeditiitem:"",
                 tmpindex: 0,
                 reloadfield:reloadfield
             },
@@ -39,8 +40,9 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 },
 
                 //以下是点击编辑的切换状态
-                openedit:function (id) {
+                openedit:function (id,item) {
                     <?=$this::vueel()?>.$data.openeditflag = id;
+                    <?=$this::vueel()?>.$data.openeditiitem = item;
                 },
 
                 editField:function () {
@@ -64,6 +66,10 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                             {
                                 <?=$this::vueel()?>.action();
                             }
+                            ajaxSuccess(result,<?=$this::vueel()?>. $data.openeditiitem);
+                        },
+                        error:function (XMLHttpRequest,textStatus) {
+                            ajaxError(textStatus,<?=$this::vueel()?>. $data.openeditiitem)
                         }
                     });
                 },

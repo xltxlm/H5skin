@@ -17,6 +17,7 @@ use xltxlm\helper\Url\FixUrl;
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/notie.min.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="/static/css/font-awesome.min.css">
     <!-- Ionicons -->
@@ -37,6 +38,7 @@ use xltxlm\helper\Url\FixUrl;
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/js.cookie.min.js"></script>
     <script src="/static/js/vue.min.js"></script>
+    <script src="/static/js/notie.min.js"></script>
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">

@@ -33,6 +33,28 @@ class SelectTPL extends Template
     protected $quick = false;
     /** @var array 直接修改html代码 */
     protected $attr=[];
+    /** @var bool 是否输出vue格式 */
+    protected $vue=false;
+
+    /**
+     * @return bool
+     */
+    public function isVue(): bool
+    {
+        return $this->vue;
+    }
+
+    /**
+     * @param bool $vue
+     * @return SelectTPL
+     */
+    public function setVue(bool $vue): SelectTPL
+    {
+        $this->vue = $vue;
+        return $this;
+    }
+
+
 
     /**
      * @return array
