@@ -29,7 +29,14 @@
     reserved.
 </footer>
 
-
+<aside class="control-sidebar control-sidebar-dark control-sidebar-close">
+    <!-- Tab panes -->
+    <div class="tab-content" id="tab-content">
+        <!-- Settings tab content -->
+        <!-- /.tab-pane -->
+    </div>
+</aside>
+<div class="control-sidebar-bg" style="position: fixed; height: auto;"></div>
 <!-- Bootstrap 3.3.6 -->
 <script src="/static/js/bootstrap.min.js"></script>
 <!-- FastClick -->

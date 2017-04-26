@@ -65,8 +65,8 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                             if($.inArray(object.name,<?=$this::vueel()?>.$data.reloadfield) != -1)
                             {
                                 <?=$this::vueel()?>.action();
+                                ajaxSuccess(result,<?=$this::vueel()?>. $data.openeditiitem);
                             }
-                            ajaxSuccess(result,<?=$this::vueel()?>. $data.openeditiitem);
                         },
                         error:function (XMLHttpRequest,textStatus) {
                             ajaxError(textStatus,<?=$this::vueel()?>. $data.openeditiitem)
