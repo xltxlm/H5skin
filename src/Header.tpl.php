@@ -4,7 +4,7 @@ use xltxlm\h5skin\Setting\Page;
 use xltxlm\helper\Ctroller\LoadClass;
 use xltxlm\helper\Ctroller\Unit\RunInvoke;
 use xltxlm\helper\Ctroller\UrlLink;
-use xltxlm\helper\Url\FixUrl;
+use xltxlm\thrift\Config\ThriftConfig;
 
 ?>
 <!DOCTYPE html>
@@ -140,9 +140,14 @@ use xltxlm\helper\Url\FixUrl;
                                 </div>
                                 <div class="pull-right">
                                     <?php
-                                     $class=LoadClass::$rootNamespce.'\\Index\\Logout';
+                                    if($this->SsoThriftConfig)
+                                    {
+                                        $SsoThriftConfig=$this->SsoThriftConfig;
+                                        /** @var ThriftConfig $SsoThriftObject */
+                                        $SsoThriftObject= new $SsoThriftConfig;
                                     ?>
-                                    <a href="<?=UrlLink::url(['backurl'=>$this::Myurl()],$class)?>" class="btn btn-default btn-flat">Sign out</a>
+                                    <a href="http://<?=$SsoThriftObject->getHosturl()?>:<?=$SsoThriftObject->getPort()?>/?c=Index/Logout&backurl=<?=$this::Myurl()?>" class="btn btn-default btn-flat">Sign out</a>
+                                    <?php } ?>
                                 </div>
                             </li>
                         </ul>
