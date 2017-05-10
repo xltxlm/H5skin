@@ -65,43 +65,6 @@ use xltxlm\thrift\Config\ThriftConfig;
 
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <!-- Tasks: style can be found in dropdown.less -->
-                    <li class="dropdown tasks-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-align-right"></i>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="header">修改每页分页条数</li>
-                            <li>
-                                <!-- inner menu: contains the actual data -->
-                                <ul class="menu">
-                                    <?php foreach ([1, 2, 10, 20, 30, 100] as $pagenum) { ?>
-                                        <li><!-- Task item -->
-                                            <a href="<?= Page::url(['prepage' => $pagenum, 'backurl' => urlencode(RunInvoke::url($_POST, LoadClass::$runClass))],LoadClass::$rootNamespce.'\\'.Setting\Page::class) ?>">
-                                                <h3>
-                                                    每页<b><?= $pagenum ?></b>条
-                                                    <small class="pull-right"><?= $pagenum ?>%</small>
-                                                </h3>
-                                                <div class="progress xs">
-                                                    <div class="progress-bar progress-bar-aqua"
-                                                         style="width: <?= $pagenum ?>%"
-                                                         role="progressbar" aria-valuenow="<?= $pagenum ?>"
-                                                         aria-valuemin="0"
-                                                         aria-valuemax="100">
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <!-- end task item -->
-                                    <?php } ?>
-                                    <!-- end task item -->
-                                </ul>
-                            </li>
-                            <li class="footer">
-                                <a href="#">分页条设置</a>
-                            </li>
-                        </ul>
-                    </li>
                     <!-- User Account: style can be found in dropdown.less -->
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
