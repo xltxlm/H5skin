@@ -35,6 +35,27 @@ class SelectTPL extends Template
     protected $attr=[];
     /** @var bool 是否输出vue格式 */
     protected $vue=false;
+    /** @var bool 是否是必填项 */
+    protected $required=false;
+
+    /**
+     * @return bool
+     */
+    public function isRequired(): bool
+    {
+        return $this->required;
+    }
+
+    /**
+     * @param bool $required
+     * @return SelectTPL
+     */
+    public function setRequired(bool $required): SelectTPL
+    {
+        $this->required = $required;
+        return $this;
+    }
+
 
     /**
      * @return bool
