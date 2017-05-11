@@ -81,37 +81,22 @@ use xltxlm\thrift\Config\ThriftConfig;
                                     <small>Member since Nov. 2012</small>
                                 </p>
                             </li>
-                            <!-- Menu Body -->
-                            <li class="user-body">
-                                <div class="row">
-                                    <div class="col-xs-4 text-center">
-                                        <a href="#">Followers</a>
-                                    </div>
-                                    <div class="col-xs-4 text-center">
-                                        <a href="#">Sales</a>
-                                    </div>
-                                    <div class="col-xs-4 text-center">
-                                        <a href="#">Friends</a>
-                                    </div>
-                                </div>
-                                <!-- /.row -->
-                            </li>
                             <!-- Menu Footer-->
                             <li class="user-footer">
+                                <?php
+                                if($this->SsoThriftConfig)
+                                {
+                                $SsoThriftConfig=$this->SsoThriftConfig;
+                                /** @var ThriftConfig $SsoThriftObject */
+                                $SsoThriftObject= new $SsoThriftConfig;
+                                ?>
                                 <div class="pull-left">
-                                    <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                    <a href="http://<?=$SsoThriftObject->getHosturl()?>:<?=$SsoThriftObject->getPort()?>/?c=Index/ChangePassword&backurl=<?=$this::Myurl()?>" class="btn btn-default btn-flat">修改密码</a>
                                 </div>
                                 <div class="pull-right">
-                                    <?php
-                                    if($this->SsoThriftConfig)
-                                    {
-                                        $SsoThriftConfig=$this->SsoThriftConfig;
-                                        /** @var ThriftConfig $SsoThriftObject */
-                                        $SsoThriftObject= new $SsoThriftConfig;
-                                    ?>
                                     <a href="http://<?=$SsoThriftObject->getHosturl()?>:<?=$SsoThriftObject->getPort()?>/?c=Index/Logout&backurl=<?=$this::Myurl()?>" class="btn btn-default btn-flat">Sign out</a>
-                                    <?php } ?>
                                 </div>
+                                <?php } ?>
                             </li>
                         </ul>
                     </li>
