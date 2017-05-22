@@ -39,6 +39,7 @@ use xltxlm\thrift\Config\ThriftConfig;
     <script src="/static/js/js.cookie.min.js"></script>
     <script src="/static/js/vue.min.js"></script>
     <script src="/static/js/notie.min.js"></script>
+    <script src="/static/js/timeago.min.js"></script>
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">

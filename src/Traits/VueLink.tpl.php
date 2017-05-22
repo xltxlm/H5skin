@@ -12,7 +12,8 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 openeditflag:"",
                 openeditiitem:"",
                 tmpindex: 0,
-                reloadfield:reloadfield
+                reloadfield:reloadfield,
+                searchform:false
             },
             methods: {
                 action: function () {
