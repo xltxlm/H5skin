@@ -67,7 +67,7 @@ if (!defined(__FILE__)) {
     <?php } ?>
 </select<?=$this->isVue()?'2':''?>>
 
-<?php if(!$this->isVue() && $this->isSelect2()){?>
+<?php if(!$this->isVue() && $this->isSelect2() && $this->getName()){?>
 <script>
     //单选下拉框
     $(function () {

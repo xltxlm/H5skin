@@ -81,7 +81,11 @@ class SidebarViewLink extends Template
     {
         $this->className = $className;
         $this->setHighlightClass($this->className);
-
+        //如果存在日志
+        $this->setHighlightClass($this->className.'log');
+        //如果存在添加
+        $this->setHighlightClass($this->className.'Add');
+        $this->setHighlightClass($this->className.'AddCopy');
         return $this;
     }
 
