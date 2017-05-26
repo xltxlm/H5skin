@@ -2,6 +2,22 @@
 use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
 
 <script>
+    //searchform 可以由网页自定义.如果没有定义,那么默认搜索框是关闭的
+    if(typeof searchform === 'undefined')
+    {
+        searchform =false;
+    }
+    //draggable 是否可以拖拽排序
+    if(typeof draggable === 'undefined')
+    {
+        draggable =false;
+    }
+    //modelname 当前项目的模型名称
+    if(typeof modelname == 'undefined')
+    {
+        console.log('aaa');
+        modelname ='';
+    }
     var <?=$this::vueel()?> =(new Vue({
             el: "#<?=$this::vueel()?>",
             data: {
@@ -12,8 +28,10 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 openeditflag:"",
                 openeditiitem:"",
                 tmpindex: 0,
+                modelname: modelname,
                 reloadfield:reloadfield,
-                searchform:false
+                searchform:searchform,
+                draggable:draggable
             },
             methods: {
                 action: function () {
@@ -66,27 +84,50 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                             if($.inArray(object.name,<?=$this::vueel()?>.$data.reloadfield) != -1)
                             {
                                 <?=$this::vueel()?>.action();
-                                ajaxSuccess(result,<?=$this::vueel()?>. $data.openeditiitem);
+                                ajaxSuccess(result,<?=$this::vueel()?>.$data.openeditiitem);
                             }
                         },
                         error:function (XMLHttpRequest,textStatus) {
-                            ajaxError(textStatus,<?=$this::vueel()?>. $data.openeditiitem)
+                            ajaxError(textStatus,<?=$this::vueel()?>.$data.openeditiitem)
                         }
                     });
                 },
 
                 // 以下是表格拖的功能 index:被压元素的坑
                 drop: function (index, event) {
-                    var tmp = this.alldata.edit[this.tmpindex];
-                    //删除掉拽住的元素
-                    this.alldata.edit.splice(this.tmpindex, 1);
-                    //被压的元素前面加 上 拽住的元素
-                    this.alldata.edit.splice(index, 0,tmp);
+                    eval('model=this.alldata.'+this.modelname);
+                    $.ajax({
+                        dataType: "json",
+                        method: "POST",
+                        url: '<?=$this->getDragAjaxUrl()?>',
+                        data:{
+                            'from':model[this.tmpindex],
+                            'to':model[index]
+                        },
+                        success: function (result) {
+                            if(result.code == 0)
+                            {
+//                                var tmp = model[this.tmpindex];
+//                                //删除掉拽住的元素
+//                                model.splice(this.tmpindex, 1);
+//                                //被压的元素前面加 上 拽住的元素
+//                                model.splice(index, 0,tmp);
+                                <?=$this::vueel()?>.action();
+                                ajaxSuccess(result,<?=$this::vueel()?>.$data.openeditiitem);
+                            }else
+                            {
+                                ajaxError(result)
+                            }
+                        },
+                        error:function (XMLHttpRequest,textStatus) {
+                            ajaxError(textStatus,<?=$this::vueel()?>.$data.openeditiitem)
+                        }
+                    });
                 },
                 dragover: function (event) {
                     event.preventDefault();
                 },
-                dragstart: function (index, eveent) {
+                dragstart: function (index, event) {
                     this.tmpindex = index;
                 }
 

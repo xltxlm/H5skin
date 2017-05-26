@@ -18,6 +18,27 @@ class VueLink extends Template
     protected $url = "";
     /** @var string 字段编辑网址 */
     protected $editAjaxUrl = "";
+    /** @var string 字段排序网址 */
+    protected $DragAjaxUrl = "";
+
+    /**
+     * @return string
+     */
+    public function getDragAjaxUrl(): string
+    {
+        return $this->DragAjaxUrl;
+    }
+
+    /**
+     * @param string $DragAjaxUrl
+     * @return VueLink
+     */
+    public function setDragAjaxUrl(string $DragAjaxUrl): VueLink
+    {
+        $this->DragAjaxUrl = $DragAjaxUrl;
+        return $this;
+    }
+
 
     public static function vueel()
     {
