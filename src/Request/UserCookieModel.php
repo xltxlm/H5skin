@@ -119,7 +119,7 @@ class UserCookieModel
      */
     public function getSign()
     {
-        return $this->sign = md5($this->username.self::KEY);
+        return $this->sign = md5($this->username . self::KEY);
     }
 
     /**
@@ -141,17 +141,19 @@ class UserCookieModel
      */
     public function check()
     {
-        if ($this->username && $this->sign == md5($this->username.self::KEY)) {
+        if ($this->username && $this->sign == md5($this->username . self::KEY)) {
             return true;
         }
 
         return false;
     }
 
-    public function makeCookie()
+    public function makeCookie($time = 0)
     {
-        setcookie('username', $_COOKIE['username'] = $this->getUsername(), 0, '/');
-        setcookie('sign', $_COOKIE['sign'] = $this->getSign(), 0, '/');
+        setcookie('username', $_COOKIE['username'] = $this->getUsername(), time() + 3600 * 24 * 300, '/');
+        if ($_COOKIE['sign'] != $this->getSign()) {
+            setcookie('sign', $_COOKIE['sign'] = $this->getSign(),  $time, '/');
+        }
     }
 
     public function clearCookie()
