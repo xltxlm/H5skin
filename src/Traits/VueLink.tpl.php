@@ -15,9 +15,9 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
     //modelname 当前项目的模型名称
     if(typeof modelname == 'undefined')
     {
-        console.log('aaa');
         modelname ='';
     }
+    var oldgetdata=[];
     var <?=$this::vueel()?> =(new Vue({
             el: "#<?=$this::vueel()?>",
             data: {
@@ -25,6 +25,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 requestmodel:requestmodel,
                 //ajax接受到的结果集
                 alldata: alldata,
+                oldalldata:[],
                 openeditflag:"",
                 openeditiitem:"",
                 tmpindex: 0,
@@ -34,12 +35,14 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 draggable:draggable
             },
             methods: {
+                //请求接口新数据
                 action: function () {
                     var getdata={};
                     //拼接查询的数据参数
                     $('#<?=$this::vueel()?> form [name]').each(function () {
                         getdata[this.name] = this.value;
                     });
+                    oldgetdata=getdata;
                     //发送数据,查询内容
                     $.ajax({
                         dataType: "json",
@@ -49,6 +52,8 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                         async:false,
                         success: function (result) {
                             <?=$this::vueel()?>. $data.alldata = result;
+                            //借助json进行深拷贝，如果直接等于的话， oldalldata 和 alldata 实时联动的
+                            <?=$this::vueel()?>. $data.oldalldata = JSON.parse(JSON.stringify(result));
                         }
                     });
                 },
@@ -59,7 +64,8 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 },
 
                 //以下是点击编辑的切换状态
-                openedit:function (id,item) {
+                openedit:function (id,index,item) {
+                    this.tmpindex = index;
                     <?=$this::vueel()?>.$data.openeditflag = id;
                     <?=$this::vueel()?>.$data.openeditiitem = item;
                 },
@@ -72,6 +78,12 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                     //字段名字 => 字段值
                     postdata['name']=object.name;
                     postdata['value']=object.value;
+                    //只有编辑的内容和之前不一致，才请求新数据
+                    eval('oldmodel=this.oldalldata.'+this.modelname);
+                    if (object.value == oldmodel[this.tmpindex][object.name] )
+                    {
+                        return;
+                    }
 
 
                     //发送数据,编辑当前字段的值
@@ -139,13 +151,21 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
     $(function () {
         $('#<?=$this::vueel()?> form [name]').each(function () {
             $(this).keyup(function () {
-                <?=$this::vueel()?>.action();
+                //console.log('触发函数:keyup');
+                //数据不一致才执行查询
+                if(this.value != oldgetdata[this.name])
+                { <?=$this::vueel()?>.action(); }
             });
             $(this).blur(function () {
-                <?=$this::vueel()?>.action();
+                //console.log('触发函数:blur');
+                //数据不一致才执行查询
+                if(this.value != oldgetdata[this.name])
+                { <?=$this::vueel()?>.action(); }
             });
             $(this).change(function () {
-                <?=$this::vueel()?>.action();
+                //console.log('触发函数:change');
+                if(this.value != oldgetdata[this.name])
+                {<?=$this::vueel()?>.action();}
             });
         });
         $('.daterangepickerClass').on('apply.daterangepicker cancel.daterangepicker', function (ev, picker) {
