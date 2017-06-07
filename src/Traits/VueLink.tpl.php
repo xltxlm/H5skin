@@ -1,6 +1,8 @@
 <?php /** @var  \xltxlm\h5skin\Traits\VueLink $this */
 use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
 
+<link rel="stylesheet" type="text/css" href="/static/css/vue-multiselect.min.css" media="screen">
+<script src="/static/js/vue-multiselect.min.js"></script>
 <script>
     //searchform 可以由网页自定义.如果没有定义,那么默认搜索框是关闭的
     if(typeof searchform === 'undefined')
@@ -17,9 +19,16 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
     {
         modelname ='';
     }
+    //字段关联外表对照关系
+    if(typeof Field2table == 'undefined')
+    {
+        Field2table =[];
+    }
     var oldgetdata=[];
-    var <?=$this::vueel()?> =(new Vue({
-            el: "#<?=$this::vueel()?>",
+    var <?=$this::vueel()?> =new Vue({
+            components: {
+                Multiselect: window.VueMultiselect.default
+            },
             data: {
                 //请求页面模型
                 requestmodel:requestmodel,
@@ -27,6 +36,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 alldata: alldata,
                 oldalldata:[],
                 openeditflag:"",
+                openedittagname:"",
                 openeditiitem:"",
                 tmpindex: 0,
                 modelname: modelname,
@@ -34,8 +44,13 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 searchform:searchform,
                 draggable:draggable
             },
-            methods: {
-                //请求接口新数据
+        methods: {
+                addTag:function(newTag) {
+                    eval('model=this.alldata.'+this.modelname);
+                    model[this.tmpindex][this.openedittagname].push(newTag)
+                    //this.value.push(tag)
+                },
+                //请求页面接口新数据
                 action: function () {
                     var getdata={};
                     //拼接查询的数据参数
@@ -60,49 +75,15 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 //以下是分页条
                 pageBar:function (pageid) {
                     $('#<?=$this::vueel()?> form [name=<?=UserCookieModelCopy::pageID()?>]').val(pageid)
-                    <?=$this::vueel()?>.action();
+                    this.action();
                 },
 
                 //以下是点击编辑的切换状态
-                openedit:function (id,index,item) {
+                openedit:function (id,index,item,tagname) {
                     this.tmpindex = index;
-                    <?=$this::vueel()?>.$data.openeditflag = id;
-                    <?=$this::vueel()?>.$data.openeditiitem = item;
-                },
-
-                editField:function () {
-                    object=event.currentTarget;
-                    var postdata={};
-                    //主键id
-                    postdata['id']=this.openeditflag;
-                    //字段名字 => 字段值
-                    postdata['name']=object.name;
-                    postdata['value']=object.value;
-                    //只有编辑的内容和之前不一致，才请求新数据
-                    eval('oldmodel=this.oldalldata.'+this.modelname);
-                    if (object.value == oldmodel[this.tmpindex][object.name] )
-                    {
-                        return;
-                    }
-
-
-                    //发送数据,编辑当前字段的值
-                    $.ajax({
-                        dataType: "json",
-                        method: "GET",
-                        url: '<?=$this->getEditAjaxUrl()?>',
-                        data: postdata,
-                        success: function (result) {
-                            if($.inArray(object.name,<?=$this::vueel()?>.$data.reloadfield) != -1)
-                            {
-                                <?=$this::vueel()?>.action();
-                                ajaxSuccess(result,<?=$this::vueel()?>.$data.openeditiitem);
-                            }
-                        },
-                        error:function (XMLHttpRequest,textStatus) {
-                            ajaxError(textStatus,<?=$this::vueel()?>.$data.openeditiitem)
-                        }
-                    });
+                    this.openeditflag = id;
+                    this.openeditiitem = item;
+                    this.openedittagname = tagname;
                 },
 
                 // 以下是表格拖的功能 index:被压元素的坑
@@ -142,10 +123,70 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 dragstart: function (index, event) {
                     this.tmpindex = index;
                 }
-
             }
-        })
-    );
+        }).$mount("#<?=$this::vueel()?>");
+
+    //拉取数据
+    <?=$this::vueel()?>. action();
+
+    //管辖之内,数据变动，提交上传
+    eval('watchmodel=<?=$this::vueel()?>.$data.alldata.'+modelname);
+    watchmodel.forEach(function (item,index) {
+        for (var tagname in item) {
+            //如果是外关联别的表格，那么在本表写入格式的明文的json字符串
+            if($.inArray(tagname,Field2tables) != -1)
+            {
+                if(item[tagname][0]=='[')
+                    item[tagname]=JSON.parse(item[tagname]);
+                else
+                    item[tagname]=[];
+            }
+            //绑定操作
+            <?=$this::vueel()?>.$watch("alldata."+modelname+'.'+index+"."+tagname,function (newVal, oldVal) {
+                //如果没标志要修改的字段名字。退出.
+                if(!this.openedittagname)
+                {
+                    return false;
+                }
+                if(typeof newVal =='object')
+                {
+                    newVal=JSON.stringify(newVal);
+                }
+                //发送数据,编辑当前字段的值
+                $.ajax({
+                    dataType: "json",
+                    method: "GET",
+                    url: '<?=$this->getEditAjaxUrl()?>',
+                    data: {
+                        'id':this.openeditflag,
+                        'name':this.openedittagname,
+                        'value':newVal
+                    },
+                    success: function (result) {
+                        if($.inArray(<?=$this::vueel()?>.$data.openedittagname,<?=$this::vueel()?>.$data.reloadfield) != -1)
+                        {
+                            //如果带有多选下拉框，只能刷新页面了
+                            if([].toString()==Field2tables.toString())
+                            {
+                                <?=$this::vueel()?>.action();
+                                ajaxSuccess(result,<?=$this::vueel()?>.$data.openeditiitem);
+                            }else
+                            {
+                                window.location.reload();
+                            }
+                        }
+                    },
+                    error:function (XMLHttpRequest,textStatus) {
+                        ajaxError(textStatus,<?=$this::vueel()?>.$data.openeditiitem)
+                    },
+                    complete:function (XMLHttpRequest, textStatus) {
+                        <?=$this::vueel()?>.$data.openedittagname='';
+                    }
+                });
+            });
+
+        }
+    });
 
     //管辖之内,有name的元素,全部加上联动绑定
     $(function () {
@@ -171,7 +212,6 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
         $('.daterangepickerClass').on('apply.daterangepicker cancel.daterangepicker', function (ev, picker) {
             <?=$this::vueel()?>.action();
         });
-        <?=$this::vueel()?>. action();
     });
 
 </script>
