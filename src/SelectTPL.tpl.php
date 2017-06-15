@@ -58,7 +58,7 @@ if (!defined(__FILE__)) {
 }
 ?>
 <?php /** @var \xltxlm\h5skin\SelectTPL $this */ ?>
-<select<?=$this->isVue()?'2':''?> <?php if($this->isRequired()){?>required<?php }?> <?=join("  ",$this->getAttr())?> style="font-size:18px;" <?if($this->isQuick()){?>size="<?=count($this->getOptions())?>"<?php }?> class="<?= $this->getClassName() ?> <?= $this->isMultiple() ? 'sumoselect ' : ($this->isSelect2() ? 'select2' : '') ?>"
+<select<?=$this->isVue()?'2':''?> <?php if($this->isRequired()){?>required<?php }?> <?=join("  ",$this->getAttr())?> style="font-size:18px;" <?if($this->isQuick()){?>size="<?=min(count($this->getOptions()),5)?>"<?php }?> class="<?= $this->getClassName() ?> <?= $this->isMultiple() ? 'sumoselect ' : ($this->isSelect2() ? 'select2' : '') ?>"
         name="<?= $this->getName() ?>" <?= $this->getVmodel() ?> <?= $this->getVOnChange() ?> id="<?= $this->getId() ?>"
     <?= $this->isMultiple() ? ' multiple="multiple" ' : '' ?>
         title="<?= $this->getName() ?>">

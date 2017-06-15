@@ -17,7 +17,7 @@ use xltxlm\thrift\Config\ThriftConfig;
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/css/notie.min.css">
+    <link rel="stylesheet" href="/static/css/notyf.min.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="/static/css/font-awesome.min.css">
     <!-- Ionicons -->
@@ -38,8 +38,14 @@ use xltxlm\thrift\Config\ThriftConfig;
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/js.cookie.min.js"></script>
     <script src="/static/js/vue.min.js"></script>
-    <script src="/static/js/notie.min.js"></script>
+    <script src="/static/js/notyf.min.js"></script>
     <script src="/static/js/timeago.min.js"></script>
+<!--    初始化提示层js-->
+    <script>
+        $(function () {
+            notyf = new Notyf({delay:3000});
+        });
+    </script>
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">

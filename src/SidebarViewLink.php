@@ -23,6 +23,27 @@ class SidebarViewLink extends Template
     /** @var string 链接名称 */
     protected $name = '';
     protected $args = [];
+    /** @var array 在指定的域名下才菜单可见 */
+    protected $lockDomain = [];
+
+    /**
+     * @return array
+     */
+    public function getLockDomain(): array
+    {
+        return $this->lockDomain;
+    }
+
+    /**
+     * @param array $lockDomain
+     * @return SidebarViewLink
+     */
+    public function setLockDomain(array $lockDomain): SidebarViewLink
+    {
+        $this->lockDomain = $lockDomain;
+        return $this;
+    }
+
 
     /**
      * @return array
@@ -82,10 +103,10 @@ class SidebarViewLink extends Template
         $this->className = $className;
         $this->setHighlightClass($this->className);
         //如果存在日志
-        $this->setHighlightClass($this->className.'log');
+        $this->setHighlightClass($this->className . 'log');
         //如果存在添加
-        $this->setHighlightClass($this->className.'Add');
-        $this->setHighlightClass($this->className.'AddCopy');
+        $this->setHighlightClass($this->className . 'Add');
+        $this->setHighlightClass($this->className . 'AddCopy');
         return $this;
     }
 
