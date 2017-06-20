@@ -133,13 +133,13 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                                                 },
                                                 success: function (result) {
                                                     name=<?=$this::vueel()?>.$data.openedittagname;
-                                                    console.log("更新数据接口完毕.");
+                                                    //console.log("更新数据接口完毕.");
                                                     //指定的字段，会刷新页面内容
                                                     if($.inArray(name,<?=$this::vueel()?>.$data.reloadfield) != -1)
                                                     {
                                                         //取消字段的编辑
                                                         <?=$this::vueel()?>.$data.openedittagname='';
-                                                        console.log("动态刷新.");
+                                                        //console.log("动态刷新.");
                                                         <?=$this::vueel()?>.requestmodelaction();
                                                     }
                                                     //下拉框的修改会提示修改成功
@@ -166,17 +166,32 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 pageBar:function (pageid) {
                     this.requestmodel.pageID=pageid;
                 },
-
+                /**
+                 * 动态新增数据,然后动态刷新内容
+                 */
+                addnewalldata:function (url)
+                {
+                    $.ajax({
+                        dataType: "json",
+                        method: "GET",
+                        url:url,
+                        async:false,
+                        success: function (result) {
+                            <?=$this::vueel()?>.requestmodelaction();
+                            ajaxSuccess(result,<?=$this::vueel()?>.$data.openeditiitem);
+                        }
+                    });
+                },
                 //以下是点击编辑的切换状态
                 openedit:function (id,index,item,tagname) {
                     if(this.openeditflag == id && this.openedittagname == tagname)
                     {
                         return;
                     }
-                    console.log('标记编辑名字:'+tagname);
+                    //console.log('标记编辑名字:'+tagname);
                     if(this.editinglock)
                     {
-                        console.log('上个字段还么释放');
+                        //console.log('上个字段还么释放');
                         return false;
                     }
                     this.openeditflag = id;
@@ -186,8 +201,9 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 },
                 closeedit:function () {
                     if(this.editinglock)
+                    {
                         return false;
-                    console.log("取消了编辑:"+this.openedittagname);
+                    }
                     this.tmpindex = '';
                     this.openeditflag = '';
                     this.openedittagname = '';
@@ -206,14 +222,8 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                             'to':model[index]
                         },
                         success: function (result) {
-                            if(result.code == 0)
-                            {
-                                <?=$this::vueel()?>.requestmodelaction();
-                                ajaxSuccess(result,<?=$this::vueel()?>.$data.openeditiitem);
-                            }else
-                            {
-                                ajaxError(result)
-                            }
+                            <?=$this::vueel()?>.requestmodelaction();
+                            ajaxSuccess(result,<?=$this::vueel()?>.$data.openeditiitem);
                         },
                         error:function (XMLHttpRequest,textStatus) {
                             ajaxError(textStatus,<?=$this::vueel()?>.$data.openeditiitem)

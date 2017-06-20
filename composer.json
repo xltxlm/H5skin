@@ -13,7 +13,8 @@
     "xltxlm/helper": "*",
     "xltxlm/redis": "*",
     "xltxlm/Template": "*",
-    "xltxlm/page": "*"
+    "xltxlm/page": "*",
+    "xltxlm/phpexcel": "*"
   },
   "autoload": {
     "psr-4": {
