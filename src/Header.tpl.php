@@ -40,6 +40,8 @@ use xltxlm\thrift\Config\ThriftConfig;
     <script src="/static/js/vue.min.js"></script>
     <script src="/static/js/notyf.min.js"></script>
     <script src="/static/js/timeago.min.js"></script>
+    <script src="/static/js/echarts.min.js"></script>
+    <script src="/static/js/vcharts.js"></script>
 <!--    初始化提示层js-->
     <script>
         $(function () {

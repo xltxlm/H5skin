@@ -37,19 +37,38 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
             datepicker:datepicker
         },
         data: {
+            //画图表采用的配置
+            chartDatacolumns_date:"",
+            chartDatacolumns_more:[],
+            chartData:{
+                columns: [],
+                rows: [
+                ]
+            },
+            chartDatapie:{
+                columns: [],
+                rows: [
+                ]
+            },
+            chartSettings:{},
+            chartSettingspie:{
+                metrics: 'data',
+                dataType: 'KMB'
+            },
             //请求页面模型
             requestmodel:requestmodel,
             //ajax接受到的结果集
             alldata: alldata,
             //正在请求改变字段锁
             editinglock:false,
-            //自增id
+            //自增id的值
             openeditflag:"",
             //字段名称
             openedittagname:"",
             openeditiitem:"",
             tmpindex: 0,
             modelname: modelname,
+            //修改之后，会导致页面数据刷新的字段
             reloadfield:reloadfield,
             //是否展开搜索框
             searchform:searchform,
@@ -62,9 +81,104 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                     this.requestmodelaction();
                 },
                 deep: true
+            },
+            "chartDatacolumns_date":{
+                handler:function(newVal, oldVal) {
+                    this.chartData.columns[0]=newVal;
+                    this.chartDatapie.columns[0]=newVal;
+                    this.vchart();
+                }
+            },
+            "chartDatacolumns_more":{
+                handler:function(newVal, oldVal) {
+                    if(this.chartDatacolumns_date=="")
+                        return;
+                    this.chartData.columns=[];
+                    this.chartData.columns=[].concat([this.chartDatacolumns_date]);
+                    for (index in newVal)
+                    {
+                        this.chartData.columns=this.chartData.columns.concat([newVal[index].name]);
+                    }
+                    this.chartDatapie.columns=this.chartData.columns;
+                    this.vchart();
+                }
             }
         },
         methods: {
+                vchart:function () {
+                    try {
+                        //修改数据值
+                        eval('model=this.alldata.'+this.modelname);
+                        this.chartData.rows=[];
+                        this.chartDatapie.rows=[];
+                        for (index in model)
+                        {
+                            this.chartData.rows[index]={};
+                            for(index1 in this.chartData.columns)
+                            {
+                                if(index1==0)
+                                {
+                                    eval('var chartDatacolumns_value=model[index].'+this.chartData.columns[index1]);
+                                }
+                                else
+                                {
+                                    if(typeof  this.chartDatapie.rows[index1-1] =='undefined' )
+                                    {
+                                        this.chartDatapie.rows[index1-1]={};
+                                        eval('this.chartDatapie.rows[index1-1].'+this.chartData.columns[0]+'="'+this.chartData.columns[index1]+'"')
+                                    }
+                                    eval('var chartDatacolumns_value=parseFloat(model[index].'+this.chartData.columns[index1]+')');
+                                    //坑爹的数学计算
+                                    if(index==0)
+                                    {
+                                        eval('this.chartDatapie.rows[index1-1].data=chartDatacolumns_value')
+                                    }else
+                                    {
+                                        eval('this.chartDatapie.rows[index1-1].data+=chartDatacolumns_value')
+                                    }
+                                }
+                                eval('this.chartData.rows[index].'+this.chartData.columns[index1]+'=chartDatacolumns_value')
+
+                            }
+                        }
+
+                        //倒序排列下
+                        this.chartData.rows.sort(function(a, b){
+                            var a1= eval('a.'+<?=$this::vueel()?>.$data.chartDatacolumns_date), b1= eval('b.'+<?=$this::vueel()?>.$data.chartDatacolumns_date);
+                            //console.log([a1,b1])
+                            if(a1== b1) return 0;
+                            return a1> b1? 1: -1;
+                        });
+                    }catch (e)
+                    {
+                        console.log(e)
+                    }
+                },
+                batch:function (name,newvalue,defaultvalue) {
+                    //情场，别的不能处理
+                    this.openedittagname="";
+                    console.log("设置修改字段名字："+this.openedittagname);
+                    eval('model=this.alldata.'+this.modelname);
+                    model.forEach(function (item,index) {
+                        eval('oldvalue=item.'+name);
+                        if(oldvalue==defaultvalue)
+                        {
+                             //发送数据,编辑当前字段的值
+                            $.ajax({
+                                dataType: "json",
+                                method: "POST",
+                                url: '<?=$this->getEditAjaxUrl()?>',
+                                data: {
+                                    'id':item.id,
+                                    'name':name,
+                                    'value':encodeURIComponent(newvalue)
+                                }
+                            });
+                            eval('item.'+name+'="'+newvalue+'"');
+                        }
+                    });
+                    this.requestmodelaction();
+                },
                 addTag:function(newTag) {
                     eval('model=this.alldata.'+this.modelname);
                     model[this.tmpindex][this.openedittagname].push(newTag)
@@ -82,7 +196,8 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                         async:false,
                         success: function (result) {
                             <?=$this::vueel()?>. $data.alldata = result;
-
+                            //顺带刷新图表
+                            <?=$this::vueel()?>.vchart();
                             //管辖之内,数据变动，提交上传
                             eval('watchmodel={object:<?=$this::vueel()?>.$data.alldata.'+modelname+',name:"'+modelname+'"}');
                             eval('watchmodeled={object:<?=$this::vueel()?>.$data.alldata.'+modelname+'ed,name:"'+modelname+'ed"}');
@@ -107,7 +222,8 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                                                 itamvalue=[];
                                         }
                                         //绑定操作
-                                        <?=$this::vueel()?>.$watch('alldata.'+watchmodelItem.name+'.'+index+"."+tagname,function (newVal, oldVal) {
+                                        <?=$this::vueel()?>.$watch('alldata.'+watchmodelItem.name+'.'+index+"."+tagname,function (newVal, oldVal,abcc) {
+                                            //钩子，如果新的值，包含了@@数字，那么数字就是要更改的id(因为vue知道谁改变了，但是不知道改变的是哪个索引)
                                             //console.log("有数据发生改变.");
                                             //如果没标志要修改的字段名字。退出.
                                             if(!this.openedittagname)
@@ -119,18 +235,20 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                                             {
                                                 newVal=JSON.stringify(newVal);
                                             }
-                                            console.log("锁住")
+                                            //console.log("锁住")
                                             this.editinglock=true;
+                                            ajaxdata={
+                                                'id':this.openeditflag,
+                                                'name':this.openedittagname,
+                                                'value':encodeURIComponent(newVal)
+                                            };
+                                            console.log(ajaxdata);
                                             //发送数据,编辑当前字段的值
                                             $.ajax({
                                                 dataType: "json",
                                                 method: "POST",
                                                 url: '<?=$this->getEditAjaxUrl()?>',
-                                                data: {
-                                                    'id':this.openeditflag,
-                                                    'name':this.openedittagname,
-                                                    'value':encodeURIComponent(newVal)
-                                                },
+                                                data: ajaxdata,
                                                 success: function (result) {
                                                     name=<?=$this::vueel()?>.$data.openedittagname;
                                                     //console.log("更新数据接口完毕.");
@@ -217,6 +335,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                         dataType: "json",
                         method: "POST",
                         url: '<?=$this->getDragAjaxUrl()?>',
+                        async:false,
                         data:{
                             'from':model[this.tmpindex],
                             'to':model[index]
