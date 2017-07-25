@@ -1,14 +1,21 @@
 <?php /** @var  \xltxlm\h5skin\Traits\VueLink $this */
 use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
 
-<link rel="stylesheet" type="text/css" href="/static/css/vue-multiselect.min.css" media="screen">
-<script src="/static/js/vue-multiselect.min.js"></script>
 <script src="/static/js/picker-range.js"></script>
 <script>
     //searchform 可以由网页自定义.如果没有定义,那么默认搜索框是关闭的
     if(typeof searchform === 'undefined')
     {
         searchform =false;
+    }
+    if(typeof viewform === 'undefined')
+    {
+        viewform =[];
+    }
+    //同期对比
+    if(requestmodel.sametime == '')
+    {
+        requestmodel.sametime =false;
     }
     //selectfields 页面上下拉框的字段名称
     if(typeof selectfields === 'undefined')
@@ -55,6 +62,9 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 metrics: 'data',
                 dataType: 'KMB'
             },
+            //数据项查看控制面板
+            viewformshow:false,
+            viewform:viewform,
             //请求页面模型
             requestmodel:requestmodel,
             //ajax接受到的结果集
@@ -167,6 +177,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                             $.ajax({
                                 dataType: "json",
                                 method: "POST",
+                                async:false,
                                 url: '<?=$this->getEditAjaxUrl()?>',
                                 data: {
                                     'id':item.id,
@@ -183,6 +194,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                     eval('model=this.alldata.'+this.modelname);
                     model[this.tmpindex][this.openedittagname].push(newTag)
                 },
+
 
                 //请求页面接口新数据
                 requestmodelaction: function () {
@@ -235,6 +247,14 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                                             {
                                                 newVal=JSON.stringify(newVal);
                                             }
+                                            //纠正日期格式
+                                            if(newVal.indexOf('"')!=-1 && newVal.indexOf('000Z')!=-1)
+                                            {
+                                                newVal=newVal.replace(/"/g,"");
+                                                var a=(new Date(newVal));
+                                                newVal=(a.getFullYear()+"-"+(a.getMonth()+1)+"-"+a.getDate()+" "+a.getHours()+":"+a.getMinutes()+":"+a.getSeconds());
+                                            }
+
                                             //console.log("锁住")
                                             this.editinglock=true;
                                             ajaxdata={
@@ -242,7 +262,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                                                 'name':this.openedittagname,
                                                 'value':encodeURIComponent(newVal)
                                             };
-                                            console.log(ajaxdata);
+
                                             //发送数据,编辑当前字段的值
                                             $.ajax({
                                                 dataType: "json",
@@ -354,6 +374,61 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 },
                 dragstart: function (index, event) {
                     this.tmpindex = index;
+                },
+                compardirect:function (name) {
+                    eval('model=this.alldata.'+this.modelname);
+                    var length=model.length;
+                    for(index in model)
+                    {
+                        try{
+                            if(index < length-1)
+                            {
+                                index2=1+ parseInt(index);
+                                eval('var me = parseInt(model[index].'+name+')');
+                                eval('var to = parseInt(model[index2].'+name+')');
+                                ratio = ((me-to)/to*100).toString();
+                                ratio = ratio.substr(0,ratio.indexOf(".")+3);
+                                if(to > me)
+                                {
+                                    eval('model[index].'+name+'=\"<font color=red>'+me+'('+ratio+'%)</font>\"');
+                                }else
+                                {
+                                    eval('model[index].'+name+'=\"<font color=green>'+me+'('+ratio+'%)</font>\"');
+                                }
+                            }
+                        }catch (e)
+                        {
+                            console.log(e.message)
+                        }
+                    }
+                },
+                compar:function (name,frequency) {
+                    eval('model=this.alldata.'+this.modelname);
+                    for(index in model)
+                    {
+                        var data={
+                            name:name,
+                            day:frequency,
+                            index:index,
+                            item:model[index]
+                        };
+                        $.ajax({
+                            context:{
+                                request:data,
+                                model:model
+                            },
+                            dataType: "json",
+                            method: "POST",
+                            url: '<?=$this->getUrl()?>Compar',
+                            data:data,
+                            async:true,
+                            success: function (result) {
+                                if(result.value){
+                                    eval('this.model[this.request.index].'+this.request.name+'=result.value');
+                                }
+                            }
+                        });
+                    }
                 }
             }
         }).$mount("#<?=$this::vueel()?>");

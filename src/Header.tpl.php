@@ -28,6 +28,10 @@ use xltxlm\thrift\Config\ThriftConfig;
          folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="/static/css/_all-skins.min.css">
 
+    <link rel="stylesheet" type="text/css" href="/static/css/vue-multiselect.min.css" media="screen">
+    <script src="/static/js/vue-multiselect.min.js"></script>
+
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -42,6 +46,11 @@ use xltxlm\thrift\Config\ThriftConfig;
     <script src="/static/js/timeago.min.js"></script>
     <script src="/static/js/echarts.min.js"></script>
     <script src="/static/js/vcharts.js"></script>
+
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="//unpkg.com/iview/dist/styles/iview.css">
+    <!-- 引入组件库 -->
+    <script src="/static/js/iview.min.js"></script>
 <!--    初始化提示层js-->
     <script>
         $(function () {
