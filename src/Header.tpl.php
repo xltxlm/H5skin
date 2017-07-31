@@ -48,7 +48,8 @@ use xltxlm\thrift\Config\ThriftConfig;
     <script src="/static/js/vcharts.js"></script>
 
     <!-- 引入样式 -->
-    <link rel="stylesheet" href="//unpkg.com/iview/dist/styles/iview.css">
+    <!-- link rel="stylesheet" href="//unpkg.com/iview/dist/styles/iview.css" -->
+    <link rel="stylesheet" href="/static/css/iview.css">
     <!-- 引入组件库 -->
     <script src="/static/js/iview.min.js"></script>
 <!--    初始化提示层js-->

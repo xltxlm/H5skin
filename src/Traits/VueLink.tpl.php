@@ -44,6 +44,8 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
             datepicker:datepicker
         },
         data: {
+            //用来标注一个事情是否正在存在
+            set:new Set(),
             //画图表采用的配置
             chartDatacolumns_date:"",
             chartDatacolumns_more:[],
@@ -300,9 +302,10 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                         }
                     });
                 },
-                //以下是分页条
-                pageBar:function (pageid) {
-                    this.requestmodel.pageID=pageid;
+                //修改了分页条的数目
+                page:function (pageID) {
+                    this.alldata.pageObject.pageID=pageID;
+                    this.requestmodel.pageID=pageID;
                 },
                 /**
                  * 动态新增数据,然后动态刷新内容
@@ -375,7 +378,10 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 dragstart: function (index, event) {
                     this.tmpindex = index;
                 },
+                //数据统计的直接对比
                 compardirect:function (name) {
+                    this.compardelete(name);
+                    this.set.add('compar'+name+'direct');
                     eval('model=this.alldata.'+this.modelname);
                     var length=model.length;
                     for(index in model)
@@ -402,7 +408,21 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                         }
                     }
                 },
+                compardelete:function (name) {
+                    this.set.delete('compar'+name+'direct');
+                    this.set.delete('compar'+name+'-1 day');
+                    this.set.delete('compar'+name+'-2 day');
+                    this.set.delete('compar'+name+'-1 week');
+                    this.set.delete('compar'+name+'-1 month');
+                },
+                //数据统计的服务端对比
                 compar:function (name,frequency) {
+                    this.compardelete(name);
+                    //取消掉标注
+                    if(frequency!='')
+                    {
+                        this.set.add('compar'+name+frequency)
+                    }
                     eval('model=this.alldata.'+this.modelname);
                     for(index in model)
                     {
