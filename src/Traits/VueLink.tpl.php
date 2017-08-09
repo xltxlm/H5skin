@@ -408,6 +408,45 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                         }
                     }
                 },
+                //当前页面加入邮件报表里面
+                AddPagelist:function(parentid,ctroller_class,search,viewform)
+                {
+                    $.ajax(
+                        {
+                            url:"/?c=Pagelist/PagelistInsertDo",
+                            async:false,
+                            data:{
+                                parentid:parentid,
+                                ctroller_class:ctroller_class,
+                                search:search,
+                                viewform:viewform
+                            },
+                            success: function (result) {
+                                window.location.href="/?c=Pagelist/Pagelist&parentid="+parentid
+                            }
+                        }
+                    );
+                },
+                //添加当前条目到监控系统里面
+                addItemAlert:function(pid,name,fieldname,ctroller_class,pagename)
+                {
+                    $.ajax(
+                        {
+                            url:"/?c=Mailalert/MailalertInsertDo",
+                            async:false,
+                            data:{
+                                pid:pid,
+                                name:name,
+                                fieldname:fieldname,
+                                ctroller_class:ctroller_class,
+                                pagename:pagename
+                            },
+                            success: function (result) {
+                                window.location.href="/?c=Mailalert/Mailalert&status=通过&pid="+pid
+                            }
+                        }
+                    );
+                },
                 compardelete:function (name) {
                     this.set.delete('compar'+name+'direct');
                     this.set.delete('compar'+name+'-1 day');
