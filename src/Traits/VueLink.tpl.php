@@ -428,7 +428,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                     );
                 },
                 //添加当前条目到监控系统里面
-                addItemAlert:function(pid,name,fieldname,ctroller_class,pagename)
+                addItemAlert:function(pid,name,fieldname,ctroller_class,table_class,pagename)
                 {
                     $.ajax(
                         {
@@ -439,6 +439,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                                 name:name,
                                 fieldname:fieldname,
                                 ctroller_class:ctroller_class,
+                                table_class:table_class,
                                 pagename:pagename
                             },
                             success: function (result) {
