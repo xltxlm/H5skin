@@ -3,11 +3,6 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
 
 <script src="/static/js/picker-range.js"></script>
 <script>
-    //searchform 可以由网页自定义.如果没有定义,那么默认搜索框是关闭的
-    if(typeof searchform === 'undefined')
-    {
-        searchform =false;
-    }
     if(typeof viewform === 'undefined')
     {
         viewform =[];
@@ -46,6 +41,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
         data: {
             //用来标注一个事情是否正在存在
             set:new Set(),
+            searchfield:'',
             //画图表采用的配置
             chartDatacolumns_date:"",
             chartDatacolumns_more:[],
@@ -82,18 +78,10 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
             modelname: modelname,
             //修改之后，会导致页面数据刷新的字段
             reloadfield:reloadfield,
-            //是否展开搜索框
-            searchform:searchform,
-            draggable:draggable
+            draggable:draggable,
+            __init:false
         },
         watch:{
-            //如果搜索框有改动，那么刷新数据
-            "requestmodel": {
-                handler:function(newVal, oldVal) {
-                    this.requestmodelaction();
-                },
-                deep: true
-            },
             "chartDatacolumns_date":{
                 handler:function(newVal, oldVal) {
                     this.chartData.columns[0]=newVal;
@@ -209,7 +197,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                         data: this.requestmodel,
                         async:false,
                         success: function (result) {
-                            <?=$this::vueel()?>. $data.alldata = result;
+                            <?=$this::vueel()?>.$data.alldata = result;
                             //顺带刷新图表
                             <?=$this::vueel()?>.vchart();
                             //管辖之内,数据变动，提交上传
@@ -237,8 +225,6 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                                         }
                                         //绑定操作
                                         <?=$this::vueel()?>.$watch('alldata.'+watchmodelItem.name+'.'+index+"."+tagname,function (newVal, oldVal,abcc) {
-                                            //钩子，如果新的值，包含了@@数字，那么数字就是要更改的id(因为vue知道谁改变了，但是不知道改变的是哪个索引)
-                                            //console.log("有数据发生改变.");
                                             //如果没标志要修改的字段名字。退出.
                                             if(!this.openedittagname)
                                             {
@@ -298,7 +284,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                                     }
                                 })
                             });
-
+                            <?=$this::vueel()?>.$data.__init = true;
                         }
                     });
                 },
@@ -306,6 +292,11 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 page:function (pageID) {
                     this.alldata.pageObject.pageID=pageID;
                     this.requestmodel.pageID=pageID;
+                },
+                //修改了每页展示的条目
+                pagesize:function(pagesize)
+                {
+                    this.requestmodel.prepage=pagesize;
                 },
                 /**
                  * 动态新增数据,然后动态刷新内容
@@ -351,6 +342,8 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 },
                 // 以下是表格拖的功能 index:被压元素的坑
                 drop: function (index, event) {
+                    if(this.draggable==false)
+                        return false;
                     //取消字段的编辑
                     <?=$this::vueel()?>.$data.openedittagname='';
                     eval('model=this.alldata.'+this.modelname);
@@ -373,9 +366,13 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                     });
                 },
                 dragover: function (event) {
+                    if(this.draggable==false)
+                        return false;
                     event.preventDefault();
                 },
                 dragstart: function (index, event) {
+                    if(this.draggable==false)
+                        return false;
                     this.tmpindex = index;
                 },
                 //数据统计的直接对比
