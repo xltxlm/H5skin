@@ -22,6 +22,7 @@ use xltxlm\thrift\Config\ThriftConfig;
     <link rel="stylesheet" href="/static/css/font-awesome.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="/static/css/ionicons.min.css">
+    <link rel="stylesheet" href="/static/css/animate.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="/static/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
