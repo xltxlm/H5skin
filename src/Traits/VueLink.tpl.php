@@ -97,7 +97,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                     this.chartData.columns=[].concat([this.chartDatacolumns_date]);
                     for (index in newVal)
                     {
-                        this.chartData.columns=this.chartData.columns.concat([newVal[index].name]);
+                        this.chartData.columns=this.chartData.columns.concat([newVal[index]]);
                     }
                     this.chartDatapie.columns=this.chartData.columns;
                     this.vchart();
@@ -144,6 +144,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
 
                         //倒序排列下
                         this.chartData.rows.sort(function(a, b){
+                            //console.log([a,b])
                             var a1= eval('a.'+<?=$this::vueel()?>.$data.chartDatacolumns_date), b1= eval('b.'+<?=$this::vueel()?>.$data.chartDatacolumns_date);
                             //console.log([a1,b1])
                             if(a1== b1) return 0;
