@@ -34,10 +34,6 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
     }
     var watchedObject=[];
     var <?=$this::vueel()?> =new Vue({
-        components: {
-            Multiselect: window.VueMultiselect.default,
-            datepicker:datepicker
-        },
         data: {
             //用来标注一个事情是否正在存在
             set:new Set(),
@@ -308,6 +304,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                         dataType: "json",
                         method: "GET",
                         url:url,
+                        data:this.requestmodel,
                         async:false,
                         success: function (result) {
                             <?=$this::vueel()?>.requestmodelaction();

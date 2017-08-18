@@ -13,46 +13,18 @@ use xltxlm\thrift\Config\ThriftConfig;
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title><?= $this->getTitle() ?></title>
+    <?php include __DIR__."/osscdn.css.html";?>
+    <?php include __DIR__."/osscdn.js.html";?>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <!-- Bootstrap 3.3.6 -->
-    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/css/notyf.min.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="/static/css/font-awesome.min.css">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="/static/css/ionicons.min.css">
-    <link rel="stylesheet" href="/static/css/animate.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="/static/css/AdminLTE.min.css">
-    <!-- AdminLTE Skins. Choose a skin from the css/skins
-         folder instead of downloading all of them to reduce the load. -->
-    <link rel="stylesheet" href="/static/css/_all-skins.min.css">
-
-    <link rel="stylesheet" type="text/css" href="/static/css/vue-multiselect.min.css" media="screen">
-    <script src="/static/js/vue-multiselect.min.js"></script>
-
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-    <script src="/static/js/html5shiv.min.js"></script>
     <script src="/static/js/respond.min.js"></script>
     <![endif]-->
     <!-- jQuery 2.2.3 -->
-    <script src="/static/js/jquery.min.js"></script>
-    <script src="/static/js/js.cookie.min.js"></script>
-    <script src="/static/js/vue.min.js"></script>
-    <script src="/static/js/notyf.min.js"></script>
-    <script src="/static/js/timeago.min.js"></script>
-    <script src="/static/js/echarts.min.js"></script>
-    <script src="/static/js/vcharts.js"></script>
-
-    <!-- 引入样式 -->
-    <!-- link rel="stylesheet" href="//unpkg.com/iview/dist/styles/iview.css" -->
-    <link rel="stylesheet" href="/static/css/iview.css">
     <!-- 引入组件库 -->
-    <script src="/static/js/iview.min.js"></script>
 <!--    初始化提示层js-->
     <script>
         $(function () {
@@ -92,15 +64,6 @@ use xltxlm\thrift\Config\ThriftConfig;
                             <span class="hidden-xs"><?= (new UserCookieModel())->getUsername() ?></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <!-- User image -->
-                            <li class="user-header">
-                                <img src="" class="img-circle" alt="User Image">
-
-                                <p>
-                                    Alexander Pierce - Web Developer
-                                    <small>Member since Nov. 2012</small>
-                                </p>
-                            </li>
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <?php
@@ -111,10 +74,10 @@ use xltxlm\thrift\Config\ThriftConfig;
                                 $SsoThriftObject= new $SsoThriftConfig;
                                 ?>
                                 <div class="pull-left">
-                                    <a href="http://<?=$SsoThriftObject->getHosturl()?>:<?=$SsoThriftObject->getPort()?>/?c=Index/ChangePassword&backurl=<?=$this::Myurl()?>" class="btn btn-default btn-flat">修改密码</a>
+                                    <a href="http://<?=$SsoThriftObject->getHosturl()?>:<?=$SsoThriftObject->getPort()?>/?c=Index/ChangePassword&backurl=<?=$this::Myurl()?>" class="btn bg-navy margin">修改密码</a>
                                 </div>
                                 <div class="pull-right">
-                                    <a href="http://<?=$SsoThriftObject->getHosturl()?>:<?=$SsoThriftObject->getPort()?>/?c=Index/Logout&backurl=<?=$this::Myurl()?>" class="btn btn-default btn-flat">Sign out</a>
+                                    <a href="http://<?=$SsoThriftObject->getHosturl()?>:<?=$SsoThriftObject->getPort()?>/?c=Index/Logout&backurl=<?=$this::Myurl()?>" class="btn bg-navy margin">Sign out</a>
                                 </div>
                                 <?php } ?>
                             </li>
