@@ -43,7 +43,7 @@ use xltxlm\thrift\Config\ThriftConfig;
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini"><b>A</b>LT</span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>后台</b></span>
+            <span class="logo-lg"><b><?=explode('\\',static::class)[1].'_'.$_SERVER['HOST_TYPE']?></b></span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">

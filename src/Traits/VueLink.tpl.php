@@ -46,7 +46,14 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 rows: [
                 ]
             },
+            //求和饼图对比
             chartDatapie:{
+                columns: [],
+                rows: [
+                ]
+            },
+            //第一指标对比
+            newchartDatapie:{
                 columns: [],
                 rows: [
                 ]
@@ -104,45 +111,50 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 vchart:function () {
                     try {
                         //修改数据值
-                        eval('model=this.alldata.'+this.modelname);
+                        var model=this.alldata[this.modelname];
                         this.chartData.rows=[];
                         this.chartDatapie.rows=[];
-                        for (index in model)
+                        this.newchartDatapie.columns=this.chartData.columns;
+                        for (model_index in model)
                         {
-                            this.chartData.rows[index]={};
-                            for(index1 in this.chartData.columns)
+                            this.chartData.rows[model_index]={};
+                            for(columns_index in this.chartData.columns)
                             {
-                                if(index1==0)
+                                //第一个指标，代表的是横轴
+                                if(columns_index==0)
                                 {
-                                    eval('var chartDatacolumns_value=model[index].'+this.chartData.columns[index1]);
+                                    eval('var chartDatacolumns_value=model[model_index].'+this.chartData.columns[columns_index]);
+                                    this.newchartDatapie.rows[model_index]={};
+                                    this.newchartDatapie.rows[model_index][this.chartData.columns[columns_index]]=model[model_index][this.chartData.columns[columns_index]];
                                 }
                                 else
                                 {
-                                    if(typeof  this.chartDatapie.rows[index1-1] =='undefined' )
+                                    if(typeof  this.chartDatapie.rows[columns_index-1] =='undefined' )
                                     {
-                                        this.chartDatapie.rows[index1-1]={};
-                                        eval('this.chartDatapie.rows[index1-1].'+this.chartData.columns[0]+'="'+this.chartData.columns[index1]+'"')
+                                        this.chartDatapie.rows[columns_index-1]={};
+                                        eval('this.chartDatapie.rows[columns_index-1].'+this.chartData.columns[0]+'="'+this.chartData.columns[columns_index]+'"')
                                     }
-                                    eval('var chartDatacolumns_value=parseFloat(model[index].'+this.chartData.columns[index1]+')');
-                                    //坑爹的数学计算
-                                    if(index==0)
+                                    eval('var chartDatacolumns_value=parseFloat(model[model_index].'+this.chartData.columns[columns_index]+')');
+                                    //饼图对比，只针对第一个指标，多余的指标采用求和对比
+                                    if(columns_index==1)
                                     {
-                                        eval('this.chartDatapie.rows[index1-1].data=chartDatacolumns_value')
+                                        this.newchartDatapie.rows[model_index]['data']=chartDatacolumns_value;
+                                    }
+                                    //坑爹的数学计算
+                                    if(model_index==0)
+                                    {
+                                        eval('this.chartDatapie.rows[columns_index-1].data=chartDatacolumns_value')
                                     }else
                                     {
-                                        eval('this.chartDatapie.rows[index1-1].data+=chartDatacolumns_value')
+                                        eval('this.chartDatapie.rows[columns_index-1].data+=chartDatacolumns_value')
                                     }
                                 }
-                                eval('this.chartData.rows[index].'+this.chartData.columns[index1]+'=chartDatacolumns_value')
-
+                                eval('this.chartData.rows[model_index].'+this.chartData.columns[columns_index]+'=chartDatacolumns_value')
                             }
                         }
-
                         //倒序排列下
                         this.chartData.rows.sort(function(a, b){
-                            //console.log([a,b])
                             var a1= eval('a.'+<?=$this::vueel()?>.$data.chartDatacolumns_date), b1= eval('b.'+<?=$this::vueel()?>.$data.chartDatacolumns_date);
-                            //console.log([a1,b1])
                             if(a1== b1) return 0;
                             return a1> b1? 1: -1;
                         });
