@@ -189,11 +189,6 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                     });
                     this.requestmodelaction();
                 },
-                addTag:function(newTag) {
-                    eval('model=this.alldata.'+this.modelname);
-                    model[this.tmpindex][this.openedittagname].push(newTag)
-                },
-
 
                 //请求页面接口新数据
                 requestmodelaction: function () {
