@@ -27,11 +27,6 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
     {
         modelname ='';
     }
-    //字段关联外表对照关系
-    if(typeof Field2tables == 'undefined')
-    {
-        Field2tables =[];
-    }
     var watchedObject=[];
     var <?=$this::vueel()?> =new Vue({
         data: {
@@ -79,8 +74,6 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
             openeditiitem:"",
             tmpindex: 0,
             modelname: modelname,
-            //修改之后，会导致页面数据刷新的字段
-            reloadfield:reloadfield,
             draggable:draggable,
             __init:false
         },
@@ -204,90 +197,6 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                             <?=$this::vueel()?>.$data.alldata = result;
                             //顺带刷新图表
                             <?=$this::vueel()?>.vchart();
-                            //管辖之内,数据变动，提交上传
-                            eval('watchmodel={object:<?=$this::vueel()?>.$data.alldata.'+modelname+',name:"'+modelname+'"}');
-                            eval('watchmodeled={object:<?=$this::vueel()?>.$data.alldata.'+modelname+'ed,name:"'+modelname+'ed"}');
-                            [watchmodel,watchmodeled].forEach(function(watchmodelItem,itemindex) {
-                                watchmodelItem.object.forEach(function (item,index) {
-                                    //之前已经绑定了，不需要再绑定监听
-                                    if(watchedObject[watchmodelItem.name+'@'+index] == true)
-                                    {
-                                        //console.log(watchmodelItem.name+'@'+index+"之前已经监听过了");
-                                        return;
-                                    }
-                                    //标记已经监听
-                                    watchedObject[watchmodelItem.name+'@'+index]=true;
-                                    for (var tagname in item) {
-                                        var itamvalue=item[tagname];
-                                        //如果是外关联别的表格，那么在本表写入格式的明文的json字符串
-                                        if($.inArray(tagname,Field2tables) != -1)
-                                        {
-                                            if(itamvalue[0]=='[')
-                                                itamvalue=JSON.parse(itamvalue);
-                                            else
-                                                itamvalue=[];
-                                        }
-                                        //绑定操作
-                                        <?=$this::vueel()?>.$watch('alldata.'+watchmodelItem.name+'.'+index+"."+tagname,function (newVal, oldVal,abcc) {
-                                            //如果没标志要修改的字段名字。退出.
-                                            if(!this.openedittagname)
-                                            {
-                                                //console.log("没有指明标记的标签名字.");
-                                                return false;
-                                            }
-                                            if(typeof newVal =='object')
-                                            {
-                                                newVal=JSON.stringify(newVal);
-                                            }
-                                            //纠正日期格式
-                                            if(newVal.indexOf('"')!=-1 && newVal.indexOf('000Z')!=-1)
-                                            {
-                                                newVal=newVal.replace(/"/g,"");
-                                                var a=(new Date(newVal));
-                                                newVal=(a.getFullYear()+"-"+(a.getMonth()+1)+"-"+a.getDate()+" "+a.getHours()+":"+a.getMinutes()+":"+a.getSeconds());
-                                            }
-
-                                            //console.log("锁住")
-                                            this.editinglock=true;
-                                            ajaxdata={
-                                                'id':this.openeditflag,
-                                                'name':this.openedittagname,
-                                                'value':encodeURIComponent(newVal)
-                                            };
-
-                                            //发送数据,编辑当前字段的值
-                                            $.ajax({
-                                                dataType: "json",
-                                                method: "POST",
-                                                url: '<?=$this->getEditAjaxUrl()?>',
-                                                data: ajaxdata,
-                                                success: function (result) {
-                                                    name=<?=$this::vueel()?>.$data.openedittagname;
-                                                    //console.log("更新数据接口完毕.");
-                                                    //指定的字段，会刷新页面内容
-                                                    if($.inArray(name,<?=$this::vueel()?>.$data.reloadfield) != -1)
-                                                    {
-                                                        //取消字段的编辑
-                                                        <?=$this::vueel()?>.$data.openedittagname='';
-                                                        //console.log("动态刷新.");
-                                                        <?=$this::vueel()?>.requestmodelaction();
-                                                    }
-                                                    //下拉框的修改会提示修改成功
-                                                    if($.inArray(name,selectfields) != -1)
-                                                    {
-                                                        ajaxSuccess(result,<?=$this::vueel()?>.$data.openeditiitem);
-                                                    }
-                                                    <?=$this::vueel()?>.$data.editinglock = false;
-                                                },
-                                                error:function (XMLHttpRequest,textStatus) {
-                                                    ajaxError(textStatus,<?=$this::vueel()?>.$data.openeditiitem);
-                                                    <?=$this::vueel()?>.$data.editinglock = false;
-                                                }
-                                            });
-                                        });
-                                    }
-                                })
-                            });
                             <?=$this::vueel()?>.$data.__init = true;
                         }
                     });
@@ -335,15 +244,6 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                     this.tmpindex = index;
                     this.openeditiitem = item;
                     this.openedittagname = tagname;
-                },
-                closeedit:function () {
-                    if(this.editinglock)
-                    {
-                        return false;
-                    }
-                    this.tmpindex = '';
-                    this.openeditflag = '';
-                    this.openedittagname = '';
                 },
                 // 以下是表格拖的功能 index:被压元素的坑
                 drop: function (index, event) {
