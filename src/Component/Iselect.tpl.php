@@ -106,6 +106,11 @@ if(!defined(__FILE__))
             ],
             methods: {
                 updateValue: function (value) {
+                    //如果没有修改，那么不要提交
+                    if(value == this.value)
+                    {
+                        return false;
+                    }
                     //this.$data.loading=true;
                     //发送数据,编辑当前字段的值
                     if(this.multiple)
