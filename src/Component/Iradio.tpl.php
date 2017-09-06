@@ -45,6 +45,10 @@ define(__FILE__,true);
                     {
                         return false;
                     }
+                    if($.inArray(value ,this.option)==-1)
+                    {
+                        return false;
+                    }
                     //this.$data.loading=true;
                     //发送数据,编辑当前字段的值
                     $.ajax({
