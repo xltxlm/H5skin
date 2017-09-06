@@ -27,6 +27,10 @@ trait Component
 
     /** @var string 整行数据的model */
     protected $item = "";
+    /** @var string 当值等于的时候，显示红色 */
+    protected $redvalue = '';
+    /** @var string 当值等于的时候，显示绿色 */
+    protected $greenvalue = '';
 
     /**
      * @return string
@@ -154,6 +158,42 @@ trait Component
     public function setEdit(bool $edit)
     {
         $this->edit = $edit;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGreenvalue(): string
+    {
+        return $this->greenvalue;
+    }
+
+    /**
+     * @param string $greenvalue
+     * @return static
+     */
+    public function setGreenvalue(string $greenvalue)
+    {
+        $this->greenvalue = $greenvalue;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRedvalue(): string
+    {
+        return $this->redvalue;
+    }
+
+    /**
+     * @param string $redvalue
+     * @return static
+     */
+    public function setRedvalue(string $redvalue)
+    {
+        $this->redvalue = $redvalue;
         return $this;
     }
 

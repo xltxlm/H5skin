@@ -26,6 +26,7 @@ class Iinput extends Template
     /** @var bool 是否格式化展示 */
     protected $showfield = false;
 
+
     /**
      * @return bool
      */

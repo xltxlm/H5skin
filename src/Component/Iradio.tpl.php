@@ -10,13 +10,13 @@ define(__FILE__,true);
         <span v-if="this.edit">
             <Spin v-show="this.loading" size="large"></Spin>
             <RadioGroup v-if="this.option.length<=6" v-show="!this.loading" v-model="this.value" @on-change="updateValue" vertical>
-                <Radio v-for="(item,index) in this.option" :label="item"></Radio>
+                <Radio v-for="(item,index) in this.option" :label="item" :class="{ 'badge bg-green':item==this.greenvalue, 'badge bg-red':item==this.redvalue }"></Radio>
             </RadioGroup>
             <select v-else v-show="!this.loading" v-model="this.value" size="6" @input="updateValue($event.target.value)">
                 <option v-for="(item,index) in this.option" :value="item" v-text="item"></option>
             </select>
         </span>
-        <span v-else v-text="this.value"></span>
+        <span v-else v-text="this.value" :class="{ 'badge bg-green':this.value && this.value==this.greenvalue, 'badge bg-red':this.value && this.value==this.redvalue }"></span>
     </div>
 </script>
 
@@ -36,7 +36,9 @@ define(__FILE__,true);
                 'ajaxurl',
                 'id',
                 'name',
-                'value'
+                'value',
+                'greenvalue',
+                'redvalue'
             ],
             methods: {
                 updateValue: function (value) {
@@ -49,7 +51,7 @@ define(__FILE__,true);
                     {
                         return false;
                     }
-                    //this.$data.loading=true;
+                    this.$data.loading=true;
                     //发送数据,编辑当前字段的值
                     $.ajax({
                         dataType: "json",
@@ -76,4 +78,4 @@ define(__FILE__,true);
 
 <?php } ?>
 
-<iradio <?php if($this->getModel()){?>v-model="<?=$this->getModel()?>"<?php }?> ajaxurl="<?=$this->getAjaxEditUrl()?>" :id="<?=$this->getId()?>" name="<?=$this->getName()?>" :edit="<?=$this->isEdit()?'true':'false'?>" :option='<?=$this->getOption()?>'></iradio>
+<iradio <?php if($this->getModel()){?>v-model="<?=$this->getModel()?>"<?php }?> ajaxurl="<?=$this->getAjaxEditUrl()?>" :id="<?=$this->getId()?>" name="<?=$this->getName()?>" :edit="<?=$this->isEdit()?'true':'false'?>" :option='<?=$this->getOption()?>' greenvalue="<?=$this->getGreenvalue()?>"  redvalue="<?=$this->getRedvalue()?>"></iradio>

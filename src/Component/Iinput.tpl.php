@@ -11,7 +11,7 @@ if(!defined(__FILE__))
             <Spin v-show="this.loading" size="large"></Spin>
             <i-input  v-show="!this.loading" :name="this.name" type="textarea"  v-model="this.value" @on-blur="updateValue($event.target.value)"></i-input>
         </span>
-        <span v-else >
+        <span v-else :class="{ 'badge bg-green':this.value && this.value==this.greenvalue, 'badge bg-red':this.value && this.value==this.redvalue }" >
                 <span v-if="this.showfield" v-html="eval(this.name+'(value,this.item);')"></span>
                 <span v-else v-text="value"></span>
         </span>
@@ -34,8 +34,11 @@ if(!defined(__FILE__))
                 'showfield',
                 'ajaxurl',
                 'id',
+                'class',
                 'name',
-                'value'
+                'value',
+                'greenvalue',
+                'redvalue'
             ],
             methods:{
                 updateValue: function (value) {
@@ -60,6 +63,10 @@ if(!defined(__FILE__))
                             // 通过 input 事件发出数值
                             this.$emit('input', value);
                             this.$data.loading=false;
+                            if(result.code!=0)
+                            {
+                                notyf.alert("修改失败!"+result.message);
+                            }
                         }
                     });
                 }
@@ -69,5 +76,5 @@ if(!defined(__FILE__))
 </script>
 
 <?php } ?>
-<iinput <?php if($this->getModel()){?>v-model="<?=$this->getModel()?>"<?php }?> ajaxurl="<?=$this->getAjaxEditUrl()?>" <?php if($this->isEdit()){?>:id="<?=$this->getId()?>"<?php }?> name="<?=$this->getName()?>" :edit="<?=$this->isEdit()?'true':'false'?>"  :showfield="<?=$this->isShowfield()?'true':'false'?>" <?php if($this->getItem()){?>:item="<?=$this->getItem()?>"<?php }?> ></iinput>
+<iinput <?php if($this->getModel()){?>v-model="<?=$this->getModel()?>"<?php }?> ajaxurl="<?=$this->getAjaxEditUrl()?>" <?php if($this->isEdit()){?>:id="<?=$this->getId()?>"<?php }?> name="<?=$this->getName()?>" :edit="<?=$this->isEdit()?'true':'false'?>"  :showfield="<?=$this->isShowfield()?'true':'false'?>" <?php if($this->getItem()){?>:item="<?=$this->getItem()?>"<?php }?> greenvalue="<?=$this->getGreenvalue()?>"  redvalue="<?=$this->getRedvalue()?>"></iinput>
 
