@@ -23,27 +23,6 @@ class Iinput extends Template
 
     /** @var string 是否允许html内容 */
     protected $html = false;
-    /** @var bool 是否格式化展示 */
-    protected $showfield = false;
-
-
-    /**
-     * @return bool
-     */
-    public function isShowfield(): bool
-    {
-        return $this->showfield;
-    }
-
-    /**
-     * @param bool $showfield
-     * @return static
-     */
-    public function setShowfield(bool $showfield)
-    {
-        $this->showfield = $showfield;
-        return $this;
-    }
 
 
     /**

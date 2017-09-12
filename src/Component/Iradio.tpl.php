@@ -10,7 +10,7 @@ define(__FILE__,true);
         <span v-if="this.edit">
             <Spin v-show="this.loading" size="large"></Spin>
             <RadioGroup v-if="this.option.length<=6" v-show="!this.loading" v-model="this.value" @on-change="updateValue" vertical>
-                <Radio v-for="(item,index) in this.option" :label="item" :class="{ 'badge bg-green':item==this.greenvalue, 'badge bg-red':item==this.redvalue }"></Radio>
+                <Radio v-for="(item,index) in this.option" :label="item" :class="{ 'badge bg-green':  value == item && value == greenvalue, 'badge bg-red': value == item && value == redvalue }"></Radio>
             </RadioGroup>
             <select v-else v-show="!this.loading" v-model="this.value" size="6" @input="updateValue($event.target.value)">
                 <option v-for="(item,index) in this.option" :value="item" v-text="item"></option>
@@ -68,6 +68,11 @@ define(__FILE__,true);
                             this.$emit('input', value);
                             this.$data.loading=false;
                             ajaxSuccess(result);
+                        },
+                        error:function()
+                        {
+                            notyf.alert("修改失败!");
+                            this.$data.loading=false;
                         }
                     });
                 }
@@ -78,4 +83,4 @@ define(__FILE__,true);
 
 <?php } ?>
 
-<iradio <?php if($this->getModel()){?>v-model="<?=$this->getModel()?>"<?php }?> ajaxurl="<?=$this->getAjaxEditUrl()?>" :id="<?=$this->getId()?>" name="<?=$this->getName()?>" :edit="<?=$this->isEdit()?'true':'false'?>" :option='<?=$this->getOption()?>' greenvalue="<?=$this->getGreenvalue()?>"  redvalue="<?=$this->getRedvalue()?>"></iradio>
+<iradio <?php if($this->getModel()){?>v-model="<?=$this->getModel()?>"<?php }?> ajaxurl="<?=$this->getAjaxEditUrl()?>"  <?php if($this->isEdit()){?>:id="<?=$this->getId()?>"<?php }?>  name="<?=$this->getName()?>" :edit="<?=$this->isEdit()?'true':'false'?>" :option='<?=$this->getOption()?>' greenvalue="<?=$this->getGreenvalue()?>"  redvalue="<?=$this->getRedvalue()?>"></iradio>

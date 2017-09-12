@@ -67,6 +67,9 @@ if(!defined(__FILE__))
                             {
                                 notyf.alert("修改失败!"+result.message);
                             }
+                        },
+                        error:function () {
+                            notyf.alert("修改失败!");
                         }
                     });
                 }

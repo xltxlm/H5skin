@@ -36,6 +36,7 @@ if(!defined(__FILE__))
             }
         },
         props: [
+            'taggable',
             'name',
             'value',
             "id",
@@ -74,10 +75,13 @@ if(!defined(__FILE__))
     <div>
         <span :value="this.value"></span>
         <span v-if="this.edit">
-            <i-select v-if="!this.tag" v-model="this.value" filterable clearable :multiple="this.multiple" @on-change="updateValue">
-                <i-option v-for='(item,index) in this.option' :value="item.value" :key="item.value" v-text="item.label"></i-option>
-            </i-select>
-            <iselect2 v-else v-model="this.value" :id="this.id"  :name="this.name"  :option='this.optionvalues' @on-change="updateValue"></iselect2>
+            <span v-if="!this.tag">
+                <input type="hidden" :id="'hidden_select_'+ this.id + this.name" >
+                <i-select  v-model="this.value" filterable clearable :multiple="this.multiple" @on-change="updateValue">
+                    <i-option v-for='(item,index) in this.option' :value="item.value" :key="item.value" v-text="item.label"></i-option>
+                </i-select>
+            </span>
+            <iselect2 v-else v-model="this.value" :taggable="this.tag" :id="this.id"  :name="this.name"  :option='this.optionvalues' @on-change="updateValue"></iselect2>
         </span>
         <span v-else v-text="this.value"></span>
     </div>
@@ -93,6 +97,9 @@ if(!defined(__FILE__))
                     loading:false
                 };
             },
+            mounted: function () {
+                this.initValue();
+            },
             props:[
                 'tag',
                 'multiple',
@@ -105,18 +112,39 @@ if(!defined(__FILE__))
                 'value'
             ],
             methods: {
+                initValue:function () {
+                    if(this.multiple) {
+                        $('#hidden_select_' + this.id + this.name).val(JSON.stringify(this.value));
+                    }
+                    else
+                    {
+                        $('#hidden_select_' + this.id + this.name).val(this.value);
+                    }
+                },
                 updateValue: function (value) {
                     //如果没有修改，那么不要提交
-                    if(value == this.value)
+                    if(this.multiple)
                     {
-                        return false;
+                        if(JSON.stringify(value) == $('#hidden_select_'+this.id + this.name).val())
+                        {
+                            return false;
+                        }
+                    }
+                    else {
+                        if (value == this.value) {
+                            return false;
+                        }
                     }
                     //this.$data.loading=true;
                     //发送数据,编辑当前字段的值
                     if(this.multiple)
+                    {
                         newvalue=JSON.stringify(value);
+                    }
                     else
+                    {
                         newvalue=value;
+                    }
                     $.ajax({
                         dataType: "json",
                         method: "POST",
@@ -129,9 +157,14 @@ if(!defined(__FILE__))
                         },
                         success: function (result) {
                             // 通过 input 事件发出数值
-                            this.$emit('input', value);
                             this.$data.loading=false;
                             ajaxSuccess(result);
+                            this.initValue();
+                        },
+                        error:function()
+                        {
+                            notyf.alert("修改失败!");
+                            this.$data.loading=false;
                         }
                     });
                 }

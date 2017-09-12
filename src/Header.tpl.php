@@ -22,6 +22,7 @@ use xltxlm\thrift\Config\ThriftConfig;
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
     <script src="/static/js/respond.min.js"></script>
+    <script src="/static/js/html5shiv.min.js"></script>
     <![endif]-->
     <!-- jQuery 2.2.3 -->
     <!-- 引入组件库 -->

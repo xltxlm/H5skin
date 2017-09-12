@@ -7,7 +7,10 @@ if(!defined(__FILE__))
 <script type="text/x-template" id="c-<?=$vueid?>">
     <div>
         <InputNumber v-if="this.edit" v-model="this.value" @input="updateValue"   ></InputNumber>
-        <span v-else v-text="this.value"></span>
+        <span v-else>
+            <span v-if="this.showfield" v-html="eval('window.'+this.name+'(value,this.item);')"></span>
+            <span v-else v-text="value"></span>
+        </span>
     </div>
 </script>
 <script type="application/javascript">
@@ -21,6 +24,8 @@ if(!defined(__FILE__))
                 };
             },
             props:[
+                'item',
+                'showfield',
                 'edit',
                 'ajaxurl',
                 'id',
@@ -55,5 +60,5 @@ if(!defined(__FILE__))
 
 <?php } ?>
 
-<iinputnumber <?php if($this->getModel()){?>v-model="<?=$this->getModel()?>"<?php }?> ajaxurl="<?=$this->getAjaxEditUrl()?>" <?php if($this->isEdit()){?>:id="<?=$this->getId()?>"<?php }?> name="<?=$this->getName()?>" :edit="<?=$this->isEdit()?'true':'false'?>"></iinputnumber>
+<iinputnumber <?php if($this->getModel()){?>v-model="<?=$this->getModel()?>"<?php }?> ajaxurl="<?=$this->getAjaxEditUrl()?>" <?php if($this->isEdit()){?>:id="<?=$this->getId()?>"<?php }?> name="<?=$this->getName()?>" :edit="<?=$this->isEdit()?'true':'false'?>" :showfield="<?=$this->isShowfield()?'true':'false'?>" <?php if($this->getItem()){?>:item="<?=$this->getItem()?>"<?php }?>></iinputnumber>
 

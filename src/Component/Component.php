@@ -31,6 +31,8 @@ trait Component
     protected $redvalue = '';
     /** @var string 当值等于的时候，显示绿色 */
     protected $greenvalue = '';
+    /** @var bool 是否格式化展示 */
+    protected $showfield = false;
 
     /**
      * @return string
@@ -194,6 +196,24 @@ trait Component
     public function setRedvalue(string $redvalue)
     {
         $this->redvalue = $redvalue;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isShowfield(): bool
+    {
+        return $this->showfield;
+    }
+
+    /**
+     * @param bool $showfield
+     * @return static
+     */
+    public function setShowfield(bool $showfield)
+    {
+        $this->showfield = $showfield;
         return $this;
     }
 
