@@ -16,7 +16,10 @@ define(__FILE__,true);
                 <option v-for="(item,index) in this.option" :value="item" v-text="item"></option>
             </select>
         </span>
-        <span v-else v-text="this.value" :class="{ 'badge bg-green':this.value && this.value==this.greenvalue, 'badge bg-red':this.value && this.value==this.redvalue }"></span>
+        <span v-else :class="{ 'badge bg-green':this.value && this.value==this.greenvalue, 'badge bg-red':this.value && this.value==this.redvalue }" >
+            <span v-if="this.showfield" v-html="eval(this.name+'(value,this.item);')"></span>
+            <span v-else v-text="value"></span>
+        </span>
     </div>
 </script>
 
@@ -33,6 +36,8 @@ define(__FILE__,true);
             props:[
                 'option',
                 'edit',
+                'item',
+                'showfield',
                 'ajaxurl',
                 'id',
                 'name',
@@ -83,4 +88,4 @@ define(__FILE__,true);
 
 <?php } ?>
 
-<iradio <?php if($this->getModel()){?>v-model="<?=$this->getModel()?>"<?php }?> ajaxurl="<?=$this->getAjaxEditUrl()?>"  <?php if($this->isEdit()){?>:id="<?=$this->getId()?>"<?php }?>  name="<?=$this->getName()?>" :edit="<?=$this->isEdit()?'true':'false'?>" :option='<?=$this->getOption()?>' greenvalue="<?=$this->getGreenvalue()?>"  redvalue="<?=$this->getRedvalue()?>"></iradio>
+<iradio <?php if($this->getModel()){?>v-model="<?=$this->getModel()?>"<?php }?> ajaxurl="<?=$this->getAjaxEditUrl()?>"  <?php if($this->isEdit()){?>:id="<?=$this->getId()?>"<?php }?>  name="<?=$this->getName()?>" :edit="<?=$this->isEdit()?'true':'false'?>" :showfield="<?=$this->isShowfield()?'true':'false'?>"  <?php if($this->getItem()){?>:item="<?=$this->getItem()?>"<?php }?> :option='<?=$this->getOption()?>' greenvalue="<?=$this->getGreenvalue()?>"  redvalue="<?=$this->getRedvalue()?>"></iradio>

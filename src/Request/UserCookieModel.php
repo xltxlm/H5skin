@@ -37,7 +37,7 @@ class UserCookieModel
      */
     public function getIp(): string
     {
-        return $this->ip = (string)$_SERVER['REMOTE_ADDR'];
+        return $this->ip = (string)$_SERVER['HTTP_X_REAL_IP']??$_SERVER['REMOTE_ADDR'];
     }
 
 
