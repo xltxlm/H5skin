@@ -8,8 +8,12 @@ if(!defined(__FILE__))
     <div>
         <input :id="'c-<?=$vueid?>-'+this.name" type="hidden" :name="this.name" value="">
         <span v-if="edit">
-            <Date-picker v-if="fulldate" type="datetime" format="yyyy-MM-dd HH:mm"  v-model="this.value"  @input="updateValue"    ></Date-picker>
-            <Date-picker v-else type="datetime" format="yyyy-MM-dd"  v-model="this.value" @input="updateValue" ></Date-picker>
+            <span v-if="editing==true">
+                <Date-picker v-if="fulldate" type="datetime" format="yyyy-MM-dd HH:mm"  v-model="this.value"  @input="updateValue"  :key="this.id+this.name"   ></Date-picker>
+                <Date-picker v-else type="datetime" format="yyyy-MM-dd"  v-model="this.value" @input="updateValue" :key="this.id+this.name"  ></Date-picker>
+                <br><a href="javascript:void(0)" @click="editing=false;">只读</a>
+            </span>
+            <span v-else><span v-text="this.value"></span><br><a href="javascript:void(0)" @click="editing=true;">编辑</a></span>
         </span>
         <span v-else >
             <span :title="this.value" v-if="timeago" v-html="window.timeago(null, 'zh_CN').format(this.value)"></span>
@@ -21,6 +25,11 @@ if(!defined(__FILE__))
     Vue.component("idate",
         {
             template:"#c-<?=$vueid?>",
+            data: function () {
+                return {
+                    editing: false
+                };
+            },
             props:[
                 'timeago',
                 'edit',
@@ -30,6 +39,11 @@ if(!defined(__FILE__))
                 'name',
                 'value'
             ],
+            watch: {
+                id:function () {
+                    this.editing = false;
+                }
+            },
             methods: {
                 updateValue: function () {
                     $('c-<?=$vueid?>-'+this.name).val(this.value);

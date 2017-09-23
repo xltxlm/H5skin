@@ -85,7 +85,7 @@ if(!defined(__FILE__))
                     window.location.reload();
                 },
                 updateSetingValue:function () {
-                    eval('$.get(this.ajaxurl,{'+this.name+':{options:this.myoptions,checked:this.myhaschecked}});');
+                    eval('$.post(this.ajaxurl,{'+this.name+':{options:this.myoptions,checked:this.myhaschecked}});');
                 }
             },
             watch: {

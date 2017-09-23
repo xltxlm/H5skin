@@ -27,7 +27,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
     {
         modelname ='';
     }
-    var watchedObject=[];
+    Vue.use(VueLazyload);
     var <?=$this::vueel()?> =new Vue({
         data: {
             //用来标注一个事情是否正在存在

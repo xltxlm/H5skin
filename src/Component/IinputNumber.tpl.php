@@ -6,7 +6,13 @@ if(!defined(__FILE__))
 ?>
 <script type="text/x-template" id="c-<?=$vueid?>">
     <div>
-        <InputNumber v-if="this.edit" v-model="this.value" @input="updateValue"   ></InputNumber>
+        <span v-if="this.edit">
+            <span v-if="editing==true">
+                <InputNumber  v-model="this.value" :key="this.id+this.name"   @keyup.enter.native="updateValue(this.value)"  ></InputNumber>
+                <br><a href="javascript:void(0)" @click="editing=false;">只读</a>
+            </span>
+            <span v-else><span v-text="this.value"></span><br><a href="javascript:void(0)" @click="editing=true;">编辑</a></span>
+        </span>
         <span v-else>
             <span v-if="this.showfield" v-html="eval('window.'+this.name+'(value,this.item);')"></span>
             <span v-else v-text="value"></span>
@@ -20,6 +26,7 @@ if(!defined(__FILE__))
             data:function()
             {
                 return {
+                    editing:false,
                     loading:false
                 };
             },
@@ -32,6 +39,11 @@ if(!defined(__FILE__))
                 'name',
                 'value'
             ],
+            watch: {
+                id:function () {
+                    this.editing = false;
+                }
+            },
             methods:{
                 updateValue: function (value) {
                     //this.$data.loading=true;
@@ -50,6 +62,7 @@ if(!defined(__FILE__))
                             // 通过 input 事件发出数值
                             this.$emit('input', value);
                             this.$data.loading=false;
+                            this.$data.editing=false;
                         }
                     });
                 }

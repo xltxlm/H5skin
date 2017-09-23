@@ -75,13 +75,30 @@ if(!defined(__FILE__))
     <div>
         <span :value="this.value"></span>
         <span v-if="this.edit">
-            <span v-if="!this.tag">
-                <input type="hidden" :id="'hidden_select_'+ this.id + this.name" >
-                <i-select  v-model="this.value" filterable clearable :multiple="this.multiple" @on-change="updateValue">
-                    <i-option v-for='(item,index) in this.option' :value="item.value" :key="item.value" v-text="item.label"></i-option>
-                </i-select>
+            <!--     人工开启编辑的情况下       -->
+            <span v-if="this.tag || editing==true">
+                <span v-if="!this.tag"  >
+                    <input type="hidden" :id="'hidden_select_'+ this.id + this.name"  >
+                    <i-select  :key="this.id+this.name" v-model="this.value" filterable clearable :multiple="this.multiple" @on-change="updateValue">
+                        <i-option v-for='(item,index) in this.option' :value="item.value"    v-text="item.label"></i-option>
+                    </i-select>
+                </span>
+                <iselect2 v-else v-model="this.value" :taggable="this.tag" :id="this.id" :key="this.id+this.name" :name="this.name"  :option='this.optionvalues' @on-change="updateValue"></iselect2>
+                <br><a href="javascript:void(0)" @click="editing=false;">只读</a>
             </span>
-            <iselect2 v-else v-model="this.value" :taggable="this.tag" :id="this.id"  :name="this.name"  :option='this.optionvalues' @on-change="updateValue"></iselect2>
+            <!--     默认情况下，关闭编辑       -->
+            <span v-else>
+                <span v-if="!this.multiple"  ><span v-text="this.value"></span></span>
+                <span v-else>
+                    <span v-if="this.tag" v-text="this.value"></span>
+                    <span v-else >
+                        <ul>
+                            <li v-for='(item,index) in this.option' v-if="$.inArray(item.value,value)!=-1"  v-text="item.label"></li>
+                        </ul>
+                    </span>
+                </span>
+                <br><a href="javascript:void(0)" @click="editing=true;">编辑</a>
+            </span>
         </span>
         <span v-else v-text="this.value"></span>
     </div>
@@ -94,10 +111,13 @@ if(!defined(__FILE__))
             data:function()
             {
                 return {
+                    editing:false,
+                    //只有初始化成功之后，才能有触发修改的动作
+                    initValuedo:[],
                     loading:false
                 };
             },
-            mounted: function () {
+            updated: function () {
                 this.initValue();
             },
             props:[
@@ -111,6 +131,11 @@ if(!defined(__FILE__))
                 'name',
                 'value'
             ],
+            watch: {
+                id:function () {
+                    this.editing = false;
+                }
+            },
             methods: {
                 initValue:function () {
                     if(this.multiple) {
@@ -120,8 +145,13 @@ if(!defined(__FILE__))
                     {
                         $('#hidden_select_' + this.id + this.name).val(this.value);
                     }
+                    this.initValuedo[this.id]=true;
                 },
                 updateValue: function (value) {
+                    if(!this.initValuedo[this.id])
+                    {
+                        return false;
+                    }
                     //如果没有修改，那么不要提交
                     if(this.multiple)
                     {
@@ -135,6 +165,7 @@ if(!defined(__FILE__))
                             return false;
                         }
                     }
+                    this.value=value;
                     //this.$data.loading=true;
                     //发送数据,编辑当前字段的值
                     if(this.multiple)
@@ -158,6 +189,10 @@ if(!defined(__FILE__))
                         success: function (result) {
                             // 通过 input 事件发出数值
                             this.$data.loading=false;
+                            if(!this.multiple)
+                            {
+                                this.$data.editing=false;
+                            }
                             ajaxSuccess(result);
                             this.initValue();
                         },

@@ -7,9 +7,13 @@ if(!defined(__FILE__))
 
 <script type="text/x-template" id="c-<?=$vueid?>">
     <div>
-        <span v-if="this.edit">
-            <Spin v-show="this.loading" size="large"></Spin>
-            <i-input  v-show="!this.loading" :name="this.name" type="textarea"  v-model="this.value" @on-blur="updateValue($event.target.value)"></i-input>
+        <span v-if="this.edit" >
+            <span v-if="editing==true">
+                <Spin v-if="this.loading" size="large"></Spin>
+                <i-input  v-if="!this.loading" :name="this.name" type="textarea" :key="this.id+this.name"  v-model="this.value" @on-blur="updateValue($event.target.value)"></i-input>
+                <br><a href="javascript:void(0)" @click="editing=false;">只读</a>
+            </span>
+            <span v-else><span v-text="this.value"></span><br><a href="javascript:void(0)" @click="editing=true;">编辑</a></span>
         </span>
         <span v-else :class="{ 'badge bg-green':this.value && this.value==this.greenvalue, 'badge bg-red':this.value && this.value==this.redvalue }" >
                 <span v-if="this.showfield" v-html="eval(this.name+'(value,this.item);')"></span>
@@ -20,15 +24,15 @@ if(!defined(__FILE__))
 <script type="application/javascript">
     Vue.component("iinput",
         {
-            template:"#c-<?=$vueid?>",
-            data:function()
-            {
-              return {
-                rows:1,
-                loading:false
-              };
+            template: "#c-<?=$vueid?>",
+            data: function () {
+                return {
+                    editing: false,
+                    rows: 1,
+                    loading: false
+                };
             },
-            props:[
+            props: [
                 'item',
                 'edit',
                 'showfield',
@@ -40,6 +44,11 @@ if(!defined(__FILE__))
                 'greenvalue',
                 'redvalue'
             ],
+            watch: {
+                id:function () {
+                    this.editing = false;
+                }
+            },
             methods:{
                 updateValue: function (value) {
                     //如果没有修改，那么不要提交

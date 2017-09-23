@@ -9,10 +9,10 @@ define(__FILE__,true);
     <div>
         <span v-if="this.edit">
             <Spin v-show="this.loading" size="large"></Spin>
-            <RadioGroup v-if="this.option.length<=6" v-show="!this.loading" v-model="this.value" @on-change="updateValue" vertical>
+            <RadioGroup :key="this.id+this.name" v-if="this.option.length<=7" v-show="!this.loading" v-model="this.value" @on-change="updateValue" vertical>
                 <Radio v-for="(item,index) in this.option" :label="item" :class="{ 'badge bg-green':  value == item && value == greenvalue, 'badge bg-red': value == item && value == redvalue }"></Radio>
             </RadioGroup>
-            <select v-else v-show="!this.loading" v-model="this.value" size="6" @input="updateValue($event.target.value)">
+            <select v-else :key="this.id+this.name" v-show="!this.loading" v-model="this.value" size="6" @input="updateValue($event.target.value)">
                 <option v-for="(item,index) in this.option" :value="item" v-text="item"></option>
             </select>
         </span>
