@@ -7,7 +7,7 @@ if(!defined(__FILE__))
 <!--  options 格式是对象，id:"value"  -->
 <script type="text/x-template"  id="c-<?=$vueid?>">
     <div>
-        <Checkbox-group v-model="myhaschecked"  @input="updateValue"  style="display: inline">
+        <Checkbox-group v-model="myhaschecked" :key="this.id" @input="updateValue"  style="display: inline" v-if="this.reshow">
             <Checkbox  v-for="(item,index) in myoptions"
                        :label="item.id"
                        :disabled="disabled"
@@ -15,7 +15,14 @@ if(!defined(__FILE__))
                        @dragover.native="dragover"
                        draggable
                        @dragstart.native="dragstart(index,$event)"
-            ><span v-text="item.name"></span></Checkbox>
+                       @keyup.37.native="left"
+                       @keyup.39.native="right"
+                       @click.native="click(item.id,index)"
+            >
+                <Tooltip placement="top" content="可以拖住移动...." :always="this.moveid==item.id">
+                    <span v-text="item.name"></span>
+                </Tooltip>
+            </Checkbox>
         </Checkbox-group>
         <a href="javascript:void(0)" class="btn bg-orange margin " @click="modaldialog = true" >重置</a>
         <a href="javascript:void(0)" class="btn bg-purple margin " @click="reload" >保存</a>
@@ -37,7 +44,11 @@ if(!defined(__FILE__))
                     modaldialog:false,
                     myoptions:this.options,
                     myhaschecked:this.haschecked,
-                    tmpindex:0
+                    tmpindex:0,
+                    moveindex:0,
+                    moveid:0,
+                    //强制重绘元素
+                    reshow:true
                 };
             },
             props: [
@@ -48,6 +59,64 @@ if(!defined(__FILE__))
                 'value'
             ],
             methods:{
+                click:function (id,index) {
+                    if(index<1)
+                    {
+                        this.moveid='';
+                        return;
+                    }
+                    this.moveindex=index;
+                    this.moveid=id;
+
+                    console.log([
+                        this.moveid ,
+                        this.moveindex,
+                        this.myoptions.length
+                    ]);
+                },
+                left:function () {
+                    console.log([
+                        this.moveid ,
+                        this.moveindex,
+                        this.myoptions.length
+                    ]);
+                   if(!this.moveid || this.moveindex<1 || this.moveindex>this.myoptions.length-1)
+                    {
+                        return;
+                    }
+                    var tmp = this.myoptions[this.moveindex];
+                    //删除掉拽住的元素
+                    this.myoptions.splice(this.moveindex, 1);
+                    //被压的元素前面加 上 拽住的元素
+                    this.myoptions.splice(this.moveindex-1, 0,tmp);
+                    this.moveindex=this.moveindex-1;
+                    this.reshow=false;
+                    this.reshow=true;
+                    console.log([
+                        this.moveid ,
+                        this.moveindex,
+                        this.myoptions.length
+                    ]);
+                },
+                right:function () {
+                    console.log([
+                        this.moveid ,
+                        this.moveindex,
+                        this.myoptions.length
+                    ]);
+                    if(!this.moveid || this.moveindex<0 || this.moveindex > this.myoptions.length-1)
+                    {
+                        return;
+                    }
+                    var tmp = this.myoptions[this.moveindex];
+                    //删除掉拽住的元素
+                    this.myoptions.splice(this.moveindex, 1);
+                    //被压的元素前面加 上 拽住的元素
+                    this.myoptions.splice(this.moveindex+1, 0,tmp);
+                    this.moveindex=Math.min(this.myoptions.length-1,this.moveindex+1);
+                    this.reshow=false;
+                    this.reshow=true;
+                },
                 cancel:function () {
                     this.modaldialog=false;
                 },

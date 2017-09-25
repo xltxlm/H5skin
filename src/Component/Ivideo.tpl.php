@@ -6,7 +6,9 @@ if(!defined(__FILE__))
 ?>
 <script type="text/x-template" id="c-<?=$vueid?>" xmlns:v-on="http://www.w3.org/1999/xhtml">
     <div>
-        <img v-lazy='this.pic' :key="this.id+'img'" width='200px' v-on:mousemove="mousemove"><br>
+        <Tooltip content="单击播放视频">
+            <img v-lazy='this.pic' :key="this.id+'img'" width='200px' @click="this.mousemove" ><br>
+        </Tooltip>
         <Modal :key="this.id+'vod'"
                 :scrollable="true"
                 :styles="{top: '50px','left':'20px',width:'650px'}"

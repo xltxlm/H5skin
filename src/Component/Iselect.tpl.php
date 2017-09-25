@@ -11,6 +11,7 @@ if(!defined(__FILE__))
         <multiselect
                 v-model="this.value"
                 @input="updateValue(this.value)"
+                :key="this.id"
                 :id="this.id"
                 :options='this.option'
                 multiple
@@ -20,6 +21,7 @@ if(!defined(__FILE__))
                 :hide-selected="true"
                 :max="5"
                 placeholder="请选择"
+                @remove="remove"
         >
         </multiselect>
     </div>
@@ -61,6 +63,13 @@ if(!defined(__FILE__))
                         this.$data.loading=false;
                     }
                 });
+            },
+            remove:function (removedOption, id) {
+                var index = this.value.indexOf(removedOption);
+                if(index > -1)
+                {
+                    this.value.splice(this.value, 1);
+                }
             },
             addTag:function(newTag) {
                 this.value.push(newTag)

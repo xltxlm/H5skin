@@ -9,7 +9,7 @@ define(__FILE__,true);
     <div>
         <span v-if="this.edit">
             <Spin v-show="this.loading" size="large"></Spin>
-            <RadioGroup :key="this.id+this.name" v-if="this.option.length<=7" v-show="!this.loading" v-model="this.value" @on-change="updateValue" vertical>
+            <RadioGroup :key="this.id+this.name" v-if="this.option.length<=7" v-show="!this.loading" v-model="this.value" @on-change="updateValue" :vertical="vertical">
                 <Radio v-for="(item,index) in this.option" :label="item" :class="{ 'badge bg-green':  value == item && value == greenvalue, 'badge bg-red': value == item && value == redvalue }"></Radio>
             </RadioGroup>
             <select v-else :key="this.id+this.name" v-show="!this.loading" v-model="this.value" size="6" @input="updateValue($event.target.value)">
@@ -34,6 +34,7 @@ define(__FILE__,true);
                 };
             },
             props:[
+                'vertical',
                 'option',
                 'edit',
                 'item',
@@ -88,4 +89,4 @@ define(__FILE__,true);
 
 <?php } ?>
 
-<iradio <?php if($this->getModel()){?>v-model="<?=$this->getModel()?>"<?php }?> ajaxurl="<?=$this->getAjaxEditUrl()?>"  <?php if($this->isEdit()){?>:id="<?=$this->getId()?>"<?php }?>  name="<?=$this->getName()?>" :edit="<?=$this->isEdit()?'true':'false'?>" :showfield="<?=$this->isShowfield()?'true':'false'?>"  <?php if($this->getItem()){?>:item="<?=$this->getItem()?>"<?php }?> :option='<?=$this->getOption()?>' greenvalue="<?=$this->getGreenvalue()?>"  redvalue="<?=$this->getRedvalue()?>"></iradio>
+<iradio <?php if($this->getModel()){?>v-model="<?=$this->getModel()?>"<?php }?> ajaxurl="<?=$this->getAjaxEditUrl()?>"  <?php if($this->isEdit()){?>:id="<?=$this->getId()?>"<?php }?>  name="<?=$this->getName()?>" :edit="<?=$this->isEdit()?'true':'false'?>" :showfield="<?=$this->isShowfield()?'true':'false'?>"  <?php if($this->getItem()){?>:item="<?=$this->getItem()?>"<?php }?> :option='<?=$this->getOption()?>' :vertical='<?=$this->isVertical()?'true':'false'?>'  greenvalue="<?=$this->getGreenvalue()?>"  redvalue="<?=$this->getRedvalue()?>"></iradio>
