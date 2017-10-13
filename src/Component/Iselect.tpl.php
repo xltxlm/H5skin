@@ -15,7 +15,7 @@ if(!defined(__FILE__))
                 :id="this.id"
                 :options='this.option'
                 multiple
-                :taggable="true"
+                :taggable="this.addTag"
                 @tag="addTag"
                 :close-on-select="false"
                 :hide-selected="true"
@@ -38,6 +38,7 @@ if(!defined(__FILE__))
             }
         },
         props: [
+            'addTag',
             'taggable',
             'name',
             'value',
@@ -85,14 +86,14 @@ if(!defined(__FILE__))
         <span :value="this.value"></span>
         <span v-if="this.edit">
             <!--     人工开启编辑的情况下       -->
-            <span v-if="this.tag || editing==true">
+            <span v-if="this.tag || this.multiple || editing==true">
                 <span v-if="!this.tag"  >
                     <input type="hidden" :id="'hidden_select_'+ this.id + this.name"  >
-                    <i-select  :key="this.id+this.name" v-model="this.value" filterable clearable :multiple="this.multiple" @on-change="updateValue">
+                    <i-select style="width: 250px" :key="this.id+this.name" v-model="this.value" filterable clearable :multiple="this.multiple" @on-change="updateValue">
                         <i-option v-for='(item,index) in this.option' :value="item.value"    v-text="item.label"></i-option>
                     </i-select>
                 </span>
-                <iselect2 v-else v-model="this.value" :taggable="this.tag" :id="this.id" :key="this.id+this.name" :name="this.name"  :option='this.optionvalues' @on-change="updateValue"></iselect2>
+                <iselect2 v-else v-model="this.value" :addTag="this.addTag" :taggable="this.tag" :id="this.id" :key="this.id+this.name" :name="this.name"  :option='this.optionvalues' @on-change="updateValue"></iselect2>
                 <br><a href="javascript:void(0)" @click="editing=false;">只读</a>
             </span>
             <!--     默认情况下，关闭编辑       -->
@@ -130,6 +131,7 @@ if(!defined(__FILE__))
                 this.initValue();
             },
             props:[
+                'addTag',
                 'tag',
                 'multiple',
                 'optionvalues',
@@ -219,4 +221,4 @@ if(!defined(__FILE__))
 </script>
 <?php } ?>
 
-<iselect <?php if($this->getModel()){?>v-model="<?=$this->getModel()?>"<?php }?> ajaxurl="<?=$this->getAjaxEditUrl()?>" :id="<?=$this->getId()?>" name="<?=$this->getName()?>" :edit="<?=$this->isEdit()?'true':'false'?>" :option='<?=$this->getOption()?>' :multiple="<?=$this->isMultiple()?'true':'false'?>" :tag="<?=$this->isTag()?'true':'false'?>" :optionvalues='<?=$this->getOptionValues()?>' ></iselect>
+<iselect <?php if($this->getModel()){?>v-model="<?=$this->getModel()?>"<?php }?> ajaxurl="<?=$this->getAjaxEditUrl()?>" :id="<?=$this->getId()?>" name="<?=$this->getName()?>" :edit="<?=$this->isEdit()?'true':'false'?>" :option='<?=$this->getOption()?>' :multiple="<?=$this->isMultiple()?'true':'false'?>" :addTag="<?=$this->isAddTag()?'true':'false'?>" :tag="<?=$this->isTag()?'true':'false'?>" :optionvalues='<?=$this->getOptionValues()?>' ></iselect>

@@ -22,6 +22,27 @@ class Iselect extends Template
     protected $multiple = false;
     /** @var bool 是否是打标签类型 */
     protected $tag = false;
+    /** @var bool 是否能动态添加标签 */
+    protected $addTag = false;
+
+    /**
+     * @return bool
+     */
+    public function isAddTag(): bool
+    {
+        return $this->addTag;
+    }
+
+    /**
+     * @param bool $addTag
+     * @return Iselect
+     */
+    public function setAddTag(bool $addTag): Iselect
+    {
+        $this->addTag = $addTag;
+        return $this;
+    }
+
 
     /**
      * @return string

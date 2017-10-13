@@ -6,24 +6,15 @@ if(!defined(__FILE__))
 ?>
 <script type="text/x-template" id="c-<?=$vueid?>" xmlns:v-on="http://www.w3.org/1999/xhtml">
     <div>
-            <img v-lazy='this.pic' :key="this.id+'img'" width='200px' @click="this.mousemove" ><br>
-        <Modal :key="this.id+'vod'"
-                :scrollable="true"
-                :styles="{top: '50px','left':'20px',width:'650px'}"
-                v-model="videomodel"
-                @on-cancel="cancel"
-                @ok="cancel">
-            <h3 v-text="this.title"></h3>
-            <video v-if="videomodel" controls="controls"  :key="this.id+'video'"  :id="'ivideo'+this.id" style="max-width: 550px"  :src='this.playurl' >
-            </video><br><br><br>
-            <a :href="this.playurl" target="_blank">新窗口打开视频</a>
-        </Modal>
+        <img v-if="!videomodel" v-lazy='this.pic' :key="this.id+'img'" :style="{width:this.picwidth+'px',height:this.picheight+'px'}"   @click="this.mousemove" >
+        <video v-else controls="controls"  :key="this.id+'video'"  :id="'ivideo'+this.id"  :style="{width:this.picwidth+'px',height:this.picheight+'px'}"  :src='this.playurl' @click="pausevideo"  >
+        </video>
     </div>
 </script>
 
 
 <script type="application/javascript">
-    Vue.component("ivideo",
+    Vue.component("ivideo2",
         {
             template: "#c-<?=$vueid?>",
             data: function () {
@@ -37,7 +28,9 @@ if(!defined(__FILE__))
                 'id',
                 'title',
                 'playurl',
-                'pic'
+                'pic',
+                'picwidth',
+                'picheight'
             ],
             methods: {
                 cancel:function () {
@@ -56,16 +49,11 @@ if(!defined(__FILE__))
                         $(id)[0].play();
                     },200)
                 },
-                playvideo: function () {
-                    event.target.play();
-                    event.target.width = '450'
-                },
                 pausevideo: function () {
-                    event.target.pause();
-                    event.target.width = '150'
-                },
-                control: function () {
-                    event.target.controls = !event.target.controls;
+                    if (event.target.paused) {
+                        event.target.play();
+                    }else
+                        event.target.pause();
                 }
             }
         }
