@@ -10,7 +10,8 @@ if(!defined(__FILE__))
         <span v-if="this.edit" >
             <span v-if="editing==true">
                 <Spin v-if="this.loading" size="large"></Spin>
-                <i-input  v-if="!this.loading" :name="this.name" type="textarea" :key="this.id+this.name"  v-model="this.value" @on-blur="updateValue($event.target.value)"></i-input>
+                <i-input  v-if="!this.loading" :name="this.name" type="textarea" :key="this.id+this.name" :id="this.id+'<?=$vueid?>'"  v-model="this.value" ></i-input>
+                <button @click="updateValue($('#'+id+'<?=$vueid?> textarea').val())">提交</button>
                 <br><a href="javascript:void(0)" @click="editing=false;">只读</a> <Spin v-if="ajax && ajaxing"></Spin><Icon v-if="ajax && !ajaxing" type="checkmark-circled" color="green"></Icon>
             </span>
             <span v-else><span v-text="this.value"></span><br><a href="javascript:void(0)" @click="editing=true;" >编辑</a></span>
@@ -22,7 +23,7 @@ if(!defined(__FILE__))
     </div>
 </script>
 <script type="application/javascript">
-    Vue.component("iinput",
+    Vue.component("iinputconfirm",
         {
             template: "#c-<?=$vueid?>",
             data: function () {
@@ -53,11 +54,6 @@ if(!defined(__FILE__))
             },
             methods:{
                 updateValue: function (value) {
-                    //如果没有修改，那么不要提交
-                    if(value == this.value)
-                    {
-                        return false;
-                    }
                     this.ajax=true;
                     this.ajaxing=true;
                     //this.$data.loading=true;
@@ -99,5 +95,5 @@ if(!defined(__FILE__))
 </script>
 
 <?php } if($this->isInit()){ return false;}?>
-<iinput <?php if($this->getModel()){?>v-model="<?=$this->getModel()?>"<?php }?> ajaxurl="<?=$this->getAjaxEditUrl()?>" <?php if($this->isEdit()){?>:id="<?=$this->getId()?>"<?php }?> name="<?=$this->getName()?>" :edit="<?=$this->isEdit()?'true':'false'?>"  :showfield="<?=$this->isShowfield()?'true':'false'?>" <?php if($this->getItem()){?>:item="<?=$this->getItem()?>"<?php }?> greenvalue="<?=$this->getGreenvalue()?>"  redvalue="<?=$this->getRedvalue()?>"></iinput>
+<iinputconfirm <?php if($this->getModel()){?>v-model="<?=$this->getModel()?>"<?php }?> ajaxurl="<?=$this->getAjaxEditUrl()?>" <?php if($this->isEdit()){?>:id="<?=$this->getId()?>"<?php }?> name="<?=$this->getName()?>" :edit="<?=$this->isEdit()?'true':'false'?>"  :showfield="<?=$this->isShowfield()?'true':'false'?>" <?php if($this->getItem()){?>:item="<?=$this->getItem()?>"<?php }?> greenvalue="<?=$this->getGreenvalue()?>"  redvalue="<?=$this->getRedvalue()?>"></iinputconfirm>
 

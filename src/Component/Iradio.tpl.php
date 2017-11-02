@@ -63,7 +63,7 @@ define(__FILE__,true);
                         dataType: "json",
                         method: "POST",
                         context:this,
-                        url: '<?=$this->getAjaxEditUrl()?>',
+                        url: this.ajaxurl,
                         data: {
                             'id':this.id,
                             'name':this.name,
@@ -87,6 +87,6 @@ define(__FILE__,true);
     );
 </script>
 
-<?php } ?>
+<?php } if($this->isInit()){ return false;}?>
 
 <iradio <?php if($this->getModel()){?>v-model="<?=$this->getModel()?>"<?php }?> ajaxurl="<?=$this->getAjaxEditUrl()?>"  <?php if($this->isEdit()){?>:id="<?=$this->getId()?>"<?php }?>  name="<?=$this->getName()?>" :edit="<?=$this->isEdit()?'true':'false'?>" :showfield="<?=$this->isShowfield()?'true':'false'?>"  <?php if($this->getItem()){?>:item="<?=$this->getItem()?>"<?php }?> :option='<?=$this->getOption()?>' :vertical='<?=$this->isVertical()?'true':'false'?>'  greenvalue="<?=$this->getGreenvalue()?>"  redvalue="<?=$this->getRedvalue()?>"></iradio>

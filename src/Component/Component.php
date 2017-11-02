@@ -33,6 +33,27 @@ trait Component
     protected $greenvalue = '';
     /** @var bool 是否格式化展示 */
     protected $showfield = false;
+    /** @var bool 是否只显示模板 */
+    protected $init = false;
+
+    /**
+     * @return bool
+     */
+    public function isInit(): bool
+    {
+        return $this->init;
+    }
+
+    /**
+     * @param bool $init
+     * @return static
+     */
+    public function setInit(bool $init)
+    {
+        $this->init = $init;
+        return $this;
+    }
+
 
     /**
      * @return string

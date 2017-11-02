@@ -41,6 +41,7 @@ if(!defined(__FILE__))
             'addTag',
             'taggable',
             'name',
+            'ajaxurl',
             'value',
             "id",
             'option'
@@ -52,7 +53,7 @@ if(!defined(__FILE__))
                     dataType: "json",
                     method: "POST",
                     context:this,
-                    url: '<?=$this->getAjaxEditUrl()?>',
+                    url: this.ajaxurl,
                     data: {
                         'id':this.id,
                         'name':this.name,
@@ -93,7 +94,7 @@ if(!defined(__FILE__))
                         <i-option v-for='(item,index) in this.option' :value="item.value"    v-text="item.label"></i-option>
                     </i-select>
                 </span>
-                <iselect2 v-else v-model="this.value" :addTag="this.addTag" :taggable="this.tag" :id="this.id" :key="this.id+this.name" :name="this.name"  :option='this.optionvalues' @on-change="updateValue"></iselect2>
+                <iselect2 v-else v-model="this.value" :ajaxurl="this.ajaxurl" :addTag="this.addTag" :taggable="this.tag" :id="this.id" :key="this.id+this.name" :name="this.name"  :option='this.optionvalues' @on-change="updateValue"></iselect2>
                 <br><a href="javascript:void(0)" @click="editing=false;">只读</a>
             </span>
             <!--     默认情况下，关闭编辑       -->
@@ -191,7 +192,7 @@ if(!defined(__FILE__))
                         dataType: "json",
                         method: "POST",
                         context:this,
-                        url: '<?=$this->getAjaxEditUrl()?>',
+                        url: this.ajaxurl,
                         data: {
                             'id':this.id,
                             'name':this.name,
@@ -219,6 +220,6 @@ if(!defined(__FILE__))
     );
 
 </script>
-<?php } ?>
+<?php } if($this->isInit()){ return false;}?>
 
 <iselect <?php if($this->getModel()){?>v-model="<?=$this->getModel()?>"<?php }?> ajaxurl="<?=$this->getAjaxEditUrl()?>" :id="<?=$this->getId()?>" name="<?=$this->getName()?>" :edit="<?=$this->isEdit()?'true':'false'?>" :option='<?=$this->getOption()?>' :multiple="<?=$this->isMultiple()?'true':'false'?>" :addTag="<?=$this->isAddTag()?'true':'false'?>" :tag="<?=$this->isTag()?'true':'false'?>" :optionvalues='<?=$this->getOptionValues()?>' ></iselect>

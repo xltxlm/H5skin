@@ -6,7 +6,7 @@ if(!defined(__FILE__))
 ?>
 <script type="text/x-template" id="c-<?=$vueid?>" xmlns:v-on="http://www.w3.org/1999/xhtml">
     <div>
-            <img v-lazy='this.pic' :key="this.id+'img'" width='200px' @click="this.mousemove" ><br>
+        <img v-lazy='this.pic' :key="this.id+'img'" width='200px' style="max-height: 200px;cursor: pointer" @click="this.mousemove" ><br>
         <Modal :key="this.id+'vod'"
                 :scrollable="true"
                 :styles="{top: '50px','left':'20px',width:'650px'}"
@@ -14,7 +14,7 @@ if(!defined(__FILE__))
                 @on-cancel="cancel"
                 @ok="cancel">
             <h3 v-text="this.title"></h3>
-            <video v-if="videomodel" controls="controls"  :key="this.id+'video'"  :id="'ivideo'+this.id" style="max-width: 550px"  :src='this.playurl' >
+            <video v-if="videomodel" controls="controls"  :key="this.id+'video'"  :id="'ivideo'+this.id" style="max-width: 550px"  :src='this.playurl' @click="pausevideo"  >
             </video><br><br><br>
             <a :href="this.playurl" target="_blank">新窗口打开视频</a>
         </Modal>
@@ -56,13 +56,11 @@ if(!defined(__FILE__))
                         $(id)[0].play();
                     },200)
                 },
-                playvideo: function () {
-                    event.target.play();
-                    event.target.width = '450'
-                },
                 pausevideo: function () {
-                    event.target.pause();
-                    event.target.width = '150'
+                    if (event.target.paused) {
+                        event.target.play();
+                    }else
+                        event.target.pause();
                 },
                 control: function () {
                     event.target.controls = !event.target.controls;

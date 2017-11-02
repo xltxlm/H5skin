@@ -163,7 +163,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                     eval('model=this.alldata.'+this.modelname);
                     model.forEach(function (item,index) {
                         eval('oldvalue=item.'+name);
-                        if(oldvalue==defaultvalue)
+                        if($.inArray(oldvalue,defaultvalue)!=-1)
                         {
                              //发送数据,编辑当前字段的值
                             $.ajax({
