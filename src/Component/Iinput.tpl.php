@@ -17,7 +17,7 @@ if(!defined(__FILE__))
         </span>
         <span v-else :class="{ 'badge bg-green':this.value && this.value==this.greenvalue, 'badge bg-red':this.value && this.value==this.redvalue }" >
                 <span v-if="this.showfield" v-html="eval(this.name+'(value,this.item);')"></span>
-                <span v-else v-text="value"></span>
+                <span v-else style="    word-break: break-all;    word-wrap: break-word;" v-html="(value+'').replace(/(\r\n|\n\r|\r|\n)/g,'<br>'+'$1')"></span>
         </span>
     </div>
 </script>

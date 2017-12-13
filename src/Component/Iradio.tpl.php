@@ -72,6 +72,8 @@ define(__FILE__,true);
                         success: function (result) {
                             // 通过 input 事件发出数值
                             this.$emit('input', value);
+                            //通知外部：本控件的值被修改了
+                            vueel.$emit(this.name+'change', this.item,value,this.value);
                             this.$data.loading=false;
                             ajaxSuccess(result);
                         },

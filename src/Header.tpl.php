@@ -34,11 +34,14 @@ $SsoThrift=(new $SsoThriftclass());
         $(function () {
             notyf = new Notyf({delay:3000});
             var clipboard = new Clipboard('.copy');
+            clipboard.on('success', function(e) {
+                notyf.confirm("拷贝成功");
+            });
         });
     </script>
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition  skin-black-light sidebar-mini">
 <div class="wrapper">
 
 
@@ -46,15 +49,15 @@ $SsoThrift=(new $SsoThriftclass());
         <!-- Logo -->
         <a href="/" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>A</b>LT</span>
+            <span class="logo-mini">一下</span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b><?=$_SERVER['HOSTNAME'].'_'.$_SERVER['HOST_TYPE']?></b></span>
+            <span class="logo-lg"><img src="https://mail.yixia.com/coremail/s?sid=BAigIUFFOsmSmKcIqAFFVhfMHulpRPSF&func=getInsidePageLogoData"></span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
             <!-- Sidebar toggle button-->
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-                <span class="sr-only">Toggle navigation</span>
+                <span class="sr-only">Toggle navigation</span><b><?=$_SERVER['HOSTNAME'].'('.($_SERVER['HOST_TYPE']=='online'?'正式':'测试').')'?></b>
             </a>
 
 
@@ -94,7 +97,7 @@ $SsoThrift=(new $SsoThriftclass());
 <aside class="main-sidebar" id="mainsidebar">
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar" style="height: auto;" >
-        <div class="user-panel" style="color: white">
+        <div class="user-panel" >
             只看有权限菜单
             <i-switch v-model="onlyme" @on-change="loaddata">
                 <span slot="open">是</span>
@@ -179,8 +182,11 @@ $SsoThrift=(new $SsoThriftclass());
                     this.tmpindex = index;
                 },
                 project_loaddata:function () {
-                    if(this.i>2)
-                        this.searchtext='';
+                    if(this.i>2) {
+                        if(this.projectname)
+                            this.searchtext = '';
+                        this.menutype=[];
+                    }
                     this.loaddata();
                 },
                 loaddata:function () {

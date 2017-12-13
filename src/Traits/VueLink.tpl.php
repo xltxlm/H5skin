@@ -7,6 +7,11 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
     {
         viewform =[];
     }
+    if(typeof created === 'undefined')
+    {
+        var created=function() {
+        };
+    }
     //同期对比
     if(requestmodel.sametime == '')
     {
@@ -32,6 +37,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
         data: {
             //用来标注一个事情是否正在存在
             set:new Set(),
+            //当前正处在搜索的字段
             searchfield:'',
             //画图表采用的配置
             chartDatacolumns_date:"",
@@ -69,7 +75,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
             editinglock:false,
             //自增id的值
             openeditflag:"",
-            //字段名称
+            //正在编辑的字段名称
             openedittagname:"",
             openeditiitem:"",
             tmpindex: 0,
@@ -77,11 +83,17 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
             draggable:draggable,
             __init:false
         },
+        updated:function () {
+            //刷新显示逻辑
+            created(this);
+        },
         watch:{
             "chartDatacolumns_date":{
                 handler:function(newVal, oldVal) {
                     this.chartData.columns[0]=newVal;
                     this.chartDatapie.columns[0]=newVal;
+                    if(this.chartDatacolumns_date=="")
+                        return;
                     this.vchart();
                 }
             },
@@ -116,9 +128,11 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                                 //第一个指标，代表的是横轴
                                 if(columns_index==0)
                                 {
+                                    //横向指标的名称
+                                    var dtname=this.chartData.columns[columns_index];
                                     eval('var chartDatacolumns_value=model[model_index].'+this.chartData.columns[columns_index]);
                                     this.newchartDatapie.rows[model_index]={};
-                                    this.newchartDatapie.rows[model_index][this.chartData.columns[columns_index]]=model[model_index][this.chartData.columns[columns_index]];
+                                    this.newchartDatapie.rows[model_index][dtname]=model[model_index][this.chartData.columns[columns_index]];
                                 }
                                 else
                                 {
@@ -192,11 +206,14 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                         method: "GET",
                         url: '<?=$this->getUrl()?>',
                         data: this.requestmodel,
+                        context:this,
                         async:false,
                         success: function (result) {
                             <?=$this::vueel()?>.$data.alldata = result;
-                            //顺带刷新图表
-                            <?=$this::vueel()?>.vchart();
+                            if(this.chartDatacolumns_date!="") {
+                                //顺带刷新图表
+                                <?=$this::vueel()?>.vchart();
+                            }
                             <?=$this::vueel()?>.$data.__init = true;
                         }
                     });
