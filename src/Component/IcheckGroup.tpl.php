@@ -68,18 +68,8 @@ if(!defined(__FILE__))
                     this.moveindex=index;
                     this.moveid=id;
 
-                    console.log([
-                        this.moveid ,
-                        this.moveindex,
-                        this.myoptions.length
-                    ]);
                 },
                 left:function () {
-                    console.log([
-                        this.moveid ,
-                        this.moveindex,
-                        this.myoptions.length
-                    ]);
                    if(!this.moveid || this.moveindex<1 || this.moveindex>this.myoptions.length-1)
                     {
                         return;
@@ -92,18 +82,8 @@ if(!defined(__FILE__))
                     this.moveindex=this.moveindex-1;
                     this.reshow=false;
                     this.reshow=true;
-                    console.log([
-                        this.moveid ,
-                        this.moveindex,
-                        this.myoptions.length
-                    ]);
                 },
                 right:function () {
-                    console.log([
-                        this.moveid ,
-                        this.moveindex,
-                        this.myoptions.length
-                    ]);
                     if(!this.moveid || this.moveindex<0 || this.moveindex > this.myoptions.length-1)
                     {
                         return;

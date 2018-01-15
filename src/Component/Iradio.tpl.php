@@ -67,7 +67,9 @@ define(__FILE__,true);
                         data: {
                             'id':this.id,
                             'name':this.name,
-                            'value':encodeURIComponent(value)
+                            'value':encodeURIComponent(value),
+                            //需要附加的字段
+                            'moredata':window.moredata
                         },
                         success: function (result) {
                             // 通过 input 事件发出数值

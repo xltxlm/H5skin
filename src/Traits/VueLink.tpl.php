@@ -1,7 +1,6 @@
 <?php /** @var  \xltxlm\h5skin\Traits\VueLink $this */
 use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
 
-<script src="/static/js/picker-range.js"></script>
 <script>
     if(typeof viewform === 'undefined')
     {
@@ -35,6 +34,10 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
     Vue.use(VueLazyload);
     var <?=$this::vueel()?> =new Vue({
         data: {
+            //当前正在处理的行数据
+            currentitem:{},
+            //点击某个字段，需要展开的对应下级表格
+            showSubTable:[],
             //用来标注一个事情是否正在存在
             set:new Set(),
             //当前正处在搜索的字段
@@ -71,8 +74,6 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
             requestmodel:requestmodel,
             //ajax接受到的结果集
             alldata: alldata,
-            //正在请求改变字段锁
-            editinglock:false,
             //自增id的值
             openeditflag:"",
             //正在编辑的字段名称
@@ -84,8 +85,10 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
             __init:false
         },
         updated:function () {
-            //刷新显示逻辑
-            created(this);
+            this.$nextTick(function () {
+                //刷新显示逻辑
+                created(this);
+            });
         },
         watch:{
             "chartDatacolumns_date":{
@@ -171,9 +174,6 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                     }
                 },
                 batch:function (name,newvalue,defaultvalue) {
-                    //情场，别的不能处理
-                    this.openedittagname="";
-                    console.log("设置修改字段名字："+this.openedittagname);
                     eval('model=this.alldata.'+this.modelname);
                     model.forEach(function (item,index) {
                         eval('oldvalue=item.'+name);
@@ -199,7 +199,6 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
 
                 //请求页面接口新数据
                 requestmodelaction: function () {
-                    this.openedittagname = '';
                     //发送数据,查询内容
                     $.ajax({
                         dataType: "json",
@@ -245,29 +244,11 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                         }
                     });
                 },
-                //以下是点击编辑的切换状态
-                openedit:function (id,index,item,tagname) {
-                    if(this.openeditflag == id && this.openedittagname == tagname)
-                    {
-                        return;
-                    }
-                    //console.log('标记编辑名字:'+tagname);
-                    if(this.editinglock)
-                    {
-                        //console.log('上个字段还么释放');
-                        return false;
-                    }
-                    this.openeditflag = id;
-                    this.tmpindex = index;
-                    this.openeditiitem = item;
-                    this.openedittagname = tagname;
-                },
                 // 以下是表格拖的功能 index:被压元素的坑
                 drop: function (index, event) {
                     if(this.draggable==false)
                         return false;
                     //取消字段的编辑
-                    <?=$this::vueel()?>.$data.openedittagname='';
                     eval('model=this.alldata.'+this.modelname);
                     $.ajax({
                         dataType: "json",
@@ -342,27 +323,6 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                             },
                             success: function (result) {
                                 window.location.href="/?c=Pagelist/Pagelist&parentid="+parentid
-                            }
-                        }
-                    );
-                },
-                //添加当前条目到监控系统里面
-                addItemAlert:function(pid,name,fieldname,ctroller_class,table_class,pagename)
-                {
-                    $.ajax(
-                        {
-                            url:"/?c=Mailalert/MailalertInsertDo",
-                            async:false,
-                            data:{
-                                pid:pid,
-                                name:name,
-                                fieldname:fieldname,
-                                ctroller_class:ctroller_class,
-                                table_class:table_class,
-                                pagename:pagename
-                            },
-                            success: function (result) {
-                                window.location.href="/?c=Mailalert/Mailalert&status=通过&pid="+pid
                             }
                         }
                     );

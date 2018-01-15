@@ -5,6 +5,7 @@ if(!defined(__FILE__))
     define(__FILE__,true);
 ?>
 
+<!--  tag类型的下拉框  -->
 <script type="text/x-template" id="i-select2">
     <div style="width: 250px;">
         <span :value="this.value"></span>
@@ -27,7 +28,7 @@ if(!defined(__FILE__))
     </div>
 </script>
 <script type="application/javascript">
-    Vue.component('iselect2', {
+    Vue.component('iselecttag', {
         template: "#i-select2",
         components: {
             Multiselect: window.VueMultiselect.default
@@ -62,6 +63,7 @@ if(!defined(__FILE__))
                     success: function (result) {
                         // 通过 input 事件发出数值
                         this.$emit('input', value);
+                        vueel.$emit(this.name+'change', this.item,value,this.value);
                         this.$data.loading=false;
                     }
                 });
@@ -87,27 +89,34 @@ if(!defined(__FILE__))
         <span :value="this.value"></span>
         <span v-if="this.edit">
             <!--     人工开启编辑的情况下       -->
-            <span v-if="this.tag || this.multiple || editing==true">
-                <span v-if="!this.tag"  >
+            <span v-if="editing==true">
+
+                <!--    tag类型的下拉框  -->
+                <iselecttag v-if="this.tag"  v-model="this.value" :ajaxurl="this.ajaxurl" :addTag="this.addTag" :taggable="this.tag" :id="this.id" :key="this.id+this.name" :name="this.name"  :option='this.optionvalues' @on-change="updateValue"></iselecttag>
+
+            <!--   普通的下拉框  -->
+                <span v-else  >
                     <input type="hidden" :id="'hidden_select_'+ this.id + this.name"  >
                     <i-select style="width: 250px" :key="this.id+this.name" v-model="this.value" filterable clearable :multiple="this.multiple" @on-change="updateValue">
-                        <i-option v-for='(item,index) in this.option' :value="item.value"    v-text="item.label"></i-option>
+                        <i-option v-for='(item,index) in this.option' :value="item.value"    v-text="item.label==item.value?item.label:item.label+'('+item.value+')'"></i-option>
                     </i-select>
                 </span>
-                <iselect2 v-else v-model="this.value" :ajaxurl="this.ajaxurl" :addTag="this.addTag" :taggable="this.tag" :id="this.id" :key="this.id+this.name" :name="this.name"  :option='this.optionvalues' @on-change="updateValue"></iselect2>
+
                 <br><a href="javascript:void(0)" @click="editing=false;">只读</a>
             </span>
             <!--     默认情况下，关闭编辑       -->
             <span v-else>
-                <span v-if="!this.multiple"  ><span v-text="this.value"></span></span>
-                <span v-else>
+                <!--    多选的文本输出  -->
+                <span  v-if="this.multiple" >
                     <span v-if="this.tag" v-text="this.value"></span>
                     <span v-else >
                         <ul>
-                            <li v-for='(item,index) in this.option' v-if="$.inArray(item.value,value)!=-1"  v-text="item.label"></li>
+                            <ol v-for='(item,index) in this.option' v-if="$.inArray(item.value,value)!=-1"  v-text="item.label+'('+item.value+')'"></ol>
                         </ul>
                     </span>
                 </span>
+                <!--    单选的文本输出  -->
+                 <span v-else ><span v-for='(item,index) in this.option' v-if="item.value==value" v-text="item.label==item.value?item.label:item.label+'('+item.value+')'"></span></span>
                 <br><a href="javascript:void(0)" @click="editing=true;">编辑</a>
             </span>
         </span>
@@ -135,6 +144,7 @@ if(!defined(__FILE__))
                 'addTag',
                 'tag',
                 'multiple',
+                //默认值
                 'optionvalues',
                 'option',
                 'edit',

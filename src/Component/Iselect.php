@@ -17,6 +17,7 @@ class Iselect extends Template
 
     /** @var string 选项 */
     protected $option = "";
+    /** @var string 默认值 */
     protected $optionValues = "";
     /** @var bool 是否允许多选 */
     protected $multiple = false;

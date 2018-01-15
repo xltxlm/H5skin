@@ -13,11 +13,10 @@ if(!defined(__FILE__))
                 <i-input  v-if="!this.loading" :name="this.name" type="textarea" :key="this.id+this.name"  v-model="this.value" @on-blur="updateValue($event.target.value)"></i-input>
                 <br><a href="javascript:void(0)" @click="editing=false;">只读</a> <Spin v-if="ajax && ajaxing"></Spin><Icon v-if="ajax && !ajaxing" type="checkmark-circled" color="green"></Icon>
             </span>
-            <span v-else><span v-text="this.value"></span><br><a href="javascript:void(0)" @click="editing=true;" >编辑</a></span>
+            <span v-else><span v-html="(value+'').replace(/(\r\n|\n\r|\r|\n)/g,'<br>'+'$1')"></span><br><a href="javascript:void(0)" @click="editing=true;" >编辑</a></span>
         </span>
         <span v-else :class="{ 'badge bg-green':this.value && this.value==this.greenvalue, 'badge bg-red':this.value && this.value==this.redvalue }" >
-                <span v-if="this.showfield" v-html="eval(this.name+'(value,this.item);')"></span>
-                <span v-else style="    word-break: break-all;    word-wrap: break-word;" v-html="(value+'').replace(/(\r\n|\n\r|\r|\n)/g,'<br>'+'$1')"></span>
+                <span  style="    word-break: break-all;    word-wrap: break-word;" v-html="(value+'').replace(/(\r\n|\n\r|\r|\n)/g,'<br>'+'$1')"></span>
         </span>
     </div>
 </script>

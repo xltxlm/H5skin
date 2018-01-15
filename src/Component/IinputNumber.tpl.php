@@ -8,7 +8,7 @@ if(!defined(__FILE__))
     <div>
         <span v-if="this.edit">
             <span v-if="editing==true">
-                <InputNumber  v-model="this.value" :key="this.id+this.name"   @keyup.enter.native="updateValue(this.value)"  ></InputNumber>
+                <InputNumber  v-model="this.value" :key="this.id+this.name"    @on-blur="updateValue(this.value)"  ></InputNumber>
                 <br><a href="javascript:void(0)" @click="editing=false;">只读</a>
             </span>
             <span v-else><span v-text="this.value"></span><br><a href="javascript:void(0)" @click="editing=true;">编辑</a></span>
@@ -59,10 +59,19 @@ if(!defined(__FILE__))
                             'value':encodeURIComponent(value)
                         },
                         success: function (result) {
+                            if(result.code!=0)
+                            {
+                                notyf.alert("修改失败!"+result.message);
+                                return;
+                            }
                             // 通过 input 事件发出数值
                             this.$emit('input', value);
+                            vueel.$emit(this.name+'change', this.item,value,this.value);
                             this.$data.loading=false;
                             this.$data.editing=false;
+                        },
+                        error:function () {
+                            notyf.alert("修改失败!");
                         }
                     });
                 }

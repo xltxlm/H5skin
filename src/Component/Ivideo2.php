@@ -12,7 +12,7 @@ namespace xltxlm\h5skin\Component;
 use xltxlm\template\Template;
 
 /**
- * 视频播放方式
+ * 视频播放方式：原地播放，前提是视频按照原始宽高展示
  * Class Ivideo
  * @package xltxlm\h5skin\Component
  */

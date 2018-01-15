@@ -32,12 +32,38 @@ $SsoThrift=(new $SsoThriftclass());
 <!--    初始化提示层js-->
     <script>
         $(function () {
-            notyf = new Notyf({delay:3000});
+            notyf = new Notyf({delay:10000});
             var clipboard = new Clipboard('.copy');
             clipboard.on('success', function(e) {
                 notyf.confirm("拷贝成功");
             });
         });
+
+        /**
+         * 正确提交和错误提交的弹出框函数
+         * @param result
+         * @param item
+         */
+        function ajaxError(result, item) {
+            notyf.alert("修改失败!"+result.message);
+        }
+
+        function ajaxSuccess(result, item) {
+            if (result.code != 0)
+            {
+                ajaxError(result, item)
+            }else
+            {
+                //第一次刷新的时候。notyf还未加载成功
+                try {
+                    notyf.confirm(result.message);
+                }catch (err)
+                {
+
+                }
+            }
+        }
+
     </script>
 </head>
 
@@ -130,8 +156,8 @@ $SsoThrift=(new $SsoThriftclass());
         <ul class="sidebar-menu" style="min-height: 200px;">
             <template v-for="(item,index) in menu">
                 <li v-if="item.partingline" class="header">{{item.menutype}}</li>
-                <li :class="{'active':item.ctroller_class=='<?=addslashes(LoadClass::$runClass)?>'}" :key="item.id">
-                    <a :href="'https://'+item.hosturl+':'+item.httpsport+'/?c='+item.act+'&searchtext='+searchtext+'&'+$.param(JSON.parse(item.param?item.param:'{}'))+'&webPageOrderBy='+item.orderbyfield"><i class="fa fa-circle-o text-red" v-if="item.ctroller_class=='<?=addslashes(LoadClass::$runClass)?>'"></i><i v-else class="fa fa-th"></i><span>{{item.title}}</span></a>
+                <li :class="{'bg-info':item.ctroller_class=='<?=addslashes(LoadClass::$runClass)?>'}" :key="item.id">
+                    <a style="font-weight:normal" :href="'https://'+item.hosturl+':'+item.httpsport+'/?c='+item.act+'&searchtext='+searchtext+'&'+$.param(JSON.parse(item.param?item.param:'{}'))+'&webPageOrderBy='+item.orderbyfield"><i class="fa fa-circle-o text-red" v-if="item.ctroller_class=='<?=addslashes(LoadClass::$runClass)?>'"></i><i v-else class="fa fa-th"></i><span>{{item.title}}</span></a>
                 </li>
             </template>
         </ul>
@@ -139,114 +165,89 @@ $SsoThrift=(new $SsoThriftclass());
 </aside>
 
 
-<script>
-    var mainsidebar = new Vue(
-        {
-            data:{
-                i:0,
-                onlyme:true,
-                searchtext:'<?=$_GET['searchtext']?>',
-                menu:[],
-                projectlist:[],
-                projectname:[],
-                menutypelist:[],
-                menutype:[],
-                loading:false,
-                menutypeloding:false
-            },
-            methods:{
-                // 以下是表格拖的功能 index:被压元素的坑
-                drop: function (index, event) {
-                    //取消字段的编辑
-                    $.ajax({
-                        dataType: "json",
-                        method: "POST",
-                        url: 'https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getHttpsport()?>/?c=Menu/SsoctrolleruserDrag',
-                        async:false,
-                        context:this,
-                        data:{
-                            'from':this.menu[this.tmpindex],
-                            'to':this.menu[index]
-                        },
-                        success: function (result) {
+<script  type="application/ecmascript">
+            var mainsidebar = new Vue(
+                {
+                    data:{
+                        i:0,
+                        onlyme:true,
+                        searchtext:'<?=$_GET['searchtext']?>',
+                        menu:[],
+                        projectlist:[],
+                        projectname:[],
+                        menutypelist:[],
+                        menutype:[],
+                        loading:false,
+                        menutypeloding:false
+                    },
+                    methods:{
+                        project_loaddata:function () {
+                            if(this.i>2) {
+                                if(this.projectname)
+                                    this.searchtext = '';
+                                this.menutype=[];
+                            }
                             this.loaddata();
                         },
-                        error:function (XMLHttpRequest,textStatus) {
-                        }
-                    });
-                },
-                dragover: function (event) {
-                    event.preventDefault();
-                },
-                dragstart: function (index, event) {
-                    this.tmpindex = index;
-                },
-                project_loaddata:function () {
-                    if(this.i>2) {
-                        if(this.projectname)
-                            this.searchtext = '';
-                        this.menutype=[];
-                    }
-                    this.loaddata();
-                },
-                loaddata:function () {
-                    //在切换菜单中，不要操作
-                    if(this.loading==true)
-                        return;
-                    this.i++;
-                    $.ajax({
-                        dataType: "json",
-                        method: "GET",
-                        url: 'https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getHttpsport()?>/?c=MenuJson/Menu',
-                        data: {'title':this.searchtext,'onlyme':this.onlyme,'username':Cookies('username'),'projectname':this.projectname,'menutype':$.isArray(this.menutype)?this.menutype:[],'i':this.i},
-                        async:false,
-                        context:this,
-                        success: function (result) {
-                            this.$data.menu=result
-                            //读取完菜单之后再设置
-
-                            if(!this.menutypeloding)
+                        loaddata:function () {
+                            //在切换菜单中，不要操作
+                            if(this.loading==true)
                             {
-                                $.ajax({
-                                    dataType: "json",
-                                    method: "GET",
-                                    url: 'https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getHttpsport()?>/?c=MenuJson/Project',
-                                    data: {'title':this.searchtext,'onlyme':this.onlyme,'username':Cookies('username'),'projectname':this.projectname,'menutype':$.isArray(this.menutype)?this.menutype:[],'i':this.i},
-                                    async:false,
-                                    context:this,
-                                    success: function (result) {
-                                        this.$data.loading=true;
-                                        this.$data.menutypeloding=true;
-                                        this.$data.projectlist=result.project;
-                                        this.$data.menutypelist=result.menutype;
-
-                                        if(result.usersetting.title)
-                                        {
-                                            this.$data.searchtext=result.usersetting.title;
-                                        }
-                                        //this.$data.onlyme=result.usersetting.onlyme=='true'?true:false;
-                                        if(result.usersetting.projectname)
-                                        {
-                                            this.$data.projectname=result.usersetting.projectname;
-                                        }
-                                        if(result.usersetting.menutype && $.isArray(result.usersetting.menutype))
-                                        {
-                                            this.$data.menutype=result.usersetting.menutype;
-                                        }
-                                        this.$data.loading=false;
-                                        this.$data.menutypeloding=false;
-                                    }
-                                });
+                                return;
                             }
+                            this.i++;
+                            $.ajax({
+                                dataType: "json",
+                                method: "GET",
+                                url: 'https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getHttpsport()?>/?c=MenuJson/Project',
+                                data: {'title':this.searchtext,'onlyme':this.onlyme,'username':Cookies('username'),'projectname':this.projectname,'menutype':$.isArray(this.menutype)?this.menutype:[],'i':this.i},
+                                async:false,
+                                context:this,
+                                success: function (result) {
+                                    this.loading=true;
+                                    //可供选择的项目
+                                    this.projectlist = result.project;
+                                    //可供选择的二级菜单
+                                    this.menutypelist = result.menutype;
+
+                                    //搜索的内容
+                                    if (result.usersetting.title) {
+                                        this.searchtext = result.usersetting.title;
+                                    }
+                                    //this.onlyme=result.usersetting.onlyme=='true'?true:false;
+                                    //锁定的项目
+                                    if (result.usersetting.projectname) {
+                                        this.projectname = result.usersetting.projectname;
+                                    }
+                                    //锁定的二级菜单
+                                    if (result.usersetting.menutype && $.isArray(result.usersetting.menutype) && result.usersetting.menutype.length>0) {
+                                        this.menutype = result.usersetting.menutype;
+                                    }
+
+                                    //读取完菜单之后再设置
+                                    $.ajax({
+                                        dataType: "json",
+                                        method: "GET",
+                                        url: 'https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getHttpsport()?>/?c=MenuJson/Menu',
+                                        data: {'title':this.searchtext,'onlyme':this.onlyme,'username':Cookies('username'),'projectname':this.projectname,'menutype':$.isArray(this.menutype)?this.menutype:[],'i':this.i},
+                                        async:false,
+                                        context:this,
+                                        success: function (result) {
+                                            this.menu=result;
+                                            setTimeout(function () {
+                                                mainsidebar.$data.loading=false;
+                                            },500)
+                                        }
+                                    });
+                                }
+                            });
                         }
-                    });
+                    },
+                    mounted:function(){
+                        this.loaddata();
+                    }
                 }
-            },
-            mounted:function(){
-                this.loaddata();
-            }
-        }
-    ).$mount('#mainsidebar');
+            ).$mount('#mainsidebar');
 </script>
 
     <div class="content-wrapper" style="min-height: 916px;">
