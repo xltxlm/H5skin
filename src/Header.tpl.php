@@ -29,8 +29,9 @@ $SsoThrift=(new $SsoThriftclass());
     <![endif]-->
     <!-- jQuery 2.2.3 -->
     <!-- 引入组件库 -->
+<script src="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getHttpsport()?>/Vue/Header/Project.js"></script>
 <!--    初始化提示层js-->
-    <script>
+<script>
         $(function () {
             notyf = new Notyf({delay:10000});
             var clipboard = new Clipboard('.copy');
@@ -63,13 +64,14 @@ $SsoThrift=(new $SsoThriftclass());
                 }
             }
         }
+        window.ssohttps="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getHttpsport()?>";
 
-    </script>
+</script>
+
 </head>
 
 <body class="hold-transition  skin-black-light sidebar-mini">
 <div class="wrapper">
-
 
     <header class="main-header">
         <!-- Logo -->
@@ -123,41 +125,30 @@ $SsoThrift=(new $SsoThriftclass());
 <aside class="main-sidebar" id="mainsidebar">
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar" style="height: auto;" >
-        <div class="user-panel" >
-            只看有权限菜单
-            <i-switch v-model="onlyme" @on-change="loaddata">
-                <span slot="open">是</span>
-                <span slot="close">否</span>
-            </i-switch>
+
+        <div class="user-panel">
+        <div class="pull-left image">
+          <img src="/static/images/user1-128x128.jpg" class="img-circle" alt="User Image">
         </div>
+        <div class="pull-left info">
+          <p><?= (new UserCookieModel())->getUsername() ?></p>
+          <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+        </div>
+      </div>
+
 
         <div >
-            <div class="box box-warning">
-                <!-- /.box-header -->
-                <div class="box-body">
-                    <i-select v-model="projectname"  clearable placeholder="项目筛选" @on-change="project_loaddata">
-                        <i-option  v-for="(pitem,pindex) in projectlist" :value="pitem" :key="pitem">{{ pitem }}</i-option>
-                    </i-select>
-                    <i-select v-model="menutype" multiple placeholder="类型筛选" @on-change="function(){ mainsidebar.$data.menutypeloding=true; mainsidebar.loaddata(); mainsidebar.$data.menutypeloding=false;}">
-                        <i-option  v-for="(pitem,pindex) in menutypelist" :value="pitem" :key="pitem">{{ pitem }}</i-option>
-                    </i-select>
-                </div>
-                <!-- /.box-body -->
-            </div>
+            <projectname :projectlist="projectlist" v-model="projectname" @input="loaddata"></projectname>
+
             <!-- /.box -->
         </div>
 
-        <form action="#" method="get" class="sidebar-form clearfix" onsubmit="return false;" >
-            <div class="input-group">
-              <input v-model="searchtext" type="text" name="q" class="form-control" placeholder="搜索菜单..." @blur="loaddata" @keyup.enter="loaddata">
-            </div>
-      </form>
         <!-- sidebar menu: : style can be found in sidebar.less -->
-        <ul class="sidebar-menu" style="min-height: 200px;">
+        <ul class="sidebar-menu tree" style="min-height: 200px;">
             <template v-for="(item,index) in menu">
-                <li v-if="item.partingline" class="header">{{item.menutype}}</li>
+                <li v-if="item.partingline" class="header"><span style="color:royalblue">{{item.backstagename}}</span>:{{item.menutype}}</li>
                 <li :class="{'bg-info':item.ctroller_class=='<?=addslashes(LoadClass::$runClass)?>'}" :key="item.id">
-                    <a style="font-weight:normal" :href="'https://'+item.hosturl+':'+item.httpsport+'/?c='+item.act+'&searchtext='+searchtext+'&'+$.param(JSON.parse(item.param?item.param:'{}'))+'&webPageOrderBy='+item.orderbyfield"><i class="fa fa-circle-o text-red" v-if="item.ctroller_class=='<?=addslashes(LoadClass::$runClass)?>'"></i><i v-else class="fa fa-th"></i><span>{{item.title}}</span></a>
+                    <a style="font-weight:normal" :href="'https://'+item.hosturl+':'+item.httpsport+'/?c='+item.act+'&'+$.param(JSON.parse(item.param?item.param:'{}'))+'&webPageOrderBy='+item.orderbyfield"><i class="fa fa-circle-o text-red" v-if="item.ctroller_class=='<?=addslashes(LoadClass::$runClass)?>'"></i><i v-else class="fa fa-th"></i><span>{{item.title}}</span></a>
                 </li>
             </template>
         </ul>
@@ -165,90 +156,7 @@ $SsoThrift=(new $SsoThriftclass());
 </aside>
 
 
-<script  type="application/ecmascript">
-            var mainsidebar = new Vue(
-                {
-                    data:{
-                        i:0,
-                        onlyme:true,
-                        searchtext:'<?=$_GET['searchtext']?>',
-                        menu:[],
-                        projectlist:[],
-                        projectname:[],
-                        menutypelist:[],
-                        menutype:[],
-                        loading:false,
-                        menutypeloding:false
-                    },
-                    methods:{
-                        project_loaddata:function () {
-                            if(this.i>2) {
-                                if(this.projectname)
-                                    this.searchtext = '';
-                                this.menutype=[];
-                            }
-                            this.loaddata();
-                        },
-                        loaddata:function () {
-                            //在切换菜单中，不要操作
-                            if(this.loading==true)
-                            {
-                                return;
-                            }
-                            this.i++;
-                            $.ajax({
-                                dataType: "json",
-                                method: "GET",
-                                url: 'https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getHttpsport()?>/?c=MenuJson/Project',
-                                data: {'title':this.searchtext,'onlyme':this.onlyme,'username':Cookies('username'),'projectname':this.projectname,'menutype':$.isArray(this.menutype)?this.menutype:[],'i':this.i},
-                                async:false,
-                                context:this,
-                                success: function (result) {
-                                    this.loading=true;
-                                    //可供选择的项目
-                                    this.projectlist = result.project;
-                                    //可供选择的二级菜单
-                                    this.menutypelist = result.menutype;
-
-                                    //搜索的内容
-                                    if (result.usersetting.title) {
-                                        this.searchtext = result.usersetting.title;
-                                    }
-                                    //this.onlyme=result.usersetting.onlyme=='true'?true:false;
-                                    //锁定的项目
-                                    if (result.usersetting.projectname) {
-                                        this.projectname = result.usersetting.projectname;
-                                    }
-                                    //锁定的二级菜单
-                                    if (result.usersetting.menutype && $.isArray(result.usersetting.menutype) && result.usersetting.menutype.length>0) {
-                                        this.menutype = result.usersetting.menutype;
-                                    }
-
-                                    //读取完菜单之后再设置
-                                    $.ajax({
-                                        dataType: "json",
-                                        method: "GET",
-                                        url: 'https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getHttpsport()?>/?c=MenuJson/Menu',
-                                        data: {'title':this.searchtext,'onlyme':this.onlyme,'username':Cookies('username'),'projectname':this.projectname,'menutype':$.isArray(this.menutype)?this.menutype:[],'i':this.i},
-                                        async:false,
-                                        context:this,
-                                        success: function (result) {
-                                            this.menu=result;
-                                            setTimeout(function () {
-                                                mainsidebar.$data.loading=false;
-                                            },500)
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    },
-                    mounted:function(){
-                        this.loaddata();
-                    }
-                }
-            ).$mount('#mainsidebar');
-</script>
+<script type="application/javascript" src="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getHttpsport()?>/Vue/Header/MenuApp.js"></script>
 
     <div class="content-wrapper" style="min-height: 916px;">
 

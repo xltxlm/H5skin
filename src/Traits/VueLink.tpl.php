@@ -84,6 +84,9 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
             draggable:draggable,
             __init:false
         },
+        created:function () {
+            this.requestmodelaction();
+        },
         updated:function () {
             this.$nextTick(function () {
                 //刷新显示逻辑
@@ -208,12 +211,12 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                         context:this,
                         async:false,
                         success: function (result) {
-                            <?=$this::vueel()?>.$data.alldata = result;
+                            this.alldata = result;
                             if(this.chartDatacolumns_date!="") {
                                 //顺带刷新图表
-                                <?=$this::vueel()?>.vchart();
+                                this.vchart();
                             }
-                            <?=$this::vueel()?>.$data.__init = true;
+                            this.__init = true;
                         }
                     });
                 },
@@ -259,12 +262,13 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                             'from':model[this.tmpindex],
                             'to':model[index]
                         },
+                        context:this,
                         success: function (result) {
-                            <?=$this::vueel()?>.requestmodelaction();
-                            ajaxSuccess(result,<?=$this::vueel()?>.$data.openeditiitem);
+                            this.requestmodelaction();
+                            ajaxSuccess(result,this.openeditiitem);
                         },
                         error:function (XMLHttpRequest,textStatus) {
-                            ajaxError(textStatus,<?=$this::vueel()?>.$data.openeditiitem)
+                            ajaxError(textStatus,this.openeditiitem)
                         }
                     });
                 },
@@ -371,8 +375,5 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 }
             }
         }).$mount("#<?=$this::vueel()?>");
-
-    //拉取数据
-    <?=$this::vueel()?>.requestmodelaction();
 
 </script>

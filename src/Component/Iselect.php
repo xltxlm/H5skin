@@ -15,7 +15,7 @@ class Iselect extends Template
 {
     use Component;
 
-    /** @var string 选项 */
+    /** @var string 选项,json格式字符串 */
     protected $option = "";
     /** @var string 默认值 */
     protected $optionValues = "";
@@ -25,6 +25,27 @@ class Iselect extends Template
     protected $tag = false;
     /** @var bool 是否能动态添加标签 */
     protected $addTag = false;
+    /** @var string 动态调取的ajax地址 */
+    protected $optionajax = '';
+
+    /**
+     * @return string
+     */
+    public function getOptionajax(): string
+    {
+        return $this->optionajax;
+    }
+
+    /**
+     * @param string $optionajax
+     * @return Iselect
+     */
+    public function setOptionajax(string $optionajax): Iselect
+    {
+        $this->optionajax = $optionajax;
+        return $this;
+    }
+
 
     /**
      * @return bool

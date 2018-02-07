@@ -9,6 +9,9 @@
 namespace xltxlm\h5skin\Component;
 
 
+use xltxlm\helper\Ctroller\LoadClass;
+use xltxlm\thrift\Config\ThriftConfig;
+
 trait Component
 {
     /** @var string */
@@ -35,6 +38,54 @@ trait Component
     protected $showfield = false;
     /** @var bool 是否只显示模板 */
     protected $init = false;
+    /** @var bool 展示的时候 ，是否默认打开 */
+    protected $allwaysopen = false;
+
+    /** @var ThriftConfig */
+    protected $SsoThrift;
+
+    /**
+     * @return ThriftConfig
+     */
+    public function getSsoThrift(): ThriftConfig
+    {
+        if (!$this->SsoThrift) {
+            $SsoThriftclass = strtr(LoadClass::$rootNamespce, ['\\App' => '\\Config\\SsoThrift']);
+            /** @var \xltxlm\thrift\Config\ThriftConfig $SsoThrift */
+            $this->SsoThrift = (new $SsoThriftclass());
+        }
+        return $this->SsoThrift;
+    }
+
+    /**
+     * @param ThriftConfig $SsoThrift
+     * @return Component
+     */
+    public function setSsoThrift(ThriftConfig $SsoThrift): Component
+    {
+        $this->SsoThrift = $SsoThrift;
+        return $this;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isAllwaysopen(): bool
+    {
+        return $this->allwaysopen;
+    }
+
+    /**
+     * @param bool $allwaysopen
+     * @return Component
+     */
+    public function setAllwaysopen(bool $allwaysopen): Component
+    {
+        $this->allwaysopen = $allwaysopen;
+        return $this;
+    }
+
 
     /**
      * @return bool

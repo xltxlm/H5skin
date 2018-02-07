@@ -37,7 +37,7 @@ class UserCookieModel
      */
     public function getIp(): string
     {
-        return $this->ip = (string)$_SERVER['HTTP_X_REAL_IP']??$_SERVER['REMOTE_ADDR'];
+        return $this->ip = (string)$_SERVER['HTTP_X_REAL_IP'] ?? $_SERVER['REMOTE_ADDR'];
     }
 
 
@@ -77,6 +77,12 @@ class UserCookieModel
         }
         if ($_POST['prepage']) {
             $this->prepage = $_POST['prepage'];
+        }
+        //如果指定了分页条数，那么保存下来。
+        if ($this->prepage) {
+            setcookie('prepage', $_COOKIE['prepage'] = $this->prepage, time() + 3600 * 24 * 360, '/');
+        } else {
+            $_COOKIE['prepage'] && $this->prepage = $_COOKIE['prepage'];
         }
         return $this->prepage;
     }
@@ -152,7 +158,7 @@ class UserCookieModel
     {
         setcookie('username', $_COOKIE['username'] = $this->getUsername(), time() + 3600 * 24 * 300, '/');
         if ($_COOKIE['sign'] != $this->getSign()) {
-            setcookie('sign', $_COOKIE['sign'] = $this->getSign(),  $time, '/');
+            setcookie('sign', $_COOKIE['sign'] = $this->getSign(), $time, '/');
         }
     }
 
