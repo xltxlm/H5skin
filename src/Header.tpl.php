@@ -32,12 +32,54 @@ $SsoThrift=(new $SsoThriftclass());
 <script src="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getHttpsport()?>/Vue/Header/Project.js"></script>
 <!--    初始化提示层js-->
 <script>
+        //日期格式化扩展方法
+        Date.prototype.format = function (fmt) {
+            var o = {
+                "M+": this.getMonth() + 1, //月份
+                "d+": this.getDate(), //日
+                "h+": this.getHours(), //小时
+                "m+": this.getMinutes(), //分
+                "s+": this.getSeconds(), //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds() //毫秒
+            };
+            if (/(y+)/.test(fmt)) {
+                fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            }
+            for (var k in o) {
+                if (new RegExp("(" + k + ")").test(fmt)) {
+                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ?
+                        (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                }
+            }
+            return fmt;
+        }
+
+        //一个html元素，加上copy类，即可以进行拷贝 class="copy" data-clipboard-text="”
         $(function () {
             notyf = new Notyf({delay:10000});
             var clipboard = new Clipboard('.copy');
             clipboard.on('success', function(e) {
                 notyf.confirm("拷贝成功");
             });
+        });
+
+        //修正参数的拷贝方式，空的内容不要追加
+        jQuery.extend({
+            min: function(a, b) { return a < b ? a : b; },
+            max: function(a, b) { return a > b ? a : b; },
+            //拷贝网址用的函数，去掉对象的空值索引
+            paramfix:function (objectmodel) {
+                var newmodel={};
+                $.each(objectmodel,function(k,v){
+                    if($.inArray(v,["",null])!=-1)
+                    {
+                    }else{
+                        newmodel[k]=v;
+                    }
+                });
+                return $.param(newmodel);
+            }
         });
 
         /**
@@ -68,6 +110,29 @@ $SsoThrift=(new $SsoThriftclass());
 
 </script>
 
+<script type="text/javascript">
+        function downloadJSAtOnload(jspath) {
+            var element = document.createElement("script");
+            element.src = jspath;
+            document.body.appendChild(element);
+        }
+</script>
+<style>
+        .highlight
+        {
+            background:red;
+            animation:myfirst 5s;
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes myfirst
+        {
+            0%   {background: red;}
+            25%  {background: yellow;}
+            50%  {background: blue;}
+            100% {background: red;}
+        }
+    </style>
 </head>
 
 <body class="hold-transition  skin-black-light sidebar-mini">
@@ -79,7 +144,7 @@ $SsoThrift=(new $SsoThriftclass());
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini">一下</span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><img src="https://mail.yixia.com/coremail/s?sid=BAigIUFFOsmSmKcIqAFFVhfMHulpRPSF&func=getInsidePageLogoData"></span>
+            <span class="logo-lg"><img src="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getHttpsport()?>/static/images/s.png"></span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
@@ -92,9 +157,9 @@ $SsoThrift=(new $SsoThriftclass());
 
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <li class="dropdown messages-menu">
-                        <a href="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getHttpsport()?>/?c=Index/Index">
-                            <span class="fa  fa-home">首页</span>
+                    <li class="dropdown messages-menu highlight">
+                        <a href="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getHttpsport()?>/?c=Ssotask/Ssotask&progress=未开始&status%5B%5D=不通过&statusoperation=+notinjson+" >
+                            <span class="fa  fa-home">发现问题/有需求点这里</span>
                         </a>
                     </li>
                     <!-- User Account: style can be found in dropdown.less -->
@@ -161,15 +226,6 @@ $SsoThrift=(new $SsoThriftclass());
     <div class="content-wrapper" style="min-height: 916px;">
 
 
-        <section class="content-header">
-            <h1>
-                <?=method_exists($this,'getSsoctrolleruser')?$this->getSsoctrolleruser()->title:''?>
-                <small><a href="https://almsaeedstudio.com/themes/AdminLTE/index2.html" target="_blank">Preview of UIelements</a></small>
-                <span class="pull-right bg-red" style="cursor: pointer" onclick="$('#mydoc').fadeToggle('slow','linear')">需要帮助？</span>
-            </h1>
-        </section>
-
-        <!-- Main content -->
         <section class="content">
             <!-- 具体内容开始 -->
 

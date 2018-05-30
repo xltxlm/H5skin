@@ -93,108 +93,42 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 created(this);
             });
         },
-        watch:{
-            "chartDatacolumns_date":{
-                handler:function(newVal, oldVal) {
-                    this.chartData.columns[0]=newVal;
-                    this.chartDatapie.columns[0]=newVal;
-                    if(this.chartDatacolumns_date=="")
-                        return;
-                    this.vchart();
+        methods: {
+            //切换开关
+            showSubTableChange:function(名称){
+                var 索引=this.showSubTable.indexOf(名称);
+                var 在数组里面=索引!=-1;
+                if(在数组里面){
+                    this.showSubTable.splice(索引,1);
+                }else{
+                    this.showSubTable.push(名称);
                 }
             },
-            "chartDatacolumns_more":{
-                handler:function(newVal, oldVal) {
-                    if(this.chartDatacolumns_date=="")
-                        return;
-                    this.chartData.columns=[];
-                    this.chartData.columns=[].concat([this.chartDatacolumns_date]);
-                    for (index in newVal)
-                    {
-                        this.chartData.columns=this.chartData.columns.concat([newVal[index]]);
-                    }
-                    this.chartDatapie.columns=this.chartData.columns;
-                    this.vchart();
-                }
-            }
-        },
-        methods: {
-                vchart:function () {
-                    try {
-                        //修改数据值
-                        var model=this.alldata[this.modelname];
-                        this.chartData.rows=[];
-                        this.chartDatapie.rows=[];
-                        this.newchartDatapie.columns=this.chartData.columns;
-                        for (model_index in model)
-                        {
-                            this.chartData.rows[model_index]={};
-                            for(columns_index in this.chartData.columns)
-                            {
-                                //第一个指标，代表的是横轴
-                                if(columns_index==0)
-                                {
-                                    //横向指标的名称
-                                    var dtname=this.chartData.columns[columns_index];
-                                    eval('var chartDatacolumns_value=model[model_index].'+this.chartData.columns[columns_index]);
-                                    this.newchartDatapie.rows[model_index]={};
-                                    this.newchartDatapie.rows[model_index][dtname]=model[model_index][this.chartData.columns[columns_index]];
-                                }
-                                else
-                                {
-                                    if(typeof  this.chartDatapie.rows[columns_index-1] =='undefined' )
-                                    {
-                                        this.chartDatapie.rows[columns_index-1]={};
-                                        eval('this.chartDatapie.rows[columns_index-1].'+this.chartData.columns[0]+'="'+this.chartData.columns[columns_index]+'"')
-                                    }
-                                    eval('var chartDatacolumns_value=parseFloat(model[model_index].'+this.chartData.columns[columns_index]+')');
-                                    //饼图对比，只针对第一个指标，多余的指标采用求和对比
-                                    if(columns_index==1)
-                                    {
-                                        this.newchartDatapie.rows[model_index]['data']=chartDatacolumns_value;
-                                    }
-                                    //坑爹的数学计算
-                                    if(model_index==0)
-                                    {
-                                        eval('this.chartDatapie.rows[columns_index-1].data=chartDatacolumns_value')
-                                    }else
-                                    {
-                                        eval('this.chartDatapie.rows[columns_index-1].data+=chartDatacolumns_value')
-                                    }
-                                }
-                                eval('this.chartData.rows[model_index].'+this.chartData.columns[columns_index]+'=chartDatacolumns_value')
-                            }
-                        }
-                        //倒序排列下
-                        this.chartData.rows.sort(function(a, b){
-                            var a1= eval('a.'+<?=$this::vueel()?>.$data.chartDatacolumns_date), b1= eval('b.'+<?=$this::vueel()?>.$data.chartDatacolumns_date);
-                            if(a1== b1) return 0;
-                            return a1> b1? 1: -1;
-                        });
-                    }catch (e)
-                    {
-                        console.log(e)
-                    }
-                },
+                //批量提交操作
                 batch:function (name,newvalue,defaultvalue) {
                     eval('model=this.alldata.'+this.modelname);
                     model.forEach(function (item,index) {
-                        eval('oldvalue=item.'+name);
+                        oldvalue=item[name];
                         if($.inArray(oldvalue,defaultvalue)!=-1)
                         {
-                             //发送数据,编辑当前字段的值
+                            //发送数据,编辑当前字段的值
                             $.ajax({
                                 dataType: "json",
                                 method: "POST",
-                                async:false,
+                                async:true,
+                                context:this,
                                 url: '<?=$this->getEditAjaxUrl()?>',
                                 data: {
                                     'id':item.id,
                                     'name':name,
                                     'value':encodeURIComponent(newvalue)
+                                },
+                                success: function (result) {
+                                    ajaxSuccess(result);
                                 }
                             });
-                            eval('item.'+name+'="'+newvalue+'"');
+                            item[name]=newvalue;
+
                         }
                     });
                     this.requestmodelaction();
@@ -209,13 +143,10 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                         url: '<?=$this->getUrl()?>',
                         data: this.requestmodel,
                         context:this,
-                        async:false,
+                        //没有初始化之前，第一次采用异步方式加载数据，加快速度
+                        async:!this.__init,
                         success: function (result) {
                             this.alldata = result;
-                            if(this.chartDatacolumns_date!="") {
-                                //顺带刷新图表
-                                this.vchart();
-                            }
                             this.__init = true;
                         }
                     });
@@ -241,9 +172,10 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                         url:url,
                         data:this.requestmodel,
                         async:false,
+                        context:this,
                         success: function (result) {
-                            <?=$this::vueel()?>.requestmodelaction();
-                            ajaxSuccess(result,<?=$this::vueel()?>.$data.openeditiitem);
+                            this.requestmodelaction();
+                            ajaxSuccess(result,this.openeditiitem);
                         }
                     });
                 },

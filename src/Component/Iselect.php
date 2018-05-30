@@ -23,10 +23,31 @@ class Iselect extends Template
     protected $multiple = false;
     /** @var bool 是否是打标签类型 */
     protected $tag = false;
+    /** @var string 远程检索的字段 */
+    protected $Tagfield = '';
     /** @var bool 是否能动态添加标签 */
     protected $addTag = false;
     /** @var string 动态调取的ajax地址 */
     protected $optionajax = '';
+
+    /**
+     * @return string
+     */
+    public function getTagfield(): string
+    {
+        return $this->Tagfield;
+    }
+
+    /**
+     * @param string $Tagfield
+     * @return Iselect
+     */
+    public function setTagfield(string $Tagfield): Iselect
+    {
+        $this->Tagfield = $Tagfield;
+        return $this;
+    }
+
 
     /**
      * @return string
