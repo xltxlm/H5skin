@@ -141,7 +141,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                         dataType: "json",
                         method: "GET",
                         url: '<?=$this->getUrl()?>',
-                        data: this.requestmodel,
+                        data: $.paramfix(this.requestmodel),
                         context:this,
                         //没有初始化之前，第一次采用异步方式加载数据，加快速度
                         async:!this.__init,

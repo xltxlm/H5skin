@@ -32,6 +32,103 @@ class UserCookieModel
     /** @var  string 客户端ip */
     protected $ip = "";
 
+    protected $url = '';
+    protected $hostname = "";
+    protected $dockername = '';
+    protected $pid = '';
+    protected $uniqid = '';
+
+    /**
+     * @return string
+     */
+    public function getUrl(): string
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param string $url
+     * @return UserCookieModel
+     */
+    public function setUrl(string $url): UserCookieModel
+    {
+        $this->url = $url;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHostname(): string
+    {
+        return $this->hostname;
+    }
+
+    /**
+     * @param string $hostname
+     * @return UserCookieModel
+     */
+    public function setHostname(string $hostname): UserCookieModel
+    {
+        $this->hostname = $hostname;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDockername(): string
+    {
+        return $this->dockername;
+    }
+
+    /**
+     * @param string $dockername
+     * @return UserCookieModel
+     */
+    public function setDockername(string $dockername): UserCookieModel
+    {
+        $this->dockername = $dockername;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPid(): string
+    {
+        return $this->pid;
+    }
+
+    /**
+     * @param string $pid
+     * @return UserCookieModel
+     */
+    public function setPid(string $pid): UserCookieModel
+    {
+        $this->pid = $pid;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUniqid(): string
+    {
+        return $this->uniqid;
+    }
+
+    /**
+     * @param string $uniqid
+     * @return UserCookieModel
+     */
+    public function setUniqid(string $uniqid): UserCookieModel
+    {
+        $this->uniqid = $uniqid;
+        return $this;
+    }
+
+
     /**
      * @return string
      */
@@ -147,7 +244,7 @@ class UserCookieModel
      */
     public function check()
     {
-        if ($this->username && $this->sign == md5($this->username . self::KEY)) {
+        if ($this->username && $this->sign == $this->getSign()) {
             return true;
         }
 

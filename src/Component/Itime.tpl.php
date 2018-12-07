@@ -3,7 +3,7 @@ if (!defined(__FILE__)) {
     $vueid = md5(get_class($this));
     define(__FILE__, true);
 ?>
-<script  src="https://<?=$this->getSsoThrift()->getHosturl()?>:<?=$this->getSsoThrift()->getHttpsport()?>/Vue/iTime/iTime.js" ></script>
+<script  src="https://<?=$this->getSsoThrift()->getHosturl()?>:<?=$this->getSsoThrift()->getPort()?>/Vue/iTime/iTime.js?t=<?=date('Ymd')?>" ></script>
 <?php }
 if ($this->isInit()) {
     return false;

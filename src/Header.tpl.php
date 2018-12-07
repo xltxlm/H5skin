@@ -24,12 +24,12 @@ $SsoThrift=(new $SsoThriftclass());
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-    <script src="/static/js/respond.min.js"></script>
-    <script src="/static/js/html5shiv.min.js"></script>
+    <script src="//<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/static/js/respond.min.js"></script>
+    <script src="//<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/static/js/html5shiv.min.js"></script>
     <![endif]-->
     <!-- jQuery 2.2.3 -->
     <!-- 引入组件库 -->
-<script src="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getHttpsport()?>/Vue/Header/Project.js"></script>
+<script src="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/Vue/Header/Project.js?t=<?=date('Ymd')?>"></script>
 <!--    初始化提示层js-->
 <script>
         //日期格式化扩展方法
@@ -53,7 +53,7 @@ $SsoThrift=(new $SsoThriftclass());
                 }
             }
             return fmt;
-        }
+        };
 
         //一个html元素，加上copy类，即可以进行拷贝 class="copy" data-clipboard-text="”
         $(function () {
@@ -79,6 +79,24 @@ $SsoThrift=(new $SsoThriftclass());
                     }
                 });
                 return $.param(newmodel);
+            },
+            //数据的空值去掉
+            paramfixPost:function (objectmodel) {
+                var newmodel={};
+                $.each(objectmodel,function(k,v){
+                    if($.inArray(v,["",null])!=-1)
+                    {
+                    }else{
+                        //如果是空数组类型的,值设置为空 [这样提交的是,对方就能收到值]
+                        if($.isArray(v) && v.length==0){
+                            console.log("空数组"+k);
+                            newmodel[k]='';
+                        }else {
+                            newmodel[k] = v;
+                        }
+                    }
+                });
+                return newmodel;
             }
         });
 
@@ -106,15 +124,17 @@ $SsoThrift=(new $SsoThriftclass());
                 }
             }
         }
-        window.ssohttps="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getHttpsport()?>";
+        window.ssohttps="//<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>";
 
 </script>
 
 <script type="text/javascript">
         function downloadJSAtOnload(jspath) {
-            var element = document.createElement("script");
-            element.src = jspath;
-            document.body.appendChild(element);
+            setTimeout(function () {
+                var element = document.createElement("script");
+                element.src = jspath;
+                document.body.appendChild(element);
+            },200);
         }
 </script>
 <style>
@@ -144,7 +164,7 @@ $SsoThrift=(new $SsoThriftclass());
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini">一下</span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><img src="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getHttpsport()?>/static/images/s.png"></span>
+            <span class="logo-lg"><img src="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/static/images/s.png"></span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
@@ -158,14 +178,14 @@ $SsoThrift=(new $SsoThriftclass());
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <li class="dropdown messages-menu highlight">
-                        <a href="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getHttpsport()?>/?c=Ssotask/Ssotask&progress=未开始&status%5B%5D=不通过&statusoperation=+notinjson+" >
+                        <a href="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/?c=Ssotask/Ssotask&progress=未开始&status%5B%5D=不通过&statusoperation=+notinjson+" >
                             <span class="fa  fa-home">发现问题/有需求点这里</span>
                         </a>
                     </li>
                     <!-- User Account: style can be found in dropdown.less -->
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="/static/images/user1-128x128.jpg" class="user-image" alt="User Image">
+                            <img src="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/static/images/user1-128x128.jpg" class="user-image" alt="User Image">
                             <span class="hidden-xs"><?= (new UserCookieModel())->getUsername() ?></span>
                         </a>
                         <ul class="dropdown-menu">
@@ -173,10 +193,10 @@ $SsoThrift=(new $SsoThriftclass());
                             <li class="user-footer">
                                 <?php if($this->SsoThriftConfig) { ?>
                                 <div class="pull-left">
-                                    <a href="http://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/?c=Index/ChangePassword&backurl=<?=$this::Myurl()?>" class="btn bg-navy margin">修改密码</a>
+                                    <a href="//<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/?c=Index/ChangePassword&backurl=<?=$this::Myurl()?>" class="btn bg-navy margin">修改密码</a>
                                 </div>
                                 <div class="pull-right">
-                                    <a href="http://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/?c=Index/Logout&backurl=<?=$this::Myurl()?>" class="btn bg-navy margin">Sign out</a>
+                                    <a href="//<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/?c=Index/Logout&backurl=<?=$this::Myurl()?>" class="btn bg-navy margin">Sign out</a>
                                 </div>
                                 <?php } ?>
                             </li>
@@ -193,7 +213,7 @@ $SsoThrift=(new $SsoThriftclass());
 
         <div class="user-panel">
         <div class="pull-left image">
-          <img src="/static/images/user1-128x128.jpg" class="img-circle" alt="User Image">
+          <img src="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/static/images/user1-128x128.jpg" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
           <p><?= (new UserCookieModel())->getUsername() ?></p>
@@ -221,7 +241,7 @@ $SsoThrift=(new $SsoThriftclass());
 </aside>
 
 
-<script type="application/javascript" src="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getHttpsport()?>/Vue/Header/MenuApp.js"></script>
+<script type="application/javascript" src="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/Vue/Header/MenuApp.js"></script>
 
     <div class="content-wrapper" style="min-height: 916px;">
 
@@ -271,5 +291,12 @@ $(function(){
     document.onkeypress = banBackSpace;
     //对功能按键的获取
     document.onkeydown = banBackSpace;
+
+<?php if($_GET['noheader__']){?>
+    //如果传递了不需要框架页面的内容的配置
+    $('.sidebar-toggle').click();
+    $('.main-header').css("display","none");
+    $('.main-sidebar').css("display","none");
+<?php }?>
 })
 </script>

@@ -7,8 +7,10 @@
       "email": "xltxlm@qq.com"
     }
   ],
+  "minimum-stability": "dev",
   "require": {
     "php": ">=7.0",
+    "xltxlm/ssoclient": "@dev",
     "symfony/filesystem": "*",
     "xltxlm/helper": "*",
     "xltxlm/redis": "*",
