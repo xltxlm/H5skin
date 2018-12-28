@@ -16,6 +16,12 @@ $SsoThrift=(new $SsoThriftclass());
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title><?= $this->getTitle() ?></title>
+<?php
+//引入vue框架
+(new \xltxlm\template\VUE\VUE_Js())
+    ->setlocalstyle(true)
+    ->__invoke();
+?>
     <?php include __DIR__."/osscdn.css.html";?>
     <?php include __DIR__."/osscdn.js.html";?>
     <!-- Tell the browser to be responsive to screen width -->
