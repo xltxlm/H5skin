@@ -14,7 +14,7 @@
     "symfony/filesystem": "*",
     "xltxlm/helper": "*",
     "xltxlm/redis": "*",
-    "xltxlm/Template": "*",
+    "xltxlm/Template": "@dev",
     "xltxlm/page": "*",
     "xltxlm/phpexcel": "*"
   },
