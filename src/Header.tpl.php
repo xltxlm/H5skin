@@ -183,11 +183,6 @@ $SsoThrift=(new $SsoThriftclass());
 
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-                    <li class="dropdown messages-menu highlight">
-                        <a href="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/?c=Ssotask/Ssotask&progress=未开始&status%5B%5D=不通过&statusoperation=+notinjson+" >
-                            <span class="fa  fa-home">发现问题/有需求点这里</span>
-                        </a>
-                    </li>
                     <!-- User Account: style can be found in dropdown.less -->
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
