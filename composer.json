@@ -13,7 +13,7 @@
     "symfony/filesystem": "*",
     "xltxlm/helper": "*",
     "xltxlm/redis": "*",
-    "xltxlm/Template": "@dev",
+    "xltxlm/template": "@dev",
     "xltxlm/page": "@dev",
     "xltxlm/phpexcel": "*"
   },
