@@ -9,6 +9,7 @@
 namespace xltxlm\h5skin\Traits;
 
 
+use xltxlm\template\Minify\Minify_JS;
 use xltxlm\template\Template;
 
 class VueLink extends Template
@@ -80,5 +81,12 @@ class VueLink extends Template
     {
         $this->url = $url;
         return $this;
+    }
+
+    public function __invoke()
+    {
+        $minify_JS = new Minify_JS();
+        echo parent::__invoke();
+        return $minify_JS->__invoke();
     }
 }

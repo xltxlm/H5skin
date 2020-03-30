@@ -59,20 +59,6 @@ class Power extends Template
      */
     public function setPower($Power): Power
     {
-        switch ($Power) {
-            case access::WU_QUAN_XIAN:
-                $Power = EnumSsoctrolleruserAccess::WU_QUAN_XIAN;
-                break;
-            case access::ZHI_DU:
-                $Power = EnumSsoctrolleruserAccess::ZHI_DU;
-                break;
-            case access::CAO_ZUO:
-                $Power = EnumSsoctrolleruserAccess::CAO_ZUO;
-                break;
-            default:
-                throw new \Exception("未知权限：{$Power}");
-
-        }
         $this->Power = $Power;
         return $this;
     }

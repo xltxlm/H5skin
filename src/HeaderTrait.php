@@ -14,6 +14,28 @@ namespace xltxlm\h5skin;
  */
 trait HeaderTrait
 {
+    //定义网页的fav图标
+    protected $favicon="";
+
+    /**
+     * @return string
+     */
+    public function getFavicon(): string
+    {
+        return $this->favicon;
+    }
+
+    /**
+     * @param string $favicon
+     * @return HeaderTrait
+     */
+    public function setFavicon(string $favicon): HeaderTrait
+    {
+        $this->favicon = $favicon;
+        return $this;
+    }
+
+    //定义网页额标题
     protected $title = '';
 
     /**

@@ -86,8 +86,8 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
         methods: {
             //切换开关
             showSubTableChange: function (名称) {
-                var 索引 = this.showSubTable.indexOf(名称);
-                var 在数组里面 = 索引 != -1;
+                索引 = this.showSubTable.indexOf(名称);
+                在数组里面 = (索引 != -1);
                 if (在数组里面) {
                     this.showSubTable.splice(索引, 1);
                 } else {

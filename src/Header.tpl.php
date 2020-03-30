@@ -16,6 +16,10 @@ $SsoThrift=(new $SsoThriftclass());
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title><?= $this->getTitle() ?></title>
+    <!--项目配置的网站展示图标-->
+<?php if($this->getFavicon()){?>
+    <link rel="icon" type="image/png" href="<?=$this->getFavicon()?>" />
+<?php } /*if*/ ?>
 <?php
 //引入vue框架
 (new \xltxlm\template\VUE\VUE_Js())
@@ -33,132 +37,18 @@ $SsoThrift=(new $SsoThriftclass());
     <script src="//<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/static/js/respond.min.js"></script>
     <script src="//<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/static/js/html5shiv.min.js"></script>
     <![endif]-->
-    <!-- jQuery 2.2.3 -->
-    <!-- 引入组件库 -->
-<script src="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/Vue/Header/Project.js?t=<?=date('Ymd')?>"></script>
+<?php /* 隐藏导航,就不需要再加载js*/ if(!$_GET['hidden_navigation']){?>
+<!-- 引入组件库:项目切换 -->
+<script src="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/Vue/Header/Project.js"></script>
+<?php } /*if*/ ?>
+<!-- 引入组件库:通用js代码 -->
+<script src="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/Vue/Header/commomjs.js"></script>
 <!--    初始化提示层js-->
 <script>
-        //日期格式化扩展方法
-        Date.prototype.format = function (fmt) {
-            var o = {
-                "M+": this.getMonth() + 1, //月份
-                "d+": this.getDate(), //日
-                "h+": this.getHours(), //小时
-                "m+": this.getMinutes(), //分
-                "s+": this.getSeconds(), //秒
-                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-                "S": this.getMilliseconds() //毫秒
-            };
-            if (/(y+)/.test(fmt)) {
-                fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-            }
-            for (var k in o) {
-                if (new RegExp("(" + k + ")").test(fmt)) {
-                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ?
-                        (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-                }
-            }
-            return fmt;
-        };
-
-        //一个html元素，加上copy类，即可以进行拷贝 class="copy" data-clipboard-text="”
-        $(function () {
-            notyf = new Notyf({delay:10000});
-            var clipboard = new Clipboard('.copy');
-            clipboard.on('success', function(e) {
-                notyf.confirm("拷贝成功");
-            });
-        });
-
-        //修正参数的拷贝方式，空的内容不要追加
-        jQuery.extend({
-            min: function(a, b) { return a < b ? a : b; },
-            max: function(a, b) { return a > b ? a : b; },
-            //拷贝网址用的函数，去掉对象的空值索引
-            paramfix:function (objectmodel) {
-                var newmodel={};
-                $.each(objectmodel,function(k,v){
-                    if($.inArray(v,["",null])!=-1)
-                    {
-                    }else{
-                        newmodel[k]=v;
-                    }
-                });
-                return $.param(newmodel);
-            },
-            //数据的空值去掉
-            paramfixPost:function (objectmodel) {
-                var newmodel={};
-                $.each(objectmodel,function(k,v){
-                    if($.inArray(v,["",null])!=-1)
-                    {
-                    }else{
-                        //如果是空数组类型的,值设置为空 [这样提交的是,对方就能收到值]
-                        if($.isArray(v) && v.length==0){
-                            console.log("空数组"+k);
-                            newmodel[k]='';
-                        }else {
-                            newmodel[k] = v;
-                        }
-                    }
-                });
-                return newmodel;
-            }
-        });
-
-        /**
-         * 正确提交和错误提交的弹出框函数
-         * @param result
-         * @param item
-         */
-        function ajaxError(result, item) {
-            notyf.alert("修改失败!"+result.message);
-        }
-
-        function ajaxSuccess(result, item) {
-            if (result.code != 0)
-            {
-                ajaxError(result, item)
-            }else
-            {
-                //第一次刷新的时候。notyf还未加载成功
-                try {
-                    notyf.confirm(result.message);
-                }catch (err)
-                {
-
-                }
-            }
-        }
         window.ssohttps="//<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>";
-
 </script>
 
-<script type="text/javascript">
-        function downloadJSAtOnload(jspath) {
-            setTimeout(function () {
-                var element = document.createElement("script");
-                element.src = jspath;
-                document.body.appendChild(element);
-            },200);
-        }
-</script>
-<style>
-        .highlight
-        {
-            background:red;
-            animation:myfirst 5s;
-            animation-iteration-count: infinite;
-        }
-
-        @keyframes myfirst
-        {
-            0%   {background: red;}
-            25%  {background: yellow;}
-            50%  {background: blue;}
-            100% {background: red;}
-        }
-    </style>
+<style> .highlight {background:red;animation:myfirst 5s;animation-iteration-count: infinite;}  @keyframes myfirst { 0%   {background: red;} 25%  {background: yellow;} 50%  {background: blue;} 100% {background: red;} }</style>
 </head>
 
 <body class="hold-transition  skin-black-light sidebar-mini">
@@ -170,7 +60,7 @@ $SsoThrift=(new $SsoThriftclass());
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini">一下</span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><img src="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/static/images/s.png"></span>
+            <span class="logo-lg"></span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
@@ -214,7 +104,7 @@ $SsoThrift=(new $SsoThriftclass());
 
         <div class="user-panel">
         <div class="pull-left image">
-          <img src="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/static/images/user1-128x128.jpg" class="img-circle" alt="User Image">
+          <img :src="window.ssohttps+'/static/images/user1-128x128.jpg'" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
           <p><?= (new UserCookieModel())->getUsername() ?></p>
@@ -222,10 +112,9 @@ $SsoThrift=(new $SsoThriftclass());
         </div>
       </div>
 
-
         <div >
-            <projectname :projectlist="projectlist" v-model="projectname" @input="loaddata"></projectname>
-
+            <!--  项目切换组件，如果组件的值发生改变了，触发  loaddata 事件      -->
+            <projectname :projectlist="projectlist" v-model="projectname" v-on:input="loaddata();"></projectname>
             <!-- /.box -->
         </div>
 
@@ -241,63 +130,12 @@ $SsoThrift=(new $SsoThriftclass());
     </section>
 </aside>
 
-
+<?php /* 隐藏导航,就不需要再加载js*/ if(!$_GET['hidden_navigation']){?>
 <script type="application/javascript" src="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/Vue/Header/MenuApp.js"></script>
+<?php } /*if*/ ?>
 
     <div class="content-wrapper" style="min-height: 916px;">
 
 
         <section class="content">
             <!-- 具体内容开始 -->
-
-
-        <!-- footer 包尾具体内容开始 -->
-<script type="application/javascript">
-function banBackSpace(e){
-  var ev = e || window.event;
-  //各种浏览器下获取事件对象
-  var obj = ev.relatedTarget || ev.srcElement || ev.target ||ev.currentTarget;
-  //按下Backspace键
-  if(ev.keyCode == 8){
-    var tagName = obj.nodeName //标签名称
-    //如果标签不是input或者textarea则阻止Backspace
-    if(tagName!='INPUT' && tagName!='TEXTAREA'){
-      return stopIt(ev);
-    }
-    var tagType = obj.type.toUpperCase();//标签类型
-    //input标签除了下面几种类型，全部阻止Backspace
-    if(tagName=='INPUT' && (tagType!='TEXT' && tagType!='TEXTAREA' && tagType!='PASSWORD')){
-      return stopIt(ev);
-    }
-    //input或者textarea输入框如果不可编辑则阻止Backspace
-    if((tagName=='INPUT' || tagName=='TEXTAREA') && (obj.readOnly==true || obj.disabled ==true)){
-      return stopIt(ev);
-    }
-  }
-}
-function stopIt(ev){
-  if(ev.preventDefault ){
-    //preventDefault()方法阻止元素发生默认的行为
-    ev.preventDefault();
-  }
-  if(ev.returnValue){
-    //IE浏览器下用window.event.returnValue = false;实现阻止元素发生默认的行为
-    ev.returnValue = false;
-  }
-  return false;
-}
-
-$(function(){
-    //实现对字符码的截获，keypress中屏蔽了这些功能按键
-    document.onkeypress = banBackSpace;
-    //对功能按键的获取
-    document.onkeydown = banBackSpace;
-
-<?php if($_GET['noheader__']){?>
-    //如果传递了不需要框架页面的内容的配置
-    $('.sidebar-toggle').click();
-    $('.main-header').css("display","none");
-    $('.main-sidebar').css("display","none");
-<?php }?>
-})
-</script>
