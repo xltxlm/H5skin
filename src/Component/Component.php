@@ -10,7 +10,7 @@ namespace xltxlm\h5skin\Component;
 
 
 use xltxlm\helper\Ctroller\LoadClass;
-use xltxlm\thrift\Config\ThriftConfig;
+use \kuaigeng\sso\Login\ThriftConfig;
 
 trait Component
 {
@@ -51,7 +51,7 @@ trait Component
     {
         if (!$this->SsoThrift) {
             $SsoThriftclass = strtr(LoadClass::$rootNamespce, ['\\App' => '\\Config\\SsoThrift']);
-            /** @var \xltxlm\thrift\Config\ThriftConfig $SsoThrift */
+            /** @var \kuaigeng\sso\Login\ThriftConfig $SsoThrift */
             $this->SsoThrift = (new $SsoThriftclass());
         }
         return $this->SsoThrift;

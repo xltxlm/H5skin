@@ -81,6 +81,13 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
             this.$nextTick(function () {
                 //刷新显示逻辑
                 created(this);
+                //页面加载完毕之后，发出iframe高度调整消息
+                var info = {
+                    message: "来自updated，发出的高度调整消息，scrollHeight："+document.body.scrollHeight+"，clientHeight："+document.body.clientHeight,
+                    height: Math.max(document.body.scrollHeight, document.body.clientHeight),
+                    url: window.location.href,
+                };
+                window.parent.postMessage(info, '*');
             });
         },
         methods: {
