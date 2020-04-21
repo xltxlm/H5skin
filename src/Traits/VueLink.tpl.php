@@ -71,7 +71,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                 tmpindex: 0,
                 modelname: modelname,
                 draggable: draggable,
-                __init: false
+                requestinit: false
             }
         },
         created: function () {
@@ -140,10 +140,10 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                     data: $.paramfix(this.requestmodel),
                     context: this,
                     //没有初始化之前，第一次采用异步方式加载数据，加快速度
-                    async: !this.__init,
+                    async: !this.requestinit,
                     success: function (result) {
                         this.alldata = result;
-                        this.__init = true;
+                        this.requestinit = true;
                     }
                 });
             },

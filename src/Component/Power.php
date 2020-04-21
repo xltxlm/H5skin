@@ -9,7 +9,6 @@
 namespace xltxlm\h5skin\Component;
 
 use kuaigeng\sso\Config\KuaigengSsoConfig\enum\EnumSsoctrolleruserAccess;
-use xltxlm\ssoclient\Sso\access;
 use xltxlm\template\Template;
 /**
  * 账户的权限修改框，自助获取权限。不需要管理员确认，但是会发送通知邮件

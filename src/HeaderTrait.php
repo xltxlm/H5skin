@@ -14,8 +14,13 @@ namespace xltxlm\h5skin;
  */
 trait HeaderTrait
 {
+    /**
+     * @return string;
+     */
+    abstract public function getSsoThriftConfig(): string;
+
     //定义网页的fav图标
-    protected $favicon="";
+    protected $favicon = "";
 
     /**
      * @return string
@@ -60,6 +65,6 @@ trait HeaderTrait
 
     final public function getHeader()
     {
-        include __DIR__.'/Header.tpl.php';
+        include __DIR__ . '/Header.tpl.php';
     }
 }

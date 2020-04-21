@@ -8,9 +8,9 @@ use xltxlm\helper\Ctroller\UrlLink;
 use \kuaigeng\sso\Login\ThriftConfig;
 use xltxlm\template\VUE\VUE_Js;
 
-$SsoThriftclass=strtr(LoadClass::$rootNamespce,['\\App'=>'\\Config\\SsoThrift']);
-/** @var \kuaigeng\sso\Login\ThriftConfig $SsoThrift */
-$SsoThrift=(new $SsoThriftclass());
+/** @var \kuaigeng\sso\Login\ThriftConfig $SsoThriftConfigObject  */
+$SsoThriftConfig=$this->getSsoThriftConfig();
+$SsoThriftConfigObject = (new $SsoThriftConfig);
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,46 +28,47 @@ $SsoThrift=(new $SsoThriftclass());
 //引入vue框架
 (new VUE_Js())
     ->setlocalstyle(true)
+    ->setossdomain($SsoThriftConfigObject->getossdomain())
     ->__invoke();
 ?>
     <!-- bootstrap -->
-    <link rel="stylesheet" href="<?=$SsoThrift->getossdomain()?>/static/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="<?=$SsoThriftConfigObject->getossdomain()?>/static/css/bootstrap.min.css" />
     <!-- 信息提示css -->
-    <link rel="stylesheet" href="<?=$SsoThrift->getossdomain()?>/static/css/notyf.min.css" />
+    <link rel="stylesheet" href="<?=$SsoThriftConfigObject->getossdomain()?>/static/css/notyf.min.css" />
     <!-- 字体样式 -->
-    <link rel="stylesheet" href="<?=$SsoThrift->getossdomain()?>/static/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="<?=$SsoThriftConfigObject->getossdomain()?>/static/css/font-awesome.min.css" />
     <!--  -->
-    <link rel="stylesheet" href="<?=$SsoThrift->getossdomain()?>/static/css/ionicons.min.css" />
+    <link rel="stylesheet" href="<?=$SsoThriftConfigObject->getossdomain()?>/static/css/ionicons.min.css" />
     <!--  -->
-    <link rel="stylesheet" href="<?=$SsoThrift->getossdomain()?>/static/css/animate.min.css" />
+    <link rel="stylesheet" href="<?=$SsoThriftConfigObject->getossdomain()?>/static/css/animate.min.css" />
     <!--  -->
-    <link rel="stylesheet" href="<?=$SsoThrift->getossdomain()?>/static/css/AdminLTE.min.css" />
+    <link rel="stylesheet" href="<?=$SsoThriftConfigObject->getossdomain()?>/static/css/AdminLTE.min.css" />
     <!--  -->
-    <link rel="stylesheet" href="<?=$SsoThrift->getossdomain()?>/static/css/_all-skins.min.css">
+    <link rel="stylesheet" href="<?=$SsoThriftConfigObject->getossdomain()?>/static/css/_all-skins.min.css">
     <!-- iview -->
-    <link rel="stylesheet" href="<?=$SsoThrift->getossdomain()?>/static/css/iview.css" />
+    <link rel="stylesheet" href="<?=$SsoThriftConfigObject->getossdomain()?>/static/css/iview.css" />
 
 
     <!-- jquery -->
-    <script src="<?=$SsoThrift->getossdomain()?>/static/js/jquery.min.js"></script>    <!-- 测试文件地址 -->
-    <script src="<?=$SsoThrift->getossdomain()?>/static/js/iview.min.js"></script>    <!--  -->
-    <script src="<?=$SsoThrift->getossdomain()?>/static/js/js.cookie.min.js"></script>
+    <script src="<?=$SsoThriftConfigObject->getossdomain()?>/static/js/jquery.min.js"></script>    <!-- 测试文件地址 -->
+    <script src="<?=$SsoThriftConfigObject->getossdomain()?>/static/js/iview.min.js"></script>    <!--  -->
+    <script src="<?=$SsoThriftConfigObject->getossdomain()?>/static/js/js.cookie.min.js"></script>
     <!--  -->
-    <script src="<?=$SsoThrift->getossdomain()?>/static/js/notyf.min.js"></script>
+    <script src="<?=$SsoThriftConfigObject->getossdomain()?>/static/js/notyf.min.js"></script>
     <!--  -->
-    <script src="<?=$SsoThrift->getossdomain()?>/static/js/echarts.min.js"></script>
+    <script src="<?=$SsoThriftConfigObject->getossdomain()?>/static/js/echarts.min.js"></script>
     <!--  -->
-    <script src="<?=$SsoThrift->getossdomain()?>/static/js/v-chartsindex.min.js"></script>
+    <script src="<?=$SsoThriftConfigObject->getossdomain()?>/static/js/v-chartsindex.min.js"></script>
     <!--  -->
-    <script src="<?=$SsoThrift->getossdomain()?>/static/js/bootstrap.min.js"></script>
+    <script src="<?=$SsoThriftConfigObject->getossdomain()?>/static/js/bootstrap.min.js"></script>
     <!--  -->
-    <script src="<?=$SsoThrift->getossdomain()?>/static/js/app.min.js"></script>
+    <script src="<?=$SsoThriftConfigObject->getossdomain()?>/static/js/app.min.js"></script>
     <!--  -->
-    <script src="<?=$SsoThrift->getossdomain()?>/static/js/demo.js"></script>
+    <script src="<?=$SsoThriftConfigObject->getossdomain()?>/static/js/demo.js"></script>
     <!--  --><!--  -->
-    <script src="<?=$SsoThrift->getossdomain()?>/static/js/vue-lazyload.js"></script>
+    <script src="<?=$SsoThriftConfigObject->getossdomain()?>/static/js/vue-lazyload.js"></script>
     <!--  -->
-    <script src="<?=$SsoThrift->getossdomain()?>/static/js/clipboard.min.js"></script>
+    <script src="<?=$SsoThriftConfigObject->getossdomain()?>/static/js/clipboard.min.js"></script>
 
 
     <!-- Tell the browser to be responsive to screen width -->
@@ -76,18 +77,18 @@ $SsoThrift=(new $SsoThriftclass());
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-    <script src="<?=$SsoThrift->getossdomain()?>/static/js/respond.min.js"></script>
-    <script src="<?=$SsoThrift->getossdomain()?>/static/js/html5shiv.min.js"></script>
+    <script src="<?=$SsoThriftConfigObject->getossdomain()?>/static/js/respond.min.js"></script>
+    <script src="<?=$SsoThriftConfigObject->getossdomain()?>/static/js/html5shiv.min.js"></script>
     <![endif]-->
 <?php /* 隐藏导航,就不需要再加载js*/ if(!$_GET['hidden_navigation']){?>
 <!-- 引入组件库:项目切换 -->
-<script src="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/Vue/Header/Project.js"></script>
+<script src="https://<?=$SsoThriftConfigObject->getHosturl()?>:<?=$SsoThriftConfigObject->getPort()?>/Vue/Header/Project.js"></script>
 <?php } /*if*/ ?>
 <!-- 引入组件库:通用js代码 -->
-<script src="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/Vue/Header/commomjs.js"></script>
+<script src="<?=$SsoThriftConfigObject->getossdomain()?>/sso/OssVue/commomjs.js"></script>
 <!--    初始化提示层js-->
 <script>
-        window.ssohttps="//<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>";
+        window.ssohttps="//<?=$SsoThriftConfigObject->getHosturl()?>:<?=$SsoThriftConfigObject->getPort()?>";
 </script>
 
 <style> .highlight {background:red;animation:myfirst 5s;animation-iteration-count: infinite;}  @keyframes myfirst { 0%   {background: red;} 25%  {background: yellow;} 50%  {background: blue;} 100% {background: red;} }</style>
@@ -118,17 +119,17 @@ $SsoThrift=(new $SsoThriftclass());
                     <!-- User Account: style can be found in dropdown.less -->
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/static/images/user1-128x128.jpg" class="user-image" alt="User Image">
+                            <img src="https://<?=$SsoThriftConfigObject->getHosturl()?>:<?=$SsoThriftConfigObject->getPort()?>/static/images/user1-128x128.jpg" class="user-image" alt="User Image">
                             <span class="hidden-xs"><?= (new UserCookieModel())->getUsername() ?></span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    <a href="//<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/?c=Index/ChangePassword&backurl=<?=$this::Myurl()?>" class="btn bg-navy margin">修改密码</a>
+                                    <a href="//<?=$SsoThriftConfigObject->getHosturl()?>:<?=$SsoThriftConfigObject->getPort()?>/?c=Index/ChangePassword&backurl=<?=$this::Myurl()?>" class="btn bg-navy margin">修改密码</a>
                                 </div>
                                 <div class="pull-right">
-                                    <a href="//<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/?c=Index/Logout&backurl=<?=$this::Myurl()?>" class="btn bg-navy margin">退出系统</a>
+                                    <a href="//<?=$SsoThriftConfigObject->getHosturl()?>:<?=$SsoThriftConfigObject->getPort()?>/?c=Index/Logout&backurl=<?=$this::Myurl()?>" class="btn bg-navy margin">退出系统</a>
                                 </div>
                             </li>
                         </ul>
@@ -173,7 +174,7 @@ $SsoThrift=(new $SsoThriftclass());
 </aside>
 
 <?php /* 隐藏导航,就不需要再加载js*/ if(!$_GET['hidden_navigation']){?>
-<script type="application/javascript" src="https://<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/Vue/Header/MenuApp.js"></script>
+<script type="application/javascript" src="https://<?=$SsoThriftConfigObject->getHosturl()?>:<?=$SsoThriftConfigObject->getPort()?>/Vue/Header/MenuApp.js"></script>
 <?php } /*if*/ ?>
 
     <div class="content-wrapper" style="min-height: 916px;">
