@@ -10,9 +10,7 @@
   "minimum-stability": "dev",
   "require": {
     "php": ">=7.0",
-    "symfony/filesystem": "*",
     "xltxlm/helper": "*",
-    "xltxlm/redis": "*",
     "xltxlm/template": "@dev",
     "xltxlm/page": "@dev",
     "xltxlm/phpexcel": "*"

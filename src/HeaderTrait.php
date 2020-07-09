@@ -63,7 +63,7 @@ trait HeaderTrait
         return $this;
     }
 
-    final public function getHeader()
+    public function getHeader()
     {
         include __DIR__ . '/Header.tpl.php';
     }

@@ -3,8 +3,6 @@
 use xltxlm\h5skin\Request\UserCookieModel;
 use xltxlm\h5skin\Setting\Page;
 use xltxlm\helper\Ctroller\LoadClass;
-use xltxlm\helper\Ctroller\Unit\RunInvoke;
-use xltxlm\helper\Ctroller\UrlLink;
 use \kuaigeng\sso\Login\ThriftConfig;
 use xltxlm\template\VUE\VUE_Js;
 
@@ -20,7 +18,7 @@ $SsoThrift=(new $SsoThriftclass());
     <title><?= $this->getTitle() ?></title>
     <!--项目配置的网站展示图标-->
     <?php if($this->getFavicon()){?>
-        <link rel="icon" type="image/png" href="<?=$this->getFavicon()?>" />
+        <link rel="icon"  href="<?=$this->getFavicon()?>" />
     <?php } /*if*/ else{?>
         <link rel="icon" href="data:;base64,=">
     <?php } /*if*/ ?>
@@ -28,6 +26,7 @@ $SsoThrift=(new $SsoThriftclass());
     //引入vue框架
     (new VUE_Js())
         ->setlocalstyle(true)
+        ->setossdomain($SsoThrift->getossdomain())
         ->__invoke();
     ?>
     <!-- bootstrap --><link rel="stylesheet" href="<?=$SsoThrift->getossdomain()?>/static/css/bootstrap.min.css" /><!-- 信息提示css --><link rel="stylesheet" href="<?=$SsoThrift->getossdomain()?>/static/css/notyf.min.css" /><!-- 字体样式 --><link rel="stylesheet" href="<?=$SsoThrift->getossdomain()?>/static/css/font-awesome.min.css" /><!--  --><link rel="stylesheet" href="<?=$SsoThrift->getossdomain()?>/static/css/ionicons.min.css" /><!--  --><link rel="stylesheet" href="<?=$SsoThrift->getossdomain()?>/static/css/animate.min.css" /><!--  --><link rel="stylesheet" href="<?=$SsoThrift->getossdomain()?>/static/css/AdminLTE.min.css" /><!--  --><link rel="stylesheet" href="<?=$SsoThrift->getossdomain()?>/static/css/_all-skins.min.css"><!-- iview --><link rel="stylesheet" href="<?=$SsoThrift->getossdomain()?>/static/css/iview.css" /><!-- jquery --><script src="<?=$SsoThrift->getossdomain()?>/static/js/jquery.min.js"></script>    <!-- 测试文件地址 --><script src="<?=$SsoThrift->getossdomain()?>/static/js/iview.min.js"></script>    <!--  --><script src="<?=$SsoThrift->getossdomain()?>/static/js/js.cookie.min.js"></script><!--  --><script src="<?=$SsoThrift->getossdomain()?>/static/js/notyf.min.js"></script><!--  --><script src="<?=$SsoThrift->getossdomain()?>/static/js/echarts.min.js"></script><!--  --><script src="<?=$SsoThrift->getossdomain()?>/static/js/v-chartsindex.min.js"></script><!--  --><script src="<?=$SsoThrift->getossdomain()?>/static/js/bootstrap.min.js"></script><!--  --><script src="<?=$SsoThrift->getossdomain()?>/static/js/app.min.js"></script><!--  --><script src="<?=$SsoThrift->getossdomain()?>/static/js/demo.js"></script><!--  --><!--  --><script src="<?=$SsoThrift->getossdomain()?>/static/js/vue-lazyload.js"></script><!--  --><script src="<?=$SsoThrift->getossdomain()?>/static/js/clipboard.min.js"></script>
@@ -43,6 +42,8 @@ $SsoThrift=(new $SsoThriftclass());
     <![endif]-->
     <!-- 引入组件库:通用js代码 -->
     <script src="<?=$SsoThrift->getossdomain()?>/sso/OssVue/commomjs.js"></script>
+    <!--  项目切换菜单组件  -->
+    <script type="application/javascript" src="<?=$SsoThrift->getossdomain()?>/sso/OssVue/menu.js"></script>
     <!--    初始化提示层js-->
     <script>
         window.ssohttps="//<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>";
@@ -72,6 +73,7 @@ $SsoThrift=(new $SsoThriftclass());
                     <span class="sr-only">Toggle navigation</span><b style="color: red"><?=$_SERVER['dockername']?>[测试]</b>
                 <?php } /*if*/ ?>
             </a>
+            <a href="/readme/" target="_blank" class="sidebar-toggle"   role="button" >帮助说明教程</a>
 
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
@@ -98,8 +100,6 @@ $SsoThrift=(new $SsoThriftclass());
     </header>
     <aside class="main-sidebar" id="mainsidebar"><projectnemu :allprojectnemu="allprojectnemu" name="<?=$_SERVER['backstagename']?>" ctroller_class="<?=LoadClass::$runClass?>"></projectnemu></aside>
     <?php /* 隐藏导航,就不需要再加载js*/ if(!$_GET['hidden_navigation']){?>
-        <!--  项目切换菜单组件  -->
-        <script type="application/javascript" src="<?=$SsoThrift->getossdomain()?>/sso/OssVue/menu.js"></script>
         <!--  vue初始化+项目数据定义  -->
         <script type="application/javascript" src="//<?=$SsoThrift->getHosturl()?>:<?=$SsoThrift->getPort()?>/menu.js"></script>
     <?php } /*if*/ ?>

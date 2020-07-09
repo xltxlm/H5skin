@@ -13,13 +13,12 @@ use xltxlm\helper\Ctroller\Request\Cookie;
 /**
  * 通用的cookie模型类
  * Class UserCookie
+ *
  * @package xltxlm\h5skin\Setting
  */
 class UserCookieModel
 {
     use Cookie;
-    //加密的秘钥
-    private const  KEY = 'A123456789';
 
     /** @var string 用户真实名称 */
     protected $username = '';
@@ -222,7 +221,8 @@ class UserCookieModel
      */
     public function getSign()
     {
-        return $this->sign = md5($this->username . self::KEY);
+        //秘钥为机器的名称，具备保密性
+        return md5($this->username . 'A123456789');
     }
 
     /**
@@ -255,7 +255,8 @@ class UserCookieModel
     {
         setcookie('username', $_COOKIE['username'] = $this->getUsername(), time() + 3600 * 24 * 300, '/');
         if ($_COOKIE['sign'] != $this->getSign()) {
-            setcookie('sign', $_COOKIE['sign'] = $this->getSign(), $time, '/');
+            $this->sign = $_COOKIE['sign'] = $this->getSign();
+            setcookie('sign', $this->sign, $time, '/');
         }
     }
 
