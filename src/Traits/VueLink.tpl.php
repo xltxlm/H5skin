@@ -1,6 +1,4 @@
-<?php /** @var  \xltxlm\h5skin\Traits\VueLink $this */
-
-use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
+<?php /** @var  \xltxlm\h5skin\Traits\VueLink $this */ ?>
 
 <script>
     if (typeof viewform === 'undefined') {
@@ -75,6 +73,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
             }
         },
         created: function () {
+            console.log(['created','this.requestmodelaction']);
             this.requestmodelaction();
         },
         updated: function () {
@@ -127,6 +126,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
 
                     }
                 });
+                console.log(['batch','this.requestmodelaction']);
                 this.requestmodelaction();
             },
 
@@ -143,6 +143,10 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                     async: !this.requestinit,
                     success: function (result) {
                         this.alldata = result;
+                        eval('model=this.alldata.' + this.modelname);
+                        if(model.length<=1){//👈👈---- 如果结果只有一条数据，那么不需要进行拖拽
+                            this.draggable=false;
+                        }
                         this.requestinit = true;
                     }
                 });
@@ -168,6 +172,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                     async: false,
                     context: this,
                     success: function (result) {
+                        console.log(['addnewalldata','this.requestmodelaction']);
                         this.requestmodelaction();
                         ajaxSuccess(result, this.openeditiitem);
                     }
@@ -190,6 +195,7 @@ use xltxlm\h5skin\Request\UserCookieModelCopy; ?>
                     },
                     context: this,
                     success: function (result) {
+                        console.log(['drop','this.requestmodelaction']);
                         this.requestmodelaction();
                         ajaxSuccess(result, this.openeditiitem);
                     },
